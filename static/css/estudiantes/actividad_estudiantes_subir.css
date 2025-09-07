@@ -1,0 +1,145 @@
+/* ====== CONTENEDOR GENERAL ====== */
+.contenido {
+    max-width: 1200px; /* más ancho */
+    margin: 2rem auto;
+    padding: 2rem 3rem; /* más espacio */
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12); /* sombra un poco más visible */
+    font-family: 'Comfortaa', sans-serif;
+    color: #000;
+}
+
+/* ====== TÍTULO DE LA ACTIVIDAD ====== */
+.contenido h1 {
+    font-size: 3.5rem; /* más grande */
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    color: #4A3F61;
+    text-align: center;
+}
+
+/* ====== SECCIONES ====== */
+.seccion-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem; /* un poco más de espacio entre cajas */
+    margin-bottom: 2.5rem;
+}
+
+.seccion {
+    flex: 1 1 300px; /* un poco más ancho */
+    background-color: #f0f4f8; /* color más suave */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+.subtitulo {
+    font-weight: 700;
+    font-size: 1.4rem; /* más grande */
+    margin-bottom: 0.7rem;
+    color: #4A3F61;
+}
+
+.texto {
+    font-size: 1.2rem; /* más grande */
+    color: #000;
+    word-wrap: break-word;
+}
+
+/* ====== FORMULARIO DE SUBIDA ====== */
+.form-subida {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+input[type="file"] {
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1.1rem;
+}
+
+.btn-subir {
+    width: 250px; /* más ancho */
+    padding: 14px 18px; /* más grande */
+    background-color: #1e91d6; 
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-subir:hover {
+    background-color: #1e91d6; 
+    transform: scale(1.08);
+}
+
+/* ====== ARCHIVO SUBIDO ====== */
+.archivo-subido {
+    margin-top: 0.7rem;
+    padding: 0.7rem 1.2rem;
+    background-color: #e0f7fa;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.archivo-subido a {
+    text-decoration: none;
+    color: #037b99;
+    font-weight: 700;
+}
+
+.cambiar-archivo {
+    background-color: #4A3F61; /* morado que ya usaste */
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cambiar-archivo:hover {
+    background-color: #3a3350;
+    transform: scale(1.08);
+}
+
+/* ====== MENSAJE DE ÉXITO ====== */
+.mensaje-exito {
+    margin-top: 1.2rem;
+    padding: 1rem 1.2rem;
+    background-color: #d4edda;
+    color: #155724;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 1024px) {
+    .contenido {
+        padding: 1.5rem 2rem;
+    }
+    .seccion-boxes {
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .seccion-boxes {
+        flex-direction: column;
+    }
+    .btn-subir {
+        width: 100%;
+    }
+}

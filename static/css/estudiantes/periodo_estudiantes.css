@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&display=swap');
+
+.contenedor-actividad {
+  padding: 20px 40px;
+  font-family: "Comfortaa", sans-serif;
+  min-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+}
+
+.titulo {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+.subtitulo {
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 0px;
+  margin-bottom: 8px;
+  color: #000000;
+}
+
+.linea {
+  border: 1.5px solid #4a4063;
+  margin: 15px 0 30px 0;
+}
+
+/* 🔹 Contenedor de periodos (tarjetas) */
+.periodos-container {
+  display: flex;
+  flex-wrap: wrap;           /* ya estaba, mantiene varias filas */
+  justify-content: space-around;  /* separa las tarjetas uniformemente */
+  gap: 25px;
+  align-items: stretch;      /* que todas las tarjetas tengan la misma altura */
+  margin-bottom: auto;
+}
+
+
+/* 🔹 Tarjeta de periodo */
+.periodo-card {
+  position: relative;
+  min-width: 220px;
+  max-width: 300px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #4a4063;
+  border: 2px solid #e8e9f0;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 4px 15px rgba(30, 145, 214, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+}
+
+
+
+.periodo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 145, 214, 0.15);
+  border-color: #1e91d6;
+}
+
+.periodo-card.selected {
+  border-color: #1e91d6;
+  box-shadow: 0 6px 20px rgba(30, 145, 214, 0.25);
+}
+
+.periodo-card.selected::before {
+  content: "✓";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #1e91d6;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* 🔹 Enlace dentro de la tarjeta */
+.periodo-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.periodo-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+/* 🔹 Botón continuar */
+.contenedor-continuar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 40px;
+}
+
+.btn-continuar {
+  background: #cccccc;
+  color: #666666;
+  padding: 14px 45px;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: not-allowed;
+  transition: all 0.3s ease;
+  font-family: "Comfortaa", sans-serif;
+  box-shadow: 0 3px 12px rgba(204, 204, 204, 0.3);
+  opacity: 0.6;
+}
+
+/* Estado activo */
+.btn-continuar.enabled {
+  background: #4a4063;
+  color: #fff;
+  cursor: pointer;
+  opacity: 1;
+  box-shadow: 0 3px 12px rgba(74, 64, 99, 0.3);
+}
+
+.btn-continuar.enabled:hover {
+  background: #352c4d;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 16px rgba(74, 64, 99, 0.4);
+}
+
+.btn-continuar.enabled:active {
+  transform: translateY(0);
+}
+
+/* 🔹 Responsive */
+@media (max-width: 768px) {
+  .contenedor-actividad {
+    padding: 15px 20px;
+  }
+
+  .titulo {
+    font-size: 26px;
+  }
+
+  .subtitulo {
+    font-size: 18px;
+  }
+
+  .periodos-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .periodo-card {
+    width: 100%;
+    max-width: 320px;
+    padding: 1.5rem;
+  }
+
+  .btn-continuar {
+    width: 100%;
+    text-align: center;
+  }
+}

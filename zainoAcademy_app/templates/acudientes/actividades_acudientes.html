@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividades - Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/acudientes/actividades_acudientes.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+            <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'dashboard_acudientes' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
+                </a></li>
+                
+                <li><a href="{% url 'actividades_acudientes' %}" class="nav-item active">
+                    <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades
+                </a></li>
+                
+                <li><a href="{% url 'asistencia_acudientes' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/asistencia.png' %}" class="nav-icon" alt="Asistencia"> Asistencia
+                </a></li>
+            </ul>
+        </nav>
+        <div class="logout-container">
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1 class="page-title">Actividades</h1>
+            <div class="header-icons">
+                <!-- Notificaciones -->
+                <a href="{% url 'notificaciones_acudientes' %}">
+                    <img src="{% static 'images/acudientes/notificaciones.png' %}" class="header-icon" alt="Notificaciones">
+                </a>
+                
+                <!-- Nombre -->
+                <span class="user-name">{{ usuario.Us_nombre }}</span>
+                
+                <!-- Avatar / Perfil -->
+                <a href="{% url 'editar_perfil_acudientes' %}">
+                    <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                </a>
+            </div>
+        </header>
+
+        <div class="divider-line"></div>
+
+        <!-- Contenido de Actividades -->
+        <div class="actividades-content">
+            <h2 class="section-title">Estudiantes a Cargo:</h2>
+            
+            {% if estudiantes_a_cargo %}
+                <div class="estudiantes-container">
+                    {% for estudiante in estudiantes_a_cargo %}
+                        <div class="estudiante-card" onclick="selectStudent('{{ estudiante.Est_id }}')" data-student-id="{{ estudiante.Est_id }}">
+                            <h3 class="estudiante-name">{{ estudiante.Usuario_us.Us_nombre }}</h3>
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="continuar-container">
+                        <form method="POST" action="{% url 'actividades_list_acudientes' %}">
+                        {% csrf_token %}
+                        <button type="button" class="continuar-btn" id="continuar-btn" onclick="continueToActivities()" disabled>Continuar</button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <div class="no-estudiantes">
+                    <p>No tienes estudiantes asignados a tu cargo.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <script>
+    let selectedStudentId = null;
+
+    // Esta es la URL que se mantiene constante
+    const baseUrl = "{% url 'actividades_list_acudientes' %}";
+
+    function selectStudent(studentId) {
+        // Remover selección previa
+        document.querySelectorAll('.estudiante-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        // Seleccionar el estudiante actual
+        const selectedCard = document.querySelector('[data-student-id="' + studentId + '"]');
+        if (selectedCard) {
+            selectedCard.classList.add('selected');
+        }
+        
+        // Guardar el ID del estudiante seleccionado
+        selectedStudentId = studentId;
+        
+        // Habilitar el botón continuar
+        const continueBtn = document.getElementById('continuar-btn');
+        continueBtn.disabled = false;
+        continueBtn.classList.add('enabled');
+        
+        console.log('Estudiante seleccionado:', studentId); // Para debug
+    }
+
+    function continueToActivities() {
+        if (selectedStudentId) {
+            // Crear un formulario temporal para hacer un POST con el ID del estudiante
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = baseUrl; // La URL definida en Django (sin cambiarla)
+
+            // Crear un campo hidden con el ID del estudiante
+            const studentIdInput = document.createElement('input');
+            studentIdInput.type = 'hidden';
+            studentIdInput.name = 'student_id';
+            studentIdInput.value = selectedStudentId;
+
+            // Agregar el campo al formulario
+            form.appendChild(studentIdInput);
+
+            // Crear el token CSRF para que Django lo acepte
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrfmiddlewaretoken';
+            csrfToken.value = '{{ csrf_token }}';
+
+            form.appendChild(csrfToken);
+
+            // Añadir el formulario al body y enviarlo
+            document.body.appendChild(form);
+            form.submit(); // Enviar el formulario
+        } else {
+            alert('Por favor selecciona un estudiante antes de continuar.');
+        }
+    }
+
+    // Asegurarse de que el botón esté deshabilitado al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        const continueBtn = document.getElementById('continuar-btn');
+        if (continueBtn) {
+            continueBtn.disabled = true;
+            continueBtn.classList.remove('enabled');
+        }
+    });
+</script>
+    </main>
+</body>
+</html>

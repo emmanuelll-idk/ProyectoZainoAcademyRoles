@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Material de Apoyo - Zaino Academy</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/profesores/materialApoyo_consultar.css' %}">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/profesores/Favicon.png' %}" alt="Logo Libro"/>
+            <img src="{% static 'images/profesores/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'dashboard_profesores' %}" class="nav-item active">
+                    <img src="{% static 'images/profesores/inicio.png' %}" class="nav-icon" alt="Inicio">
+                    Inicio
+                </a></li>
+
+                <li><a href="{% url 'actividad_profesores_consultar' %}" class="nav-item">
+                    <img src="{% static 'images/profesores/actividades.png' %}" class="nav-icon" alt="Actividades"> 
+                    Actividades - Material de apoyo
+                </a></li>
+
+                <li><a href="{% url 'asistencia_profesores_cursos' %}" class="nav-item">
+                    <img src="{% static 'images/profesores/asistencia.png' %}" class="nav-icon" alt="Asistencia"> 
+                    Asistencia
+                </a></li>
+
+                <li><a href="{% url 'reportes_profesores' %}" class="nav-item">
+                    <img src="{% static 'images/profesores/reportes.png' %}" class="nav-icon" alt="Reportes"> 
+                    Reportes
+                </a></li>
+            </ul>
+        </nav>
+        <div class="logout-container">
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+        <header class="header">
+            <h1>Material de apoyo</h1>
+            <span>Total: {{ materiales|length }} material{{ materiales|length|pluralize }}</span>
+        </header>
+
+        <input type="text" placeholder="Buscar Material" class="search-bar">
+
+        <table class="material-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Archivo</th>
+                    <th>Descripción</th>
+                    <th>Fecha de creación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for material in materiales %}
+                <tr>
+                    <td>{{ material.Mate_titulo }}</td>
+                    <td>
+                        {% if material.Mate_archivo %}
+                            <a href="{{ material.Mate_archivo.url }}" target="_blank">Ver archivo</a>
+                        {% else %}
+                            Sin archivo
+                        {% endif %}
+                    </td>
+                    <td>{{ material.Mate_descripcion }}</td>
+                    <td>{{ material.id|date:"d/m/Y" }}</td>
+                    <td>
+                        <button class="editar-btn">Editar</button>
+                        <button class="borrar-btn">Borrar</button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No hay materiales de apoyo aún.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="volver-section">
+            <a href="{% url 'actividad_profesores_consultar_cursos' periodo_id %}" class="volver-btn">Volver</a>
+        </div>
+    </main>
+</body>
+</html>

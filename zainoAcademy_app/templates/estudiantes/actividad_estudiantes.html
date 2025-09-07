@@ -1,0 +1,38 @@
+{% extends "estudiantes/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/estudiantes/actividad_estudiantes.css' %}">
+{% endblock %}
+
+{% block page_title %}Tus materias:{% endblock %}
+
+{% block mockUp %}
+<div class="contenedor-principal">
+
+        <h2>Consulta actividades o materiales de apoyo</h2>
+        <hr><br>
+
+        <div class="materias-box">
+            {% for m in materias %}
+                <div class="materia-card">
+                    <div class="materia-nombre">
+                        <h3>{{ m.Mtr_nombre }}</h3>
+                    </div>
+
+                    <div class="materia-opciones">
+                        <a href="{% url 'actividades_estudiantes' periodo.Per_id m.Mtr_id %}">
+                            Consultar actividades
+                        </a>
+                        <a href="{% url 'materiales_apoyo_estudiantes' periodo.Per_id m.Mtr_id %}">
+                            Material de apoyo
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No tienes materias asociadas en este periodo.</p>
+            {% endfor %}
+        </div>
+</div>
+{% endblock %}
+

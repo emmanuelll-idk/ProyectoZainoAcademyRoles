@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Directivos</title>
+<link rel="stylesheet" href="{% static 'css/directivos/dashboard_directivosStyles.css' %}">
+<link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+    <div class="logo">
+        <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+        <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+    </div>
+    <nav>
+        <ul class="nav-list">
+        <li><a href="{% url 'dashboard_directivo' %}" class="nav-item">
+            <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
+        </a></li>
+        <li><a href="{% url 'crear_usuario' %}" class="nav-item">
+            <img src="{% static 'images/directivos/LogoUsuario.png' %}" class="nav-icon" alt="Nuevo Usuario"> Nuevo Usuario
+        </a></li>
+        <li><a href="{% url 'crear_matricula' %}" class="nav-item">
+            <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Matricula"> Matricula
+        </a></li>
+        <li><a href="{% url 'crear_curso' %}" class="nav-item">
+            <img src="{% static 'images/directivos/LogoCurso.png' %}" class="nav-icon" alt="Curso"> Curso
+        </a></li>
+        <li><a href="{% url 'crear_materia' %}" class="nav-item">
+            <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Materia"> Materia
+        </a></li>
+        <li><a href="{% url 'periodo_directivos' %}" class="nav-item">
+            <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Asignacion"> Asignacion
+        </a></li>
+        </ul>
+    </nav>
+    <div class="logout-container">
+        <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
+        </form>
+    </div>
+    </aside>
+
+    <!-- Contenido del Dashboard -->
+    <main class="main-content">
+    <header class="header">
+        <h1>Panel de Directivos</h1>
+    </header>
+
+    <section class="stats">
+        <div class="card">📚 <h3>Matriculas</h3><p>120</p></div>
+        <div class="card">👨‍🏫 <h3>Profesores</h3><p>35</p></div>
+        <div class="card">👩‍🎓 <h3>Estudiantes</h3><p>540</p></div>
+        <div class="card">📖 <h3>Materias</h3><p>28</p></div>
+    </section>
+
+    <section class="content">
+        <div class="calendar">
+        <h2>Calendario</h2>
+        <div class="calendar-box">
+            <p>📅 Aquí va el calendario dinámico</p>
+        </div>
+        </div>
+        <div class="table">
+        <h2>Últimas Matrículas</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Estudiante</th>
+                <th>Curso</th>
+                <th>Fecha</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td>Juan Pérez</td><td>10°</td><td>01/09/2025</td></tr>
+            <tr><td>Ana Gómez</td><td>8°</td><td>30/08/2025</td></tr>
+            <tr><td>Carlos Ruiz</td><td>7°</td><td>29/08/2025</td></tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+    </main>
+</div>
+
+<!-- Modal Cerrar Sesión -->
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <p>¿Seguro que deseas cerrar sesión?</p>
+        <button onclick="closeModal()">Cancelar</button>
+        <button onclick="document.querySelector('.logout-container form').submit()">Cerrar sesión</button>
+    </div>
+</div>
+
+<style>
+/* ========== RESET ========== */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+html, body {
+height: 100%;
+font-family: "Comfortaa", sans-serif;
+background-color: #f5f6fa;
+color: #333;
+}
+
+/* ========== LAYOUT GENERAL ========== */
+.dashboard-container {
+display: flex;
+min-height: 100vh;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+width: 260px;
+background-color: #1e91d6;
+padding: 2rem 1.2rem;
+color: #fff;
+position: fixed;
+top: 0;
+left: 0;
+bottom: 0;
+overflow-y: auto;
+z-index: 100;
+display: flex;
+flex-direction: column;
+}
+
+.logo {
+text-align: center;
+margin-bottom: 3rem;
+}
+
+.logo img {
+max-width: 180px;
+display: block;
+margin: 10px auto;
+filter: brightness(0) invert(1);
+}
+
+/* Navegación */
+.nav-list {
+list-style: none;
+padding: 0;
+flex-grow: 1;
+}
+
+.nav-item {
+display: flex;
+align-items: center;
+padding: 0.8rem 1rem;
+font-size: 1rem;
+font-weight: 600;
+border-radius: 12px;
+text-decoration: none;
+color: #fff;
+margin-bottom: 0.8rem;
+transition: all 0.3s ease;
+}
+
+.nav-item:hover,
+.nav-item.active {
+background-color: #ffffff;
+color: #1e91d6;
+transform: translateX(5px);
+}
+
+.nav-item img.nav-icon {
+width: 22px;
+height: 22px;
+margin-right: 12px;
+filter: brightness(0) invert(1);
+transition: filter 0.3s ease;
+}
+
+.nav-item:hover img.nav-icon,
+.nav-item.active img.nav-icon {
+filter: invert(34%) sepia(89%) saturate(1896%) hue-rotate(186deg) brightness(91%) contrast(95%);
+}
+
+/* Botón de logout */
+.logout-container {
+margin-top: auto;
+text-align: center;
+}
+
+.logout-btn {
+width: 100%;
+background-color: #4a4063;
+color: #fff;
+padding: 0.9rem 1.2rem;
+border-radius: 12px;
+font-weight: 600;
+font-size: 1rem;
+border: none;
+cursor: pointer;
+font-family: "Comfortaa", sans-serif;
+transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+background-color: #352c4d;
+transform: scale(1.05);
+}
+
+/* ========== CONTENIDO PRINCIPAL ========== */
+.main-content {
+flex: 1;
+margin-left: 260px; /* deja espacio para el sidebar */
+padding: 20px;
+}
+
+.header {
+background: white;
+padding: 15px;
+border-radius: 8px;
+margin-bottom: 20px;
+box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estadísticas */
+.stats {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 15px;
+margin-bottom: 20px;
+}
+
+.card {
+background: white;
+padding: 20px;
+border-radius: 8px;
+text-align: center;
+font-size: 1.1rem;
+box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Contenido */
+.content {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 20px;
+}
+
+.calendar, .table {
+background: white;
+padding: 20px;
+border-radius: 8px;
+box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Tabla */
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 10px;
+}
+
+table th, table td {
+padding: 10px;
+border-bottom: 1px solid #ddd;
+}
+
+table th {
+text-align: left;
+background-color: #f0f0f0;
+}
+
+/* ========== MODAL MEJORADO ========== */
+.modal {
+display: none;
+position: fixed;
+top: 0; 
+left: 0;
+width: 100%; 
+height: 100%;
+background: rgba(0,0,0,0.5);
+justify-content: center;
+align-items: center;
+z-index: 1000;
+backdrop-filter: blur(4px);
+}
+
+.modal-content {
+background: white;
+padding: 2rem;
+border-radius: 12px;
+text-align: center;
+font-family: "Comfortaa", sans-serif;
+box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+max-width: 400px;
+width: 90%;
+animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+}
+to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+}
+
+.modal-content p {
+font-size: 1.1rem;
+color: #4a4063;
+margin-bottom: 2rem;
+font-weight: 600;
+}
+
+.modal-content button {
+margin: 0 0.5rem;
+padding: 0.8rem 1.5rem;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+font-family: "Comfortaa", sans-serif;
+font-weight: 600;
+transition: all 0.3s ease;
+}
+
+.modal-content button:first-of-type {
+background-color: #f8f9fa;
+color: #4a4063;
+border: 1px solid #dee2e6;
+}
+
+.modal-content button:first-of-type:hover {
+background-color: #e9ecef;
+transform: translateY(-1px);
+}
+
+.modal-content button:last-of-type {
+background-color: #4a4063;
+color: white;
+}
+
+.modal-content button:last-of-type:hover {
+background-color: #352c4d;
+transform: translateY(-1px);
+}
+</style>
+
+<script>
+function openModal() {
+document.getElementById("logoutModal").style.display = "flex";
+}
+
+function closeModal() {
+document.getElementById("logoutModal").style.display = "none";
+}
+
+// Cerrar modal al hacer clic fuera de él
+document.getElementById('logoutModal').addEventListener('click', function(e) {
+if (e.target === this) {
+    closeModal();
+}
+});
+
+// Cerrar modal con tecla ESC
+document.addEventListener('keydown', function(e) {
+if (e.key === 'Escape') {
+    closeModal();
+}
+});
+</script>
+</body>
+</html>

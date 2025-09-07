@@ -1,0 +1,195 @@
+body {
+  font-family: 'Comfortaa', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background-color: #4A4063;
+    padding: 1.5rem 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    color: #fff;
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.logo img {
+    max-width: 180px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    filter: brightness(0) invert(1);
+}
+
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-list li {
+    margin-bottom: 0.3rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    gap: 0.7rem;
+}
+
+.nav-item.active {
+    background-color: #fff;
+    color: #4A4063;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active:hover {
+    background-color: #fff;
+    color: #4A4063;
+}
+
+.nav-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.logout-container {
+    position: absolute;
+    bottom: 2rem;
+    left: 1rem;
+    right: 1rem;
+}
+
+.logout-btn {
+    background-color: #1E91D6;
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.logout-btn:hover {
+    background-color: #6A5B8C;
+}
+
+/* Main */
+.main-content {
+  padding: 20px;
+  margin-left: 240px; /* ancho de la barra lateral */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.notification-icon {
+    width: 24px;
+    margin-right: 15px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 35px;
+    border-radius: 50%;
+}
+
+/* Tabla */
+.asistencia-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.asistencia-table th, .asistencia-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.asistencia-table th {
+    background: #f3f3f3;
+}
+
+/* Botones de estado */
+.estado-btn {
+    padding: 5px 10px;
+    border: none;
+    margin: 2px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.presente {
+    background: #2d89ef;
+    color: white;
+}
+
+.ausente {
+    background: #d9534f;
+    color: white;
+}
+
+.retardo {
+    background: #f0ad4e;
+    color: white;
+}
+
+.parcial {
+    background: #5bc0de;
+    color: white;
+}
+
+/* Botones inferiores */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.volver-btn, .guardar-btn {
+    background: #3C2E63;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}

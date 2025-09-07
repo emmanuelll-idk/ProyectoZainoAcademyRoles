@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Josefin+Sans:wght@700&display=swap');
+
+* {
+    font-family: "Comfortaa", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+
+.barra-navegacion{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8vw;
+  height: 15vh;
+  margin-right: 1vw;
+  margin-left: 1vw;
+}
+
+.logo img {
+  width: 20vw;
+}
+
+.nav ul {
+  font-family: "Comfortaa", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: weight;
+  font-style: normal;
+  display: flex;
+  list-style: none;
+  gap: 2.5vw;
+  margin-left: 7vw;
+  margin-right: 16vw;
+}
+
+
+.nav ul li a {
+  text-decoration: none;
+  font-size: 3vh;
+  font-size: 1.1vw;
+  color: #000;
+}
+
+.butons{
+  display: flex;
+  gap: 1.5vw;
+}
+
+.butons a img {
+  height: 5vh;
+}
+
+/* Elimina viñetas y pone los ítems en fila con espacio */
+header ul {
+  list-style: none;
+  display: flex;
+  gap: 30px; /* Espacio entre cada link */
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Estilo para los enlaces */
+header ul li a {
+  text-decoration: none;
+  color: #000;
+  font-size: 12px; /* Tamaño más legible */
+  transition: border-bottom 0.3s ease;
+}
+
+/* Hover */
+header ul li a:hover {
+  border-bottom: 2px solid #2196f3;
+}
+
+.logo {
+    height: 60px; /* Tamaño del logo */
+    width: auto;
+    margin-top: 10px;
+  }
+
+.boton-derecha {
+    margin-left: auto; /* Empuja el botón hacia la derecha */
+    font-size: 12px; 
+    color: black;
+}
+
+.botonIngresar {
+    text-decoration: none;
+    color: white; /* Color de la fuente */
+    background-color: #4A4063; /* Color de fondo */
+    padding: 8px 16px;
+    border: none;
+    border-radius: 30px; /* Para hacerlo ovalado */
+  }
+  
+  /* .botonIngresar:hover {
+    
+    color: #000;
+  } */
+
+  .search-circle { /* Modificaciones para el circulo */
+    width: 30px;
+    height: 30px;
+    background-color: #4A4063; 
+    border-radius: 50%; /* Al 50% ya que es un circulo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 15px;
+    cursor: pointer;
+  }
+  
+  .search-circle i { /* Modificaciones para el ícono de la lupa */
+    color: white;
+    font-size: 16px;
+  }
+
+  .boton-ingresar-lupa {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espacio entre el botón y la lupa */
+  }
+
+#hero {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 5%;
+}
+
+#hero h2 {
+    font-size: 50px;
+    color: black;
+    font-weight: 700;
+    margin-top: -20px;
+    margin-bottom: 70px;
+}
+
+/*
+#hero button {
+    background: yellow;
+    color: #666;
+    padding: 10px 30px;
+    font-size: 26px;
+    border-radius: 8px;
+    cursor: pointer;
+} */
+
+/* Diseño para el cuadro izquierdo (Estamos a un toque) */
+
+#informacion {
+  width: 100%;
+  padding: 100px 0; /* Espaciado arriba (100) y abajo (0) */
+  text-align: left;
+  position: relative;
+}
+
+#informacion h2 {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 13px; /* Espacio debajo del titulo */
+  margin-top: -50px;
+  font-weight: bold;
+  margin-left: 60px; /* Separación desde el borde izquierdo */
+}
+
+#informacion > p {
+  font-size: 14px;
+  margin-bottom: 40px;
+  margin-left: 60px;
+}
+
+#informacion h3 {
+    font-weight: 700;
+}
+
+.fila {
+  margin-left: 60px;
+}
+
+/* Contenedor padre en flex */
+#contacto-contenedor {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 40px;
+    background-color: #e0e0e0; /* fondo como en la imagen */
+  } /* Fin del contenedor */
+  
+  /* Estilo de la sección izquierda */
+  #informacion {
+    flex: 1;
+    min-width: 280px;
+  }
+  
+  .contacto {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .circulo {
+    width: 30px;
+    height: 30px;
+    background-color: #2196f3;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  
+  
+  /* Estilo del formulario del lado derecho*/
+  #contacto {
+    flex: 1;
+    min-width: 400px;
+    max-width: 400px;
+    margin-right: 70px;
+    margin-left: 40px;
+    background-color: white;
+    padding: 25px 30px;
+    border-radius: 20px;
+    text-align: center;
+  }
+  
+  #contacto h2 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    margin-top: 30px;
+  }
+  
+  .campo input {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background: none;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  button[type="submit"] {
+    margin-top: 20px;
+    margin-left: 230px;
+    background-color: #4B3D60;
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  
+
+/*
+#destinos .fila{
+    display: flex;
+    justify-content: center; 
+} 
+
+#contac .campo {
+    display: flex;
+    justify-content: right;
+}
+
+#destinos h3{
+    color: #fff;
+    font-size: 30px;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: center;
+}
+
+#contacto {
+    background: yellow;
+    padding: 80px 0;
+    text-align: center;
+}
+
+#contacto form {
+    width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.campo {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.campo input, .campo select {
+    width: 48%;
+    padding: 12px 20px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #94940c;
+    color: white;
+    font-size: 22px;
+    padding: 12px 50px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+} 
+
+button:hover {
+    background-color: #7a7a0a;
+} */
+
+footer {
+    display: flex;                   /* Acomoda los elementos en fila */
+    justify-content: space-between; /* Espacio entre logo e iconos */
+    align-items: center;            /* Centra verticalmente */
+    padding: 10px 40px;             /* Margen interno alrededor */
+    background-color: #000;
+  }
+  
+  .footer-logo img {
+    width: 200px;                    /* Tamaño personalizado para el logo */
+    height: auto;
+  }

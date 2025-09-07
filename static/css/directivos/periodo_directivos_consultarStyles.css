@@ -1,0 +1,7 @@
+    .table { width:100%; border-collapse: collapse; font-family:'Comfortaa', sans-serif; }
+    .table th, .table td { border:1px solid #e5e7eb; padding:.6rem .8rem; text-align:left; }
+    .table th { background:#f3f4f6; color:#4a4063; }
+    .action-buttons { display:flex; gap:12px; margin-bottom:1rem; }
+    .btn { padding:.5rem 1rem; border-radius:8px; border:1px solid #4a4063; text-decoration:none; }
+    .btn-primary { background:#4a4063; color:#fff; }
+    .btn-secondary { background:#fff; color:#4a4063; }

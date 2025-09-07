@@ -1,0 +1,325 @@
+/* Dashboard Acudiente Styles */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+.dashboard-page {
+    font-family: "Comfortaa", sans-serif;
+    background-color: #f5f6fa;
+    display: flex;
+    min-height: 100vh;
+    color: #4a4063;
+    overflow-x: hidden;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+    width: 260px;
+    background-color: #1e91d6;
+    padding: 2rem 1.2rem;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.logo img {
+    max-width: 180px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    filter: brightness(0) invert(1);
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #fff;
+    margin-bottom: 0.8rem;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background-color: #ffffff;
+    color: #000000;
+    transform: translateX(5px);
+}
+
+.nav-item img.nav-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 12px;
+    filter: brightness(0) invert(1); /* blanco sobre azul */
+    transition: filter 0.3s ease;
+}
+
+.nav-item:hover img.nav-icon,
+.nav-item.active img.nav-icon {
+    filter:invert();
+}
+
+.logout-container {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+/* Botón cerrar sesión */
+.logout-btn {
+    display: inline-block;
+    width: 85%;  /* ocupa casi todo el ancho */
+    background-color: #4a4063;
+    color: #fff;
+    padding: 0.9rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: #352c4d;
+    transform: scale(1.05);
+}
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    padding: 2rem;
+    background-color: #ffffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ========== HEADER ========== */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.page-title {
+    font-size: 3.9rem;
+    font-weight: bold;
+    color: #4a4063;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-icons img.header-icon {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.header-icons img.header-icon:hover {
+    transform: scale(1.1);
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #4a4063;
+}
+
+/* Avatar */
+.user-avatar {
+    width: 41px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid #1e91d6;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.05);
+    border-color: #4a4063;
+}
+
+/* Divider */
+.divider-line {
+    width: 100%;
+    height: 3px;
+    background: #1e91d6;
+    margin: 1rem 0 2rem;
+    border-radius: 2px;
+}
+
+/* Estilo de la tabla de actividades */
+.activities-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+    max-width: 90%; /* Reduce el tamaño de la tabla */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.activities-table th, .activities-table td {
+    padding: 15px; /* Aumentar el padding */
+    border: 1px solid #000000;
+    text-align: center;
+    font-size: 1.2rem; /* Aumentar el tamaño de la letra */
+    color: #333;
+}
+
+.activities-table th {
+    background-color: #D9D9D9;
+    color: #000000;
+    font-weight: bold;
+}
+
+.activities-table tbody tr:hover {
+    background-color: #f4f6f9;
+    cursor: pointer;
+}
+
+.activities-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.activities-table td {
+    font-weight: 500;
+}
+
+/* Barra de búsqueda */
+/* Barra de búsqueda */
+.search-bar {
+    width: 100%;
+    max-width: 1437px;
+    margin-bottom: 1.5rem;
+    padding: 10px;
+    border: 2px solid #000000;
+    font-size: 1.1rem;
+    color: #333;
+    background-color: #f8f8f8;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    outline: none;
+}
+
+.search-bar:focus {
+    border-color: #4a4063;
+    background-color: #ffffff;
+}
+
+/* Estilo para los botones */
+.continue-btn {
+    background-color: #1e91d6;
+    color: white;
+    font-size: 1.1rem;
+    padding: 12px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.continue-btn:hover {
+    background-color: #155a8a;
+}
+
+
+/* Diseño responsivo para la tabla */
+@media (max-width: 768px) {
+    .activities-table th, .activities-table td {
+        padding: 10px;
+    }
+
+    .activities-table {
+        font-size: 1rem;
+    }
+
+    .activities-table th {
+        font-size: 1.1rem;
+    }
+
+    .search-bar {
+        width: 90%;
+        font-size: 1rem;
+    }
+}
+
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 80px;
+        padding: 1rem 0.5rem;
+    }
+    
+    .sidebar .logo img {
+        max-width: 60px;
+    }
+    
+    .nav-item span:not(.nav-icon) {
+        display: none;
+    }
+    
+    .main-content {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+    }
+    
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .dashboard-content {
+        grid-template-columns: 1fr;
+    }
+}
+

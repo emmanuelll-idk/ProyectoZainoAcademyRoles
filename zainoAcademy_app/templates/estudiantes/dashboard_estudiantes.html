@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Estudiante- Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/estudiantes/dashboard_estudiantes.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,600,700&display=swap" rel="stylesheet" />
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+            <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li>
+                <a href="{% url 'dashboard_estudiantes' %}" 
+                    class="nav-item {% if request.resolver_match.url_name == 'dashboard_estudiantes' %}active{% endif %}">
+                    <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
+                </a>
+                </li>
+
+                <li>
+                <a href="{% url 'consultar_periodos' %}" 
+                    class="nav-item {% if request.resolver_match.url_name == 'consultar_periodos' %}active{% endif %}">
+                    <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades y material de apoyo
+                </a>
+                </li>
+
+                <li>
+                <a href="{% url 'consultar_reportes' %}" 
+                    class="nav-item {% if request.resolver_match.url_name == 'consultar_reportes' %}active{% endif %}">
+                    <img src="{% static 'images/acudientes/asistencia.png' %}" class="nav-icon" alt="Reportes"> Reportes
+                </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="logout-container">
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <header class="page-header">
+            <div class="header-icons">
+
+                
+                <!-- Nombre -->
+                <span class="user-name">{{ usuario.Us_nombre }}</span>
+                
+                <!-- Avatar / Perfil -->
+                <a href="{% url 'editar_perfil_acudientes' %}">
+                    <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                </a>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <!-- COLUMNA IZQUIERDA - MÁS GRANDE -->
+            <div class="left-column">
+                <!-- Tarjeta de Saludo -->
+                <div class="greeting-card">
+                    <div class="greeting-text">
+                        <h2>Hola {{ usuario.Us_nombre }}!</h2>
+                        <p>Bienvenido a tu entorno virtual, recuerda estar atento a las notificaciones y trabajos pendientes!</p>
+                        <a href="{% url 'actividades_acudientes' %}" class="btn-leer-mas">Leer más</a>
+                    </div>
+                    <div class="greeting-illustration">
+                        <img src="{% static 'images/acudientes/lectura.png' %}" class="greeting-illustration" alt="Perfil">
+                    </div>
+                </div>
+
+
+                    <!-- Sección de Notificaciones -->
+            <div class="notifications-section">
+
+                <div class="notifications-table">
+                    <div class="table-header">
+                        <div class="col-header">Actividades Pendientes</div>
+                        <div class="col-header">Materia</div>
+                        <div class="col-header">Estado</div>
+                    </div>
+
+                    {% if pendientes %}
+                        {% for p in pendientes %}
+                        <div class="table-row">
+                            <div class="col-data activity-name"><a href="{% url 'subir_actividad_estudiante' p.periodo.Per_id p.materia.Mtr_id p.actividad.Act_id %}">{{ p.actividad.Act_nombre }}</a></div>
+                            <div class="col-data subject">{{ p.materia }}</div>
+                            <div class="col-data status">• {{ p.estado }}</div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="table-row">
+                            <div class="col-data activity-name" colspan="3">
+                                No tienes actividades pendientes!
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            
+                    
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA -->
+            <div class="right-column">
+                <div class="calendar-section">
+                    <div class="calendar-top">
+                        <h4 id="calendar-month-year"></h4>
+                        <div class="calendar-nav">
+                            <button class="nav-btn prev-btn" onclick="changeMonth(-1)">‹</button>
+                            <button class="nav-btn next-btn" onclick="changeMonth(1)">›</button>
+                        </div>
+                    </div>
+
+                    <div class="calendar-widget">
+                        <div class="calendar-grid" id="calendar-grid">
+                            <div class="day-header">DO</div>
+                            <div class="day-header">LU</div>
+                            <div class="day-header">MA</div>
+                            <div class="day-header">MI</div>
+                            <div class="day-header">JU</div>
+                            <div class="day-header">VI</div>
+                            <div class="day-header">SA</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Perfil del Estudiante -->
+                <div class="student-profile">
+                    <div class="student-avatar">
+                        <img src="{% static 'images/acudientes/perfil.png' %}" class="student-avatar"alt="Perfil">
+                    </div>
+                    <h4 class="student-name">{{ usuario.Us_nombre }}</h4>
+                    <p class="student-role">Estudiante</p>
+                    
+
+                    
+                    <div class="student-info">
+                        <div class="info-row">
+                            <span class="info-label">Estado</span>
+                            <span class="info-value">Activo</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Fecha registro</span>
+                            <span class="info-value">{{ usuario.fecha_registro }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Pendientes</span>
+                            <span class="info-value pending-count">4 pendientes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Modal logout -->
+    <div id="logout-modal" class="modal">
+        <div class="modal-content">
+            <h2>¿Cerrar Sesión?</h2>
+            <div class="modal-actions">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-confirm">Confirmar</button>
+                </form>
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('logout-modal');
+        function openModal() { modal.style.display = 'flex'; }
+        function closeModal() { modal.style.display = 'none'; }
+        window.onclick = function(event) {
+            if (event.target == modal) { closeModal(); }
+        }
+    </script>
+
+    <script>
+        let currentDate = new Date();
+        function renderCalendar(date) {
+            const month = date.getMonth();
+            const year = date.getFullYear();
+            const monthYear = document.getElementById("calendar-month-year");
+            const months = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+            monthYear.textContent = `${months[month]}, ${year}`;
+
+            const calendarGrid = document.querySelector(".calendar-grid");
+            calendarGrid.innerHTML = `
+                <div class="day-header">DO</div>
+                <div class="day-header">LU</div>
+                <div class="day-header">MA</div>
+                <div class="day-header">MI</div>
+                <div class="day-header">JU</div>
+                <div class="day-header">VI</div>
+                <div class="day-header">SA</div>
+            `;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+            const prevLastDate = new Date(year, month, 0).getDate();
+
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const dayCell = document.createElement("div");
+                dayCell.classList.add("day-cell", "prev-month");
+                dayCell.textContent = prevLastDate - i;
+                calendarGrid.appendChild(dayCell);
+            }
+
+            let today = new Date();
+            let formatter = new Intl.DateTimeFormat("es-CO", {
+                timeZone: "America/Bogota",
+                day: "numeric", month: "numeric", year: "numeric"
+            });
+            let parts = formatter.formatToParts(today);
+            let todayDay = parseInt(parts.find(p => p.type === "day").value);
+            let todayMonth = parseInt(parts.find(p => p.type === "month").value) - 1;
+            let todayYear = parseInt(parts.find(p => p.type === "year").value);
+
+            for (let i = 1; i <= lastDate; i++) {
+                const dayCell = document.createElement("div");
+                dayCell.classList.add("day-cell");
+                dayCell.textContent = i;
+                if (year === todayYear && month === todayMonth && i === todayDay) {
+                    dayCell.classList.add("current-day");
+                }
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            renderCalendar(currentDate);
+        }
+        renderCalendar(currentDate);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calificaciones - Zaino Academy</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/profesores/actividad_profesores_calificaciones.css' %}">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/profesores/Favicon.png' %}" alt="Logo Libro"/>
+            <img src="{% static 'images/profesores/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'dashboard_profesores' %}" class="nav-item active">
+                    <img src="{% static 'images/profesores/inicio.png' %}" class="nav-icon" alt="Inicio">
+                    Inicio
+                </a></li>
+
+                <li><a href="{% url 'actividad_profesores_consultar' %}" class="nav-item">
+                    <img src="{% static 'images/profesores/actividades.png' %}" class="nav-icon" alt="Actividades"> 
+                    Actividades - Material de apoyo
+                </a></li>
+
+                <li><a href="{% url 'asistencia_profesores_cursos' %}" class="nav-item">
+                    <img src="{% static 'images/profesores/asistencia.png' %}" class="nav-icon" alt="Asistencia"> 
+                    Asistencia
+                </a></li>
+
+                <li><a href="{% url 'reportes_profesores' %}" class="nav-item">
+                    <img src="{% static 'images/profesores/reportes.png' %}" class="nav-icon" alt="Reportes"> 
+                    Reportes
+                </a></li>
+            </ul>
+        </nav>
+        <div class="logout-container">
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <h1>Actividad:</h1>
+            <span>(nombre)</span>
+        </header>
+
+        <h2 class="section-title">(Nombre actividad) para (curso)</h2>
+
+        <table class="calificaciones-table">
+            <thead>
+                <tr>
+                    <th>Nombre estudiante</th>
+                    <th>Archivo</th>
+                    <th>Fecha Límite</th>
+                    <th>Calificación</th>
+                    <th>Comentario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>David Santiago Jiménez</td>
+                    <td>Ver PDF</td>
+                    <td>14/09/2025</td>
+                    <td><input type="number" value="8.5"></td>
+                    <td>Lorem Ipsum</td>
+                </tr>
+                <tr>
+                    <td>Sebastián Pérez</td>
+                    <td>Ver PDF</td>
+                    <td>14/09/2025</td>
+                    <td><input type="number" value="7"></td>
+                    <td>Lorem Ipsum</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="acciones">
+            <a href="{% url 'actividad_profesores_consultar' %}" class="volver-btn">Volver</a>
+            <button class="guardar-btn">Guardar</button>
+        </div>
+    </main>
+</body>
+</html>

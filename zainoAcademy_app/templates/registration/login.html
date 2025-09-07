@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión - Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/registration/registration.css' %}">
+</head>
+<body class="login-page">
+    <div class="login-wrapper">
+
+        <div class="login-left">
+
+            <div class="login-logo">
+                <img src="{% static 'images/registration/LogoNormal-removebg-preview.png' %}" 
+                     alt="Logo Zaino Academy">
+            </div>
+
+            <div class="login-card">
+                <h1><b>Inicio de <span>Sesión</span></b></h1>
+
+                <form method="post" class="login-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="correo"><b>Usuario</b></label>
+                        <input type="email" name="correo" id="correo" required class="form-control" placeholder="Tu usuario">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contraseña"><b>Contraseña</b></label>
+                        <input type="password" name="contraseña" id="contraseña" required class="form-control" placeholder="•••••••">
+                        <small><a href="#"><b>¿Olvidaste tu contraseña?</b></a></small>
+                    </div>
+
+                    <button type="submit" class="btn-login"><b>Ingresar</b></button> 
+
+                    {% if mensaje %}
+                        <div class="error-message">
+                            <p><b>{{ mensaje }}</b></p>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
+        <div class="login-decor">
+            <img src="{% static 'images/registration/figuras.png' %}" alt="Decoración figuras">
+        </div>
+    </div>
+</body>
+</html>

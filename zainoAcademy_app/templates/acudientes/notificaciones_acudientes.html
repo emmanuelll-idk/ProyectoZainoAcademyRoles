@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones - Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/acudientes/notificaciones_acudientes.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+            <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'dashboard_acudientes' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
+                </a></li>
+                
+                <li><a href="{% url 'actividades_acudientes' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades
+                </a></li>
+                
+                <li><a href="{% url 'asistencia_acudientes' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/asistencia.png' %}" class="nav-icon" alt="Asistencia"> Asistencia
+                </a></li>
+            </ul>
+        </nav>
+        <div class="logout-container">
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1 class="page-title">Notificaciones</h1>
+
+    <div class="header-icons">
+            <!-- Notificaciones -->
+            <a href="{% url 'notificaciones_acudientes' %}">
+                <img src="{% static 'images/acudientes/notificaciones.png' %}" class="header-icon" alt="Notificaciones">
+            </a>
+            
+            <!-- Nombre -->
+
+            <span class="user-name">{{ usuario.Us_nombre }}</span>
+
+            
+            <!-- Avatar / Perfil -->
+            <a href="{% url 'editar_perfil_acudientes' %}">
+                <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+            </a>
+        </div>
+    </header>
+
+    <section class="notification-table">
+    <div class="notification-card">
+        <div class="image-container">
+            <img src="{% static 'images/acudientes/Polygon.png' %}" alt="Imagen personalizada" class="custom-image">
+        </div>
+        <div class="text-container">
+            <h2>Nueva Actividad</h2>
+            <p>Una nueva actividad ha sido creada.</p>
+        </div>
+    </div>
+
+    <div class="notification-card">
+        <div class="text-container">
+        </div>
+    </div>
+
+    <div class="notification-card">
+        <div class="text-container">
+        </div>
+    </div>
+
+    <div class="notification-card">
+        <div class="text-container">
+        </div>
+    </div>
+
+    <div class="notification-card">
+        <div class="text-container">
+        </div>
+    </div>
+
+</section>
+
+    </main>

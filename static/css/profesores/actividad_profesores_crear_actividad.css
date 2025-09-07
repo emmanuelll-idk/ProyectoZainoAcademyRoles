@@ -1,0 +1,194 @@
+/* General */
+body {
+    margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+    display: flex;
+    background-color: #f9f9f9;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background-color: #40345c;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative; 
+}
+
+.sidebar-content {
+    padding: 20px;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.logo img {
+    max-width: 180px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    filter: brightness(0) invert(1);
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 0;
+    margin-top: 60px; 
+}
+
+.nav-item {
+    margin: 10px 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: white;
+    color: #40345c;
+}
+
+/* 🔹 Contenedor del logout */
+.logout-container {
+    position: absolute;
+    bottom: 2rem;
+    left: 1rem;
+    right: 1rem;
+}
+
+/* 🔹 Botón logout */
+.logout-btn {
+    background-color: #1E91D6;
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.logout-btn:hover {
+    background-color: #6A5B8C;
+}
+
+/* Main */
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-title {
+    font-size: 24px;
+    color: #3d2f5b;
+}
+
+.section-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+/* Formulario */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    font-family: inherit;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.volver-btn,
+.submit-btn {
+    background: #3d2f5b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.volver-btn:hover,
+.submit-btn:hover {
+    background: #2a1f41;
+}
+
+.user-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.confirm-btn {
+    background: #3d2f5b;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.confirm-btn:hover {
+    background: #2a1f41;
+}

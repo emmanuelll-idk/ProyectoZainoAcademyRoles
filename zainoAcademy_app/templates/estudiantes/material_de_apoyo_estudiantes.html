@@ -1,0 +1,46 @@
+{% extends "estudiantes/base.html" %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/estudiantes/material_de_apoyo_estudiantes.css' %}">
+{% endblock %}
+
+
+{% block mockUp %}
+
+<div class="materiales-apoyo">
+    <h1>Materiales de apoyo - {{ materia.Mtr_nombre }}</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Archivo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for material in materiales %}
+            <tr>
+                <td>{{ material.Mate_titulo }}</td>
+                <td>{{ material.Mate_descripcion }}</td>
+                <td>
+                    {% if material.Mate_archivo %}
+                        <a href="{{ material.Mate_archivo.url }}" target="_blank">Ver archivo</a>
+                    {% else %}
+                        No disponible
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No hay materiales de apoyo disponibles.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+

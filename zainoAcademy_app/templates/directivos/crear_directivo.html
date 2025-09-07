@@ -1,0 +1,28 @@
+{% extends 'base_directivos.html' %}
+{% load static %}
+{% block page_title %}Registrar Directivo{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/directivos/crear_directivoStyles.css' %}">
+
+<h2 style="text-align:center;">Registrar Datos del Directivo para: {{ usuario.Us_nombre }}</h2>
+
+<form method="post" class="form-layout">
+{% csrf_token %}
+<div class="column">
+    <div class="form-group">
+    {{ directivo_form.Dir_cargo.label_tag }}
+    {{ directivo_form.Dir_cargo }}
+    </div>
+</div>
+
+<div class="column">
+    <div class="form-group">
+    {{ directivo_form.Dir_telefono.label_tag }}
+    {{ directivo_form.Dir_telefono }}
+    </div>
+</div>
+
+<button type="submit" class="submit-button">Registrar Directivo</button>
+</form>
+
+{% endblock %}

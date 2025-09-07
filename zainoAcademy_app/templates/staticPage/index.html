@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zaino Academy</title>
+    
+    <!-- Fuente Comfortaa -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/staticPage/home.css' %}">
+    <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
+</head>
+<body>
+    <header>
+    <nav class="barra-navegacion">
+        <div class="logo">
+            <a href="{% url 'home' %}"><img src="{% static 'images/registration/LogoNormal-removebg-preview.png' %}" alt="LogoZaino"></a>
+        </div>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+                <li><a href="{% url 'contacto' %}">Contacto</a></li>
+                <li><a href="{% url 'precios' %}">Precios</a></li>
+            </ul>
+        </nav>
+
+        <div class="butons">
+            <a class="botonIngresar" href="{% url 'login' %}">
+                <img src="{% static 'images/staticPage/boton.png' %}" alt="boton">
+            </a>
+        </div>
+    </nav>
+</header>
+    <section class="HOMEPAGE_1">
+        <div class="container-home">
+            <div class="flex_A">
+                <div class="container2-home">
+                    <img src="{% static 'images/staticPage/izq.png' %}" class="izq">
+                    <img src="{% static 'images/staticPage/der.png' %}" class="der">
+                    <div class="home-title">
+                        <h2>La Mejor<br>
+                        <samp>Plataforma</samp> De<br>
+                        Gestión<br>
+                        Educativa</h2>
+                    </div>
+                    <div class="home-paragraph">
+                        <h4>Únete a la mejor plataforma que facilita el proceso educativo, ayudando a los profesores, estudiantes y directivos.</h4>
+                    </div>
+                    <div class="home-buttons">
+                        <a href="{% url 'login' %}" class="button1">Ingresar</a>
+                        <a href="#" class="button2">Registrar</a>
+                    </div>
+                </div>
+                <div class="container2-img">
+                    <a><img src="{% static 'images/staticPage/CHIQUE.png' %}" alt=""></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEGUNDA SECCIÓN -->
+    <section class="seccion-categorias">
+        <div class="container">
+            <div class="main-section">
+                <!-- Columna izquierda con texto y botón -->
+                <div class="header-text">
+                    <h1>Explora nuestra plataforma</h1>
+                    <p>Explora nuestra gran variedad de categorías que facilitarán la gestión de tu colegio.</p>
+                    <a href="" class="btn">Cámbiate ahora</a>
+                </div>
+                
+                <!-- Columna derecha con imágenes destacadas -->
+                <div class="header-images">
+                    <div class="category-card">
+                        <div class="image-container diversion">
+                            <img src="{% static 'images/staticPage/diversion.png' %}" alt="Diversión">
+                        </div>
+                        <h2 class="category-title">Diversión</h2>
+                    </div>
+                    
+                    <div class="category-card">
+                        <div class="image-container actividades">
+                            <img src="{% static 'images/staticPage/actividades.png' %}" alt="Actividades">
+                        </div>
+                        <h2 class="category-title">Actividades</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categorías inferiores: tres tarjetas -->
+            <div class="categories-row bottom-row">
+                <div class="category-card">
+                    <div class="image-container gestion">
+                        <img src="{% static 'images/staticPage/gestion.png' %}" alt="Gestión">
+                    </div>
+                    <h2 class="category-title">Gestión</h2>
+                </div>
+                
+                <div class="category-card">
+                    <div class="image-container matriculas">
+                        <img src="{% static 'images/staticPage/matriculas.png' %}" alt="Matrículas">
+                    </div>
+                    <h2 class="category-title">Matrículas</h2>
+                </div>
+                
+                <div class="category-card">
+                    <div class="image-container direccion">
+                        <img src="{% static 'images/staticPage/direccion.png' %}" alt="Dirección">
+                    </div>
+                    <h2 class="category-title">Dirección</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TERCERA SECCIÓN: CAMBIARTE -->
+    <section id="cambiarte">
+        <div class="seccion-doble">
+            <div class="imagen-chica">
+                <img src="{% static 'images/staticPage/chica.png' %}" alt="chica">
+            </div>
+
+            <div class="contenedor-cambiarte">
+                <h2>Algunos motivos para <br> cambiarte</h2>
+                <p>
+                    En el mundo educativo de hoy, es crucial contar con una plataforma que potencie el aprendizaje de manera integral y personalizada. A continuación, te presentamos las principales razones por las cuales nuestra plataforma sería la mejor opción para tu colegio:
+                </p>
+                <div class="fila">
+                    <article class="viñetas">
+                        <div class="contenido-viñetas">
+                            <div class="circulo-azul"></div>
+                            <div class="informacion">
+                                <h3>Innovación en el aprendizaje:</h3>
+                                <p>Utilizamos las últimas tecnologías educativas para crear un entorno interactivo y dinámico, facilitando la comprensión y retención del conocimiento.</p>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <article class="viñetas">
+                        <div class="contenido-viñetas">
+                            <div class="circulo-celeste"></div>
+                            <div class="informacion">
+                                <h3>Personalización del aprendizaje:</h3>
+                                <p>Adaptamos el contenido y el ritmo de estudio a las necesidades y estilo de aprendizaje de cada estudiante, asegurando un progreso óptimo.</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="viñetas">
+                        <div class="contenido-viñetas">
+                            <div class="circulo-morado"></div>
+                            <div class="informacion">
+                                <h3>Flexibilidad y accesibilidad:</h3>
+                                <p>Nuestra plataforma es accesible desde cualquier dispositivo y en cualquier momento, permitiendo a los estudiantes organizar su tiempo de estudio de manera efectiva.</p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <a href="{% url 'contacto' %}" class="submit">Cámbiate Ahora</a>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        <div class="footer-logo">
+            <img src="{% static 'images/staticPage/logoblanco.png' %}" alt="Logo principal blanco">
+        </div>
+    </footer>
+
+
+    
+</body>
+</html>

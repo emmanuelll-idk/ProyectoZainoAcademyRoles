@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.barra-navegacion{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8vw;
+    height: 15vh;
+    margin-right: 1vw;
+    margin-left: 1vw;
+}
+/* decoracion barra de navegacion */
+
+/* Elimina viñetas y pone los ítems en fila con espacio */
+header ul {
+    list-style: none;
+    display: flex;
+    gap: 30px; /* Espacio entre cada link */
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  /* Estilo para los enlaces */
+  header ul li a {
+    text-decoration: none;
+    color: #000;
+    font-size: 12px; /* Tamaño más legible */
+    transition: border-bottom 0.3s ease;
+  }
+  
+  /* Hover */
+  header ul li a:hover {
+    border-bottom: 2px solid #2196f3;
+  }
+  
+
+.logo img {
+    width: 20vw;
+}
+
+.nav ul {
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-style: normal;
+    display: flex;
+    list-style: none;
+    gap: 2.5vw;
+    margin-left: 7vw;
+    margin-right: 16vw;
+}
+
+
+.nav ul li a {
+    text-decoration: none;
+    font-size: 3vh;
+    font-size: 1.1vw;
+    color: #000;
+}
+
+.butons{
+    display: flex;
+    gap: 1.5vw;
+}
+
+.butons a img {
+    height: 5vh;
+}
+
+.planes-title{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2vh;
+    gap: 5vh;
+}
+
+.planes-title h2, .planes-title h3{
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-style: normal;
+}
+
+.planes-title h2{
+    font-size: 3vh;
+    font-size: 2.5vw;
+    font-weight: 900;
+}
+
+.planes-title h3{
+    font-size: 3vh;
+    font-size: 1vw;
+}
+
+.container-planes{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    gap: 6vw;
+    margin-top: 1vh;
+    height: 55vh;
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-style: normal;
+}
+
+.container-planes1, .container-planes2, .container-planes3{
+    width: 20vw;
+    height: 55vh;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+
+}
+
+.container-planes1 {
+    border: 5px solid #D9D9D9;
+    box-sizing: border-box;
+  }
+  .container-planes2 {
+    border: 5px solid #1E91D6;
+    box-sizing: border-box;
+  }
+  .container-planes3 {
+    border: 5px solid #4A4063;
+    box-sizing: border-box;
+  }
+
+.info1, .info2, .info3{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 1.8vh;
+}
+
+.info-title1, .info-title2, .info-title3{
+    padding: 1vh;
+    font-size: 2.5vh;
+    font-size: 1.5vw;
+    width: 19.7vw;
+}
+
+.info-title1{
+    background-color: #D9D9D9;
+}
+
+.info-title2{
+    background-color: #1E91D6;
+}
+
+.info-title3{
+    background-color: #4A4063;
+}
+
+.info-title2 h2{
+    color: white;
+}
+
+.info-title3 h2{
+    color: white;
+}
+
+.button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10vh;
+    gap: 2vw;
+}
+
+.deco1 {
+    height: 10vh;
+}
+
+.deco2{
+    height: 5vh;
+}
+
+.footer{
+    background-color: #000;
+    margin-top: 3vh;
+    padding-left: 5vw;
+}
+
+.footer img{
+    height: 8vh;
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Actividad - Zaino Academy</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/profesores/actividad_profesores_crear_actividad.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,600,700&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <a href="{% url 'dashboard_profesores' %}" class="logo">
+                <div class="logo-icon">
+                    <img src="{% static 'images/profesores/Favicon.png' %}" alt="Logo Libro"/>
+                    <img src="{% static 'images/profesores/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="{% url 'dashboard_profesores' %}" class="nav-link">Inicio</a></li>
+                    <li class="nav-item"><a href="{% url 'actividad_profesores_consultar' %}" class="nav-link active">Actividades - Material de Apoyo</a></li>
+                    <li class="nav-item"><a href="{% url 'asistencia_profesores_cursos' %}" class="nav-link">Asistencia</a></li>
+                    <li class="nav-item"><a href="{% url 'reportes_profesores' %}" class="nav-link">Reportes</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 🔹 Botón de cerrar sesión al fondo -->
+        <div class="logout-container">
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <header class="header">
+            <h1 class="page-title">Actividad:</h1>
+            <div class="header-right">
+                <a href="{% url 'notificaciones_profesores' %}">
+                    <img src="{% static 'images/profesores/notificaciones.png' %}" class="notification-icon" alt="Notificaciones">
+                </a>
+                <div class="user-info">
+                    <span class="user-name">{{ usuario.Us_nombre }}</span>
+                    <img src="{% static 'images/profesores/avatarMujer.png' %}" class="user-avatar" alt="Perfil">
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <h2 class="section-title">Crear actividad:</h2>
+
+            <!-- ✅ Ahora el formulario manda al backend -->
+            <form id="actividadForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="Act_nombre" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fecha">Fecha límite:</label>
+                    <input type="date" id="fecha" name="Act_fechaLimite" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción:</label>
+                    <input type="text" id="descripcion" name="Act_descripcion">
+                </div>
+
+                <div class="form-group">
+                    <label for="archivo">Archivo:</label>
+                    <input type="file" id="archivo" name="Act_Archivo_Profesor">
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'actividad_profesores_consultar' %}" class="volver-btn">Volver</a>
+                    <button type="submit" class="submit-btn">Subir actividad</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

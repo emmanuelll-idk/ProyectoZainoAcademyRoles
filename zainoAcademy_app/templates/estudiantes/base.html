@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Acudiente - Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/estudiantes/dashboard_estudiantes.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,600,700&display=swap" rel="stylesheet" />
+    {% block extra_css %}{% endblock %}
+
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+            <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li>
+                <a href="{% url 'dashboard_estudiantes' %}" 
+                    class="nav-item {% if request.resolver_match.url_name == 'dashboard_estudiantes' %}active{% endif %}">
+                    <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
+                </a>
+                </li>
+
+                <li>
+                <a href="{% url 'consultar_periodos' %}" 
+                    class="nav-item {% if request.resolver_match.url_name == 'consultar_periodos' %}active{% endif %}">
+                    <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades y material de apoyo
+                </a>
+                </li>
+
+                <li>
+                <a href="{% url 'consultar_reportes' %}" 
+                    class="nav-item {% if request.resolver_match.url_name == 'consultar_reportes' %}active{% endif %}">
+                    <img src="{% static 'images/acudientes/asistencia.png' %}" class="nav-icon" alt="Reportes"> Reportes
+                </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="logout-container">
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <header class="page-header">
+            <div class="header-container">
+                <h1 class="page-title">{% block page_title %}{% endblock %}</h1>
+                <div class="header-icons">
+                    <span class="user-name">{{ usuario.Us_nombre }}</span>
+                    <a href="{% url 'editar_perfil_acudientes' %}">
+                        <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                    </a>
+                </div>
+            </div>
+        </header>
+
+
+        </header>
+
+   
+            {% block mockUp %}
+
+            {% endblock %}
+        </main> 
+
+<!-- Modal logout -->
+    <div id="logout-modal" class="modal">
+        <div class="modal-content">
+            <h2>¿Cerrar Sesión?</h2>
+            <div class="modal-actions">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-confirm">Confirmar</button>
+                </form>
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('logout-modal');
+        function openModal() { modal.style.display = 'flex'; }
+        function closeModal() { modal.style.display = 'none'; }
+        window.onclick = function(event) {
+            if (event.target == modal) { closeModal(); }
+        }
+    </script>

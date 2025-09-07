@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reportes - Selección tipo</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/profesores/reportes_profesores_descargar.css' %}">
+  <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,600,700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+      <div class="sidebar-content">
+          <a href="{% url 'dashboard_profesores' %}" class="logo">
+              <div class="logo-icon">
+                  <img src="{% static 'images/profesores/Favicon.png' %}" alt="Logo Libro"/>
+                  <img src="{% static 'images/profesores/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+              </div>
+          </a>
+
+          <nav>
+              <ul class="nav-menu">
+                  <li><a href="{% url 'dashboard_profesores' %}">Inicio</a></li>
+                  <li><a href="{% url 'actividad_profesores_consultar' %}">Actividades y material de apoyo</a></li>
+                  <li><a href="{% url 'asistencia_profesores_cursos' %}">Asistencia</a></li>
+                  <li><a href="{% url 'reportes_profesores' %}" class="active">Reportes</a></li>
+              </ul>
+          </nav>
+      </div>
+      <form method="POST" action="{% url 'login' %}">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">Cerrar sesión</button>
+      </form>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+      <header class="header">
+          <h1 class="page-title">Reportes</h1>
+          <div class="header-right">
+              <a href="{% url 'notificaciones_profesores' %}">
+                  <img src="{% static 'images/profesores/notificaciones.png' %}" class="notification-icon" alt="Notificaciones">
+              </a>
+              <div class="user-info">
+                  <span class="user-name">{{ usuario.Us_nombre }}</span>
+                  <a href="#"><img src="{% static 'images/profesores/avatarMujer.png' %}" class="user-avatar" alt="Perfil"></a>
+              </div>
+          </div>
+      </header>
+
+      <div class="content">
+          <h2 class="section-title">Seleccione el tipo de reporte:</h2>
+          <div class="btn-group">
+              <a href="#" class="btn">Reporte de asistencias</a>
+              <a href="#" class="btn">Rendimiento académico</a>
+          </div>
+      </div>
+  </main>
+</body>
+</html>

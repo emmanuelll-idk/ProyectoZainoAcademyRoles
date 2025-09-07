@@ -1,0 +1,88 @@
+/* ====== RESET Y FUENTE ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Comfortaa", sans-serif;
+}
+
+body {
+    background-color: #1E1E1E; /* Fondo gris oscuro */
+    color: #000;
+    margin: 35px;
+    padding: 5px;
+}
+
+/* ====== CONTENEDOR DEL MÓDULO ====== */
+.materiales-apoyo {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    max-width: 1500px;
+    margin: auto;
+    position: relative;
+}
+
+/* ====== TÍTULO ====== */
+.materiales-apoyo h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+/* ====== TABLA ====== */
+.materiales-apoyo table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.materiales-apoyo thead {
+    background-color: #4A3F61;  /* Morado */
+    color: white;
+}
+
+.materiales-apoyo thead th {
+    padding: 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 18px;
+    border-bottom: 2px solid #2d91c2;
+}
+
+.materiales-apoyo tbody td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    color: #333;
+}
+
+/* ====== ENLACES DE ARCHIVO ====== */
+.materiales-apoyo tbody a {
+    background-color: #37A8E0;  /* Azul botones */
+    color: white;
+    padding: 6px 14px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s ease-in-out;
+    display: inline-block;
+    text-align: center;
+}
+
+.materiales-apoyo tbody a:hover {
+    background-color: #2d91c2;
+}
+
+/* ====== FILA VACÍA (SIN MATERIALES) ====== */
+.materiales-apoyo tbody td[colspan="3"] {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    padding: 20px;
+}

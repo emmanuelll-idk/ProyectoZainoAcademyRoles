@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planes</title>
+    <link rel="stylesheet" href="{% static 'css/staticPage/precio.css' %}">
+    <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
+</head>
+<body>
+    <header>
+    <nav class="barra-navegacion">
+        <div class="logo">
+            <a href="{% url 'home' %}"><img src="{% static 'images/registration/LogoNormal-removebg-preview.png' %}" alt="LogoZaino"></a>
+        </div>
+
+        <nav class="nav">
+            <ul>
+                    <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+                    <li><a href="{% url 'contacto' %}">Contacto</a></li>
+                    <li><a href="{% url 'precios' %}">Precios</a></li>
+            </ul>
+        </nav>
+
+        <div class="butons">
+            <a class="botonIngresar" href="{% url 'login' %}">
+                <img src="{% static 'images/staticPage/boton.png' %}" alt="boton">
+            </a>
+        </div>
+    </nav>
+    </header>
+
+    <div class="planes-title">
+        <h2>Planes</h2>
+        <h3>Recomendado:</h3>
+    </div>
+
+
+    <div class="container-planes">
+        <div class="container-planes1">
+
+            <div class="info-title1"><h2>Educación</h2></div>
+            <div class="info1"><p>Incluye:<br><br>
+            Actividades Básicas<br>
+            Matrícula<br>
+            Generación de Boletines<br>
+            Historial de Notas<br></p><br>
+
+
+            <p>Gestión:<br><br>
+            Estudiantes</p><br>
+
+            <p>Además:<br><br>
+            Lista de Estudiantes</p><br><br><br>
+            </div>
+        </div>
+        <div class="container-planes2">
+
+                <div class="info-title2"><h2>Educación +</h2></div>
+                <div class="info2"><p>Incluye:<br><br>
+                Actividades Básicas<br>
+                Actividades interactivas<br>
+                Matrícula<br>
+                Generación de Boletines<br>
+                Historial de Notas<br></p><br>
+    
+
+                <p>Gestión:<br><br>
+                Estudiantes<br>
+                Profesores</p><br>
+    
+                <p>Además:<br><br>
+                Lista de Estudiantes<br>
+                Tablero interactivo</p><br><br>
+                </div>
+        </div>
+
+        <div class="container-planes3">
+                <div class="info-title3"><h2>Educación PRO</h2></div>
+                <div class="info3"><p>Incluye:<br><br>
+                Actividades Básicas<br>
+                Actividades interactivas<br>
+                Matrícula<br>
+                Generación de Boletines<br>
+                Diseño de Dashboard Interactivo<br>
+                Material de apoyo<br>
+                Historial de Notas<br></p><br>
+                
+
+                <p>Gestión:<br><br>
+                Estudiantes<br>
+                Profesores</p><br>
+    
+                <p>Además:<br><br>
+                Lista de Estudiantes<br>
+                Tablero interactivo</p><br>
+                </div>
+        </div>
+    </div>
+
+    <div class="button">
+        <a><img src="{% static 'images/staticPage/Decoración izquierda.png'%}" alt="" class="deco1"></a>
+        <a href="#"><img src="{% static 'images/staticPage/button.png'%}" alt="" class="deco2"></a>
+        <a><img src="{% static 'images/staticPage/Decoración derecha.png'%}" alt="" class="deco1"></a>
+    </div>
+
+    <div class="footer">
+    <img src="{% static 'images/staticPage/logoblanco.png'%}" alt="Logo principal blanco">
+    </div>
+
+</body>
+</html>

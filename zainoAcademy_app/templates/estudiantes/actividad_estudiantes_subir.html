@@ -1,0 +1,84 @@
+{% extends "estudiantes/base.html" %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/estudiantes/actividad_estudiantes_subir.css' %}">
+{% endblock %}
+
+{% block mockUp %}
+
+<div class="contenido">
+    
+    <h1>{{ actividad.Act_nombre }}</h1>
+
+    <div class="seccion-boxes">
+        
+        <div class="seccion">
+            <p class="subtitulo">Estado</p>
+            <p class="texto">
+                {% if entrega and entrega.Act_calificacion %}
+                    Calificado
+                {% elif entrega and entrega.Act_Archivo_Estudiante %}
+                    Entregado
+                {% else %}
+                    Pendiente
+                {% endif %}
+            </p>
+        </div>
+        
+
+        <div class="seccion">
+            <p class="subtitulo">Fecha límite</p>
+            <p class="texto">{{ actividad.Act_fechaLimite }}</p>
+        </div>
+
+        <div class="seccion">
+            <p class="subtitulo">Nota</p>
+            <p class="texto">
+                {% if entrega and entrega.Act_calificacion %}
+                    {{ entrega.Act_calificacion }}
+                {% else %}
+                    No calificada aún
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="seccion">
+            <p class="subtitulo">Descripción</p>
+            <p class="texto">{{ actividad.Act_descripcion }}</p>
+        </div>
+
+
+    </div>
+
+    <hr>
+
+    <div class="seccion">
+        <p class="subtitulo">Subir Actividad</p>
+
+        {% if mensaje_exito %}
+            <div class="mensaje-exito">{{ mensaje_exito }}</div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" class="form-subida">
+            {% csrf_token %}
+            <input type="file" name="archivo_estudiante" id="archivo" required>
+            <button type="submit" class="btn-subir">Subir Archivo</button>
+        </form>
+
+        {% if entrega and entrega.Act_Archivo_Estudiante %}
+            <div class="archivo-subido">
+                <a href="{{ entrega.Act_Archivo_Estudiante.url }}" target="_blank">
+                    📎 {{ entrega.Act_Archivo_Estudiante.name|slice:"20:" }}
+                </a>
+                <a class="cambiar-archivo" href="#" onclick="document.getElementById('archivo').click(); return false;">
+                    Cambiar
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

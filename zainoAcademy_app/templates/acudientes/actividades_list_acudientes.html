@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividades - Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/acudientes/actividades_list_acudientes.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+            <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'dashboard_acudientes' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
+                </a></li>
+                
+                <li><a href="{% url 'actividades_acudientes' %}" class="nav-item active">
+                    <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades
+                </a></li>
+                
+                <li><a href="{% url 'asistencia_acudientes' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/asistencia.png' %}" class="nav-icon" alt="Asistencia"> Asistencia
+                </a></li>
+            </ul>
+        </nav>
+        <div class="logout-container">
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1 class="page-title">Actividades</h1>
+    <div class="header-icons">
+            <!-- Notificaciones -->
+            <a href="{% url 'notificaciones_acudientes' %}">
+                <img src="{% static 'images/acudientes/notificaciones.png' %}" class="header-icon" alt="Notificaciones">
+            </a>
+            
+            <!-- Nombre -->
+
+            <span class="user-name">{{ usuario.Us_nombre }}</span>
+            
+            <!-- Avatar / Perfil -->
+            <a href="{% url 'editar_perfil_acudientes' %}">
+                <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+            </a>
+        </div>
+    </header>
+
+        <div class="divider-line"></div>   
+
+            {% if actividades %}
+
+<!-- Barra de Búsqueda para filtrar actividades -->
+            <input type="text" class="search-bar" placeholder="Buscar actividades" id="searchActivities"> 
+          
+            <table class="activities-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Materia</th>
+                        <th>Curso</th>
+                        <th>Fecha Límite</th>
+                        <th>Estado</th> <!-- Nueva columna para Estado -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for actividad in actividades %}
+                    <tr>
+                        <td>{{ actividad.Act.Act_nombre }}</td>
+                        <td>{{ actividad.Act.Bol.Mtr.Mtr_nombre }}</td> <!-- Materia -->
+                        <td>{{ actividad.Act.Bol.Cur.Cur_nombre }}</td> <!-- Curso -->
+                        <td>{{ actividad.Act.Act_fechaLimite }}</td>
+                        <td>
+                            {{ actividad.Act.Esta_Actividad.Esta_Actividad_Estado }}</td> <!-- Estado de la actividad -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p>No hay actividades disponibles para este estudiante.</p>
+            {% endif %}
+        </section>
+    </main>
+
+    <script>
+        // Script para la barra de búsqueda que filtra las actividades
+        document.getElementById('searchActivities').addEventListener('input', function(event) {
+            const query = event.target.value.toLowerCase();
+            const rows = document.querySelectorAll('.activities-table tbody tr');
+            
+            rows.forEach(row => {
+                const nombre = row.querySelector('td:first-child').textContent.toLowerCase();
+                const materia = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                const curso = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                const fechaLimite = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                const estado = row.querySelector('td:nth-child(5)').textContent.toLowerCase(); // Estado
+
+                // Verifica si la búsqueda aparece en alguno de los campos de la fila
+                if (nombre.includes(query) || materia.includes(query) || curso.includes(query) || fechaLimite.includes(query) || estado.includes(query)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

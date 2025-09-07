@@ -1,0 +1,22 @@
+{% extends 'base_directivos.html' %}
+{% load static %}
+{% block page_title %}Materia{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/directivos/editar_materiaStyles.css' %}">
+
+
+<h2 style="text-align:center;">Editar Materia</h2>
+
+<form method="post" class="form-layout">
+  {% csrf_token %}
+
+  <div class="form-group">
+    <label for="id_Cur_nombre">Nombre de la materia:</label>
+    {{ form.Mtr_nombre }}
+  </div>
+
+
+  <button type="submit" class="submit-button">Guardar cambios</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros</title>
+    <link rel="stylesheet" href="{% static 'css/staticPage/nosotros.css' %}">
+    <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
+</head>
+<body>
+    <header>
+        <nav class="barra-navegacion">
+            <div class="logo">
+                <a href="{% url 'home' %}"><img src="{% static 'images/registration/LogoNormal-removebg-preview.png' %}" alt="LogoZaino"></a>
+            </div>
+    
+            <nav class="nav">
+                <ul>
+                    <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+                    <li><a href="{% url 'contacto' %}">Contacto</a></li>
+                    <li><a href="{% url 'precios' %}">Precios</a></li>
+                </ul>
+            </nav>
+    
+            <div class="butons">
+            <a class="botonIngresar" href="{% url 'login' %}">
+                <img src="{% static 'images/staticPage/boton.png' %}" alt="boton">
+            </a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section id="nosotros-contenedor">
+            <!-- Sección izquierda -->
+            <section id="informacion">
+            <h2>¿Quiénes somos?</h2>
+            <p>En Zaino Academy, estamos dedicados a transformar la gestión escolar a <br>
+                través de soluciones tecnológicas innovadoras y eficientes. Nuestra misión <br>
+                es facilitar y optimizar los procesos administrativos de los colegios, <br>
+                permitiendo a los educadores y administradores centrarse en lo que <br>
+                realmente importa: la educación de los estudiantes.</p>  
+
+                <h3>¿Por qué elegirnos?</h3>
+
+            <div class="fila">
+                <article class="contacto">
+                <div class="circulo"></div>
+                <div class="info">
+                    <p>Mejora Continua: Nos comprometemos a la mejora continua de nuestros <br>
+                        servicios y soluciones, incorporando feedback de nuestros usuarios y <br>
+                        adaptándonos a las nuevas demandas del sector educativo.</p>
+                </div>
+                </article>
+                <article class="contacto">
+                <div class="circulo2"></div>
+                <div class="info">
+                    <p>Compromiso con la e ducación: Aunque no enseñamos, nuestro <br>
+                    compromiso con la educación es profundo. Creemos que una gestión <br>
+                    eficiente contribuye a un entorno educativo más efectivo y enriquecedor.</p>
+                </div>
+                </article>
+            </div>
+            </section>
+
+            <div class="imagen-contenedor">
+                <img src="{% static 'images/staticPage/Group 84.png'%}" alt="Imagen">
+            </div>
+    </main>
+    <footer>
+        <div class="footer-logo">
+            <img src="{% static 'images/staticPage/logoblanco.png'%}" alt="Logo principal blanco">
+        </div>
+    </footer>
+</body>
+</html>

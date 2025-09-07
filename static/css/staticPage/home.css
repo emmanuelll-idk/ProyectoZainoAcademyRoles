@@ -1,0 +1,498 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap');
+@import "transition-style";
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-style: normal;
+    list-style: none;
+    
+}
+
+
+.barra-navegacion{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8vw;
+    height: 15vh;
+    margin-right: 1vw;
+    margin-left: 1vw;
+}
+
+.logo img {
+    width: 20vw;
+}
+
+.nav ul {
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-style: normal;
+    display: flex;
+    list-style: none;
+    gap: 2.5vw;
+    margin-left: 7vw;
+    margin-right: 16vw;
+}
+
+
+.nav ul li a {
+    text-decoration: none;
+    font-size: 3vh;
+    font-size: 1.1vw;
+    color: #000;
+}
+
+.butons{
+    display: flex;
+    gap: 1.5vw;
+}
+
+.butons a img {
+    height: 50vh;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    transition: background-color 0.3s ease; 
+}
+/* Decoraciones de barra de navegacion */
+/* Elimina viñetas y pone los ítems en fila con espacio */
+header ul {
+    list-style: none;
+    display: flex;
+    gap: 30px; /* Espacio entre cada link */
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  /* Estilo para los enlaces */
+  header ul li a {
+    text-decoration: none;
+    color: #000;
+    font-size: 12px; /* Tamaño más legible */
+    transition: border-bottom 0.3s ease;
+  }
+  
+  /* Hover */
+  header ul li a:hover {
+    border-bottom: 2px solid #2196f3;
+  }
+  
+
+
+
+
+.flex_A{
+    display: flex;
+}
+
+.container2-home{
+    display: flex;
+    flex-direction: column;
+    gap: 10vh;
+    justify-content: center;
+    width: 40vw;
+    padding-left: 10vw;
+    padding-right: 0vw ;
+    position: relative;
+    margin-left: 1vw;
+}
+
+.izq, .der {
+    width: 3vw;
+    position: absolute;
+}
+
+.izq{
+    top: 3vh;
+    left:7vw;
+}
+
+.der{
+    top: 15vw;
+    left: 28.5vw;
+}
+
+.home-title h2{
+    font-size: 7vh;
+    font-size: 3.5vw;
+}
+
+.home-title h2 samp{
+    color: #1E91D6;
+    text-shadow:
+    -0.5px -0.5px 0 #000,
+     0.5px -0.5px 0 #000,
+    -0.5px  0.5px 0 #000,
+     0.5px  0.5px 0 #000;
+}
+
+.home-paragraph{
+    padding-right: 6vw;
+    font-size: 2vh;
+}
+
+.home-buttons{
+    width: 25vw;
+}
+
+.button1{
+    padding: 1.5vh 2.5vw;
+    margin-right: 1vw;
+    font-size: 2vh;
+    color: #fff;
+    background-color: #4A4063;
+    border: 2px #000;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.button1:hover {
+    background-color: #5d4b82;
+}
+
+.button2{
+    padding: 1.5vh 2vw;
+    font-size: 2vh;
+    color: #000;
+    background-color: white;
+    border: 1px solid #4A4063;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+.button2:hover {
+    background-color: rgb(221, 218, 218);
+}
+
+
+.container2-img a img{
+    width: 50vw;
+}
+
+
+.seccion-categorias{
+    margin-top: 10vh;
+}
+
+
+
+.main-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+/* Columna izquierda con texto */
+.header-text {
+    width: 40%;
+    padding-right: 20px;
+    text-align: left;
+    padding-left: 8vw;
+}
+
+h1 {
+    font-size: 35px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    color: #000000;
+    margin-left: 30px;
+    margin-top: 30px;
+    font-family: 'Comfortaa', sans-serif;
+    line-height: 1.1;
+    -webkit-text-stroke: 0.5px black; /* Añade un trazo fino alrededor de las letras */
+    letter-spacing: -0.5px;
+}
+
+p {
+    font-size: 14px; /* Texto más pequeño como en la primera imagen */
+    line-height: 1.4; /* Espaciado entre líneas más compacto */
+    margin-bottom: 20px;
+    color: #000000; /* Color negro como en la primera imagen */
+    margin-left: 30px;
+    font-family: 'Comfortaa', sans-serif;
+    width: 100%; /* Asegurar que ocupe todo el ancho disponible */
+    max-width: 360px;
+}
+
+.btn {
+    background-color: #4A4063;
+    color: white;
+    padding: 10px 20px; /* Botón ligeramente más pequeño */
+    border: none;
+    border-radius: 2px; /* Bordes menos redondeados */
+    font-size: 14px; /* Texto del botón más pequeño */
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    margin-left: 30px;
+    font-family: 'Comfortaa', sans-serif;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #5d4b82;
+}
+
+/* Columna derecha con imágenes */
+.header-images {
+    width: 77%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-images .category-card {
+    width: 48%;
+    margin-bottom: 0;
+}
+
+/* Fila inferior de categorías */
+.categories-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.bottom-row .category-card {
+    width: 32%;
+}
+
+.image-container {
+    width: 260px;
+    height: 260px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+/* Colores de fondo para cada categoría */
+.image-container.diversion {
+    background-color: #a8d8f0;
+}
+
+.image-container.actividades {
+    background-color: #d0efe0;
+}
+
+.image-container.gestion {
+    background-color: #d0efe0;
+}
+
+.image-container.matriculas {
+    background-color: #b8b5c6;
+}
+
+.image-container.direccion {
+    background-color: #a8d8f0;
+}
+
+.category-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: #000000; /* Negro como en la primera imagen */
+    margin-top: 5px;
+    font-family: 'Comfortaa', sans-serif;
+    -webkit-text-stroke: 0.5px black; /* Añade un trazo fino alrededor de las letras */
+    letter-spacing: -0.5px;
+}
+
+img {
+    max-width: 100%;
+    max-height: max-content;
+    object-fit: contain;
+}
+
+/* Media queries para responsive */
+@media (max-width: 768px) {
+    .main-section {
+        flex-direction: column;
+    }
+    
+    .header-text,
+    .header-images {
+        width: 100%;
+    }
+    
+    .header-images {
+        margin-top: 30px;
+    }
+    
+    .bottom-row {
+        flex-direction: column;
+    }
+    
+    .bottom-row .category-card {
+        width: 100%;
+    }
+}
+
+
+#cambiarte h2 {
+    margin-bottom: 20px;
+    font-size: 30px;
+    margin-top: 30px;
+    font-weight: bold;
+    text-align: left;
+}
+
+  .search-circle { /* Modificaciones para el circulo */
+    width: 30px;
+    height: 30px;
+    background-color: #4A4063; 
+    border-radius: 50%; /* Al 50% ya que es un circulo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 15px;
+    cursor: pointer;
+  }
+  
+  .submit {
+    margin-top: 50px;
+    margin-left: 20px;
+    background-color: #4B3D60;
+    color: white;
+    padding: 17px 30px;
+    cursor: pointer;
+    box-shadow: none;
+    border: none;
+    font-size: 17px;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    margin-left: 30px;
+    font-family: 'Comfortaa', sans-serif;
+    transition: background-color 0.3s ease;
+}
+
+.submit:hover {
+    background-color: #5d4b82;
+}
+  
+
+  .fila {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.contenido-viñetas {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.informacion h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.informacion p {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.circulo-azul, .circulo-celeste, .circulo-morado {
+    width: 1.5vw;
+    height: 3vh;
+    border-radius: 50%;
+    margin-top: 5px;
+}
+
+.circulo-azul {
+    background-color: #1e91d6;
+}
+
+.circulo-celeste {
+    background-color: #a9ddd6;
+}
+
+.circulo-morado {
+    background-color: #4A4063;
+}
+
+/*.contenedor-cambiarte {
+    max-width: 600px;
+    flex: 1; /* centrado vertical, pero pegado a la izquierda 
+} */
+
+.seccion-doble {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10vh;
+    margin-bottom: 5vh;
+  }
+  
+  .contenedor-cambiarte {
+    width:60%;
+    padding-left: 10vw;
+  }
+
+  .contenedor-cambiarte p {
+    font-size: 15px;
+  }
+
+  .imagen-chica {
+
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+    margin-left: 10vw;
+  }
+  
+  .imagen-chica img {
+    width: 100%; 
+    height: auto;
+
+  }
+  
+footer {
+    display: flex;                   /* Acomoda los elementos en fila */
+    justify-content: space-between; /* Espacio entre logo e iconos */
+    align-items: center;            /* Centra verticalmente */
+    padding: 10px 40px;             /* Margen interno alrededor */
+    background-color: #000;
+  }
+  
+  .footer-logo img {
+    width: 200px;                    /* Tamaño personalizado para el logo */
+    height: auto;
+    
+  }
+
+
+
+  /* Animaciones de scroll */
+  .main--state-in {
+    animation: wipe-in-left;
+    animation-duration: 2s;
+    animation-fill-mode: both;
+  }

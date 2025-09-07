@@ -1,0 +1,72 @@
+{% extends "estudiantes/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/estudiantes/actividad_estudiantes_consultar.css' %}">
+{% endblock %}
+
+{% block page_title %}Actividades:{% endblock %}
+
+{% block mockUp %}
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Archivo profesor</th>
+            <th>Fecha límite</th>
+            <th>Nota</th>
+            <th>Estado</th>
+            <th>Subir</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in actividades %}
+        <tr>
+            <td>{{ a.actividad.Act_nombre }}</td>
+            <td>{{ a.actividad.Act_descripcion }}</td>
+            <td>
+                {% if a.actividad.Act_Archivo_Profesor %}
+                    <a href="{{ a.actividad.Act_Archivo_Profesor.url }}" target="_blank">Ver archivo</a>
+                {% else %}
+                    No hay archivo.
+                {% endif %}
+            </td> 
+            <td>{{ a.actividad.Act_fechaLimite }}</td>
+            <td>
+                {% if a.calificacion %}
+                    {{ a.calificacion }}
+                {% else %}
+                    N/E
+                {% endif %}
+            </td>
+            <td>
+                {% if a.calificacion %}
+                    Calificado
+                {% elif a.archivo %}
+                    Entregado
+                {% else %}
+                    Pendiente
+                {% endif %}            
+            </td>
+
+            <td>
+                <a href="{% url 'subir_actividad_estudiante' periodo.Per_id materia.Mtr_id a.actividad.Act_id %}">
+                    Consultar
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">No hay actividades registradas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,56 @@
+/* General */
+body, label, input, button, table {
+    font-family: 'Comfortaa', sans-serif !important;
+}
+
+/* Layout */
+.form-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem 3rem;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Botones de acción */
+.action-buttons { display:flex; gap:12px; margin-bottom:1rem; }
+.btn { padding:.6rem 1.4rem; border-radius:10px; border:1px solid #4a4063; cursor:pointer; font-weight:600; transition:.3s; font-family:'Comfortaa',sans-serif; }
+.btn-primary { background:#4a4063; color:#fff; }
+.btn-primary:hover { background:#3a3053; }
+.btn-secondary { background:#fff; color:#4a4063; }
+.btn-secondary:hover { background:#f4f0ff; }
+
+/* Línea divisoria */
+.divider { height:2px; background:#cfd6ea; margin:.8rem 0 1.2rem; }
+
+/* Inputs */
+.form-group label { font-weight:600; color:#4a4063; display:block; margin-bottom:.5rem; }
+.form-group input { width:100%; padding:.8rem; border:1px solid #ccc; border-radius:10px; font-size:.95rem; font-family:'Comfortaa',sans-serif; }
+
+/* Buscador */
+.search-box input { width:100%; padding:.8rem; border:1px solid #cfd6ea; border-radius:12px; }
+
+/* Tabla */
+.table-container { margin-top:1rem; border-radius:12px; overflow:hidden; }
+table { width:100%; border-collapse: collapse; font-family:'Comfortaa',sans-serif; }
+th, td { padding:.9rem 1rem; border-bottom:1px solid #eee; text-align:left; font-size:.9rem; }
+th { background:#f4f0ff; color:#4a4063; font-weight:600; }
+tr:hover { background:#faf8ff; }
+
+/* Botones dentro de la tabla */
+.table-btn { padding:.4rem .9rem; border-radius:8px; font-size:.85rem; border:none; cursor:pointer; margin-right:5px; transition:.3s; font-family:'Comfortaa',sans-serif; }
+.btn-asignar { background:#4a4063; color:#fff; }
+.btn-asignar:hover { background:#3a3053; }
+.btn-quitar { background:#e4e0f3; color:#4a4063; }
+.btn-quitar:hover { background:#cfd6ea; }
+
+/* Botón principal */
+.submit-button {
+    align-self: center; margin-top: 2rem; padding: 1rem 3rem; font-size:1.1rem;
+    font-weight:bold; border-radius:40px; background:#4a4063; color:#fff; border:none;
+    cursor:pointer; transition:.3s; box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    font-family:'Comfortaa',sans-serif;
+}
+.submit-button:hover { background:#3a3053; transform:translateY(-3px); }

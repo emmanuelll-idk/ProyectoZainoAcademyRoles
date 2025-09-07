@@ -1,0 +1,66 @@
+{% extends "estudiantes/base.html" %}
+{% load static %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/estudiantes/periodo_estudiantes.css' %}">
+{% endblock %}
+
+
+{% block mockUp %}
+
+    <header class="page-header">
+        <h1 class="page-title">Notificaciones</h1>
+
+    <div class="header-icons">
+            <!-- Notificaciones -->
+            <a href="{% url 'notificaciones_acudientes' %}">
+                <img src="{% static 'images/acudientes/notificaciones.png' %}" class="header-icon" alt="Notificaciones">
+            </a>
+            
+            <!-- Nombre -->
+
+            <span class="user-name">{{ usuario.Us_nombre }}</span>
+
+            
+            <!-- Avatar / Perfil -->
+            <a href="{% url 'editar_perfil_acudientes' %}">
+                <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+            </a>
+        </div>
+    </header>
+
+    <section class="notification-table">
+    <div class="notification-card">
+        <div class="image-container">
+            <img src="{% static 'images/acudientes/Polygon.png' %}" alt="Imagen personalizada" class="custom-image">
+        </div>
+        <div class="text-container">
+            <h2>Nueva Actividad</h2>
+            <p>Una nueva actividad ha sido creada.</p>
+        </div>
+    </div>
+
+    <div class="notification-card">
+        <div class="text-container">
+        </div>
+    </div>
+
+    <div class="notification-card">
+        <div class="text-container">
+        </div>
+    </div>
+
+    <div class="notification-card">
+        <div class="text-container">
+        </div>
+    </div>
+
+    <div class="notification-card">
+        <div class="text-container">
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}

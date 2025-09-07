@@ -1,0 +1,43 @@
+{% extends 'base_directivos.html' %}
+{% load static %}
+{% block page_title %}Periodo{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/directivos/periodo_directivos_crearStyles.css' %}">
+
+<div class="action-buttons">
+    <a href="{% url 'periodo_directivos' %}" class="btn {% if request.resolver_match.url_name == 'periodo_directivos' %}btn-primary{% else %}btn-secondary{% endif %}">Crear</a>
+    <a href="{% url 'periodo_directivos_consultar' %}" class="btn {% if request.resolver_match.url_name == 'periodo_directivos_consultar' %}btn-primary{% else %}btn-secondary{% endif %}">Consultar</a>
+</div>
+<div class="divider"></div>
+
+<form method="post" class="form-layout">
+    {% csrf_token %}
+
+    <div class="grid-2">
+
+    <div class="form-group">
+        <label>Periodo:</label>
+        {{ form.Per }}
+    </div>
+
+    <div class="form-group">
+        <label>Profesor:</label>
+        {{ form.Pro }}
+    </div>
+
+    <div class="form-group">
+        <label>Materia:</label>
+        {{ form.Mtr }}
+    </div>
+
+    <div class="form-group">
+        <label>Curso:</label>
+        {{ form.Cur }}
+    </div>
+
+    </div>
+
+    <button type="submit" class="submit-button">Subir Periodo</button>
+</form>
+
+{% endblock %}

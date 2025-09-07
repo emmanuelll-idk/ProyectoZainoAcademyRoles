@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar perfil - Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/acudientes/editar_perfil_acudientes.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+            <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'dashboard_acudientes' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
+                </a></li>
+                
+                <li><a href="{% url 'actividades_acudientes' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades
+                </a></li>
+                
+                <li><a href="{% url 'asistencia_acudientes' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/asistencia.png' %}" class="nav-icon" alt="Asistencia"> Asistencia
+                </a></li>
+            </ul>
+        </nav>
+        <div class="logout-container">
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1 class="page-title">Editar perfil</h1>
+    <div class="header-icons">
+            <!-- Notificaciones -->
+            <a href="{% url 'notificaciones_acudientes' %}">
+                <img src="{% static 'images/acudientes/notificaciones.png' %}" class="header-icon" alt="Notificaciones">
+            </a>
+            
+            <!-- Nombre -->
+
+            <span class="user-name">{{ usuario.Us_nombre }}</span>
+            
+            <!-- Avatar / Perfil -->
+            <a href="{% url 'editar_perfil_acudientes' %}">
+                <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+            </a>
+        </div>
+    </header>
+
+        <section class="edit-profile">
+                <form method="POST" class="profile-form">
+                    {% csrf_token %}
+                    <div class="form-column left-column">
+                        <label for="username">Nombre de usuario</label>
+                        <input type="text" id="username" name="username" value="{{ usuario.Us_nombre }}" required>
+
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" value="{{ usuario.correo }}" required>
+
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" name="password" value="{{ usuario.Us_contraseña }}" required>
+                    </div>
+
+                    <div class="profile-column right-column">
+                        <div class="profile-pic">
+                            <img src="{% static 'images/acudientes/perfil.png' %}" alt="Foto de perfil">
+                        </div>
+                        <p class="profile-name">{{ usuario.Us_nombre }}</p>
+                        <p class="profile-role">Acudiente</p>
+                        <button type="submit" class="save-btn">Guardar</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Modal de confirmación -->
+            <div id="modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>Perfil Actualizado</h2>
+                    <button id="closeModal" class="save-btn">Aceptar</button>
+                </div>
+            </div>
+        </main>
+        
+    </main>
+
+        <script>
+        document.querySelector(".profile-form").addEventListener("submit", async function(event){
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            const response = await fetch("{% url 'actualizar_perfil_acudientes' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: username,
+                    email: email,
+                    password: password
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                document.getElementById("modal").style.display = "flex"; // Mostrar modal de éxito
+                // Actualizar nombre en el encabezado también
+                document.querySelector(".user-name").textContent = username;
+                document.querySelector(".profile-name").textContent = username;
+            } else {
+                alert("Error al actualizar el perfil: " + (result.error || "desconocido"));
+            }
+        });
+
+        document.getElementById("closeModal").addEventListener("click", function(){
+            document.getElementById("modal").style.display = "none";
+        });
+</script>

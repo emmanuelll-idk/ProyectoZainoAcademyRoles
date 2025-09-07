@@ -1,0 +1,230 @@
+/* ====== ESTILOS PRINCIPALES ====== */
+body {
+    margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+    display: flex;
+    background-color: #f7f7f7;
+}
+
+/* ====== SIDEBAR ====== */
+.sidebar {
+    width: 240px;
+    background-color: #40345c;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative; /* 🔹 necesario para ubicar el logout al fondo */
+}
+
+.sidebar-content {
+    padding: 20px;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.logo img {
+    max-width: 180px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    filter: brightness(0) invert(1);
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 0;
+    margin-top: 60px; 
+}
+
+.nav-item {
+    margin: 10px 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: white;
+    color: #40345c;
+}
+
+.nav-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.nav-icon img {
+    width: 16px;
+    height: 16px;
+}
+
+/* 🔹 CONTENEDOR DEL BOTÓN DE CERRAR SESIÓN */
+.logout-container {
+    position: absolute;
+    bottom: 2rem;
+    left: 1rem;
+    right: 1rem;
+}
+
+.logout-btn {
+    background-color: #1E91D6;
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.logout-btn:hover {
+    background-color: #6A5B8C;
+}
+
+/* ====== CONTENIDO PRINCIPAL ====== */
+.main-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-title {
+    font-size: 24px;
+    color: #40345c;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.notification-icon {
+    width: 22px;
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+/* ====== CURSOS ====== */
+.content {
+    margin-top: 20px;
+}
+
+.section-title {
+    font-size: 18px;
+    color: #40345c;
+    margin-bottom: 15px;
+}
+
+.curso-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.curso-info {
+    background-color: #40345c;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    margin-left: 30px; /* 🔹 Espacio respecto a la barra lateral */
+    margin-right: 30px;
+}
+
+/* Nombre del curso */
+.curso-info p {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Botones en columna */
+.curso-info .btn-group {
+    display: flex;
+    flex-direction: column; /* 🔹 En vertical */
+    gap: 10px;
+}
+
+/* Botones */
+.crear_actividad-btn,
+.calificacion-btn,
+.material_apoyo-btn {
+    display: block;
+    background: #1E91D6;
+    color: #fff;
+    text-align: center;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.crear_actividad-btn:hover,
+.calificacion-btn:hover,
+.material_apoyo-btn:hover {
+    background: #1976BB;
+}
+
+/* ====== BOTÓN VOLVER ====== */
+.volver-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+    margin-right: 30px;
+}
+
+.volver-btn {
+    background-color: #40345c;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.volver-btn:hover {
+    background-color: #2f2642;
+}

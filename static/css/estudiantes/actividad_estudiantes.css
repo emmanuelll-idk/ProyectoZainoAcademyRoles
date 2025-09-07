@@ -1,0 +1,86 @@
+/* ====== CONTENEDOR GENERAL ====== */
+
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.contenedor-principal {
+    margin: 3.5%;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.materias-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1; /* Esto reemplaza width: 100% */
+}
+
+/* ====== CADA MATERIA ====== */
+.materia-card {
+    background-color: #4A3F61;   /* Morado de las tarjetas */
+    color: white;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 25px;
+    font-size: 20px;
+    font-weight: 500;
+    flex-wrap: wrap;
+}
+
+/* ====== NOMBRE DE LA MATERIA ====== */
+.materia-nombre h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+    color: white;
+}
+
+/* ====== OPCIONES DE LA MATERIA ====== */
+.materia-opciones {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ====== BOTONES ====== */
+.materia-opciones a {
+    background-color: #37A8E0;  /* Azul botones */
+    color: white;
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s ease-in-out;
+    display: inline-block;
+    text-align: center;
+}
+
+.materia-opciones a:hover {
+    background-color: #2d91c2;
+}
+
+/* ====== TÍTULO PRINCIPAL ====== */
+h1 {
+    font-size: 35px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+h2{
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+

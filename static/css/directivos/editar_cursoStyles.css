@@ -1,0 +1,46 @@
+.form-layout {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1.5rem;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px; /* ← Limita el ancho del campo */
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 0.4rem;
+    color: #4a4063;
+}
+
+.form-group input {
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 1rem;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+.submit-button {
+    align-self: center;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 30px;
+    background-color: #4a4063;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #3a3053;
+    transform: translateY(-2px);
+}

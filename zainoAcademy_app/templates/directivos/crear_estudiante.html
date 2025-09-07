@@ -1,0 +1,37 @@
+{% extends 'base_directivos.html' %}
+{% load static %}
+{% block page_title %}Registrar Estudiante{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/directivos/crear_estudianteStyles.css' %}">
+
+
+<h2 style="text-align:center;">Registrar Datos del Estudiante para: {{ usuario.Us_nombre }}</h2>
+
+<form method="post" class="form-layout">
+{% csrf_token %}
+<div class="column">
+{% for field in estudiante_form.visible_fields|slice:":4" %}
+<div class="form-group">
+{{ field.label_tag }}{{ field }}
+{% if field.errors %}
+<div style="color: red;">{{ field.errors }}</div>
+{% endif %}
+</div>
+{% endfor %}
+</div>
+
+<div class="column">
+{% for field in estudiante_form.visible_fields|slice:"4:" %}
+<div class="form-group">
+{{ field.label_tag }}{{ field }}
+{% if field.errors %}
+<div style="color: red;">{{ field.errors }}</div>
+{% endif %}
+</div>
+{% endfor %}
+</div>
+
+<button type="submit" class="submit-button">Registrar Estudiante</button>
+</form>
+
+{% endblock %}

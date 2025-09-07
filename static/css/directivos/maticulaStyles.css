@@ -1,0 +1,108 @@
+    .form-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 2rem;
+        font-family: 'Comfortaa', sans-serif;
+    }
+
+    .column {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 0.4rem;
+        color: #4a4063;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.8rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #fff;
+        font-size: 1rem;
+        font-family: 'Comfortaa', sans-serif;
+    }
+
+    .form-group input[type="file"] {
+        padding: 0.4rem;
+        font-family: 'Comfortaa', sans-serif;
+    }
+
+    .submit-button {
+        grid-column: span 2;
+        margin-top: 2rem;
+        justify-self: center;
+        padding: 1rem 3rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 30px;
+        background-color: #4a4063;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .submit-button:hover {
+        background-color: #3a3053;
+        transform: translateY(-2px);
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .form-layout {
+        grid-template-columns: 1fr;
+        }
+
+        .submit-button {
+        grid-column: 1;
+        }
+    }
+
+    /* Ocultar el input nativo */
+#id_Mat_comprobante {
+    display: none;
+}
+
+/* Botón personalizado */
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ccc;
+    color: #fff;
+    border-radius: 8px;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.custom-file-upload:hover {
+    background-color: #1e91d6;
+    transform: translateY(-2px);
+}
+
+/* Texto que muestra el archivo seleccionado */
+#file-chosen {
+    margin-left: 15px;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 0.9rem;
+    color: #4a4063;
+}

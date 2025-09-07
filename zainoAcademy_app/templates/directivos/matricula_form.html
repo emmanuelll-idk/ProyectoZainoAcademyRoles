@@ -1,0 +1,90 @@
+{% extends 'base_directivos.html' %}}
+{% load static %}
+{% block page_title %}Matrícula{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/directivos/matricula_formStyles.css' %}">
+
+
+<!-- Alertas (mensajes de éxito, error, etc.) -->
+{% if messages %}
+  <div class="message-container">
+    {% for message in messages %}
+      <div class="floating-alert">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- Botones de acción -->
+<div class="action-buttons">
+  <a href="{% url 'crear_matricula' %}" class="btn {% if request.resolver_match.url_name == 'crear_matricula' %}btn-primary{% else %}btn-secondary{% endif %}">Crear</a>
+  <a href="{% url 'lista_matriculas' %}" class="btn {% if request.resolver_match.url_name == 'lista_matriculas' %}btn-primary{% else %}btn-secondary{% endif %}">Consultar</a>
+</div>
+
+
+<!-- Buscador -->
+<div class="search-container">
+  <input type="search" class="search-box" placeholder="Buscar Matrícula..." id="searchInput">
+</div>
+
+<!-- Tabla -->
+<div class="table-container">
+  <table id="matriculaTable">
+    <thead>
+      <tr>
+        <th>Estudiante</th>
+        <th>Directivo</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th>Método de pago</th>
+        <th>Valor</th>
+        <th>Fecha de pago</th>
+        <th>Nivel</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+      <tbody>
+        {% for mat in matricula %}
+        <tr>
+          <td>{{ mat.Estudiantes_Est.Usuario_us.Us_nombre }}</td>
+          <td>{{ mat.Directivos_Dir.Us.Us_nombre }}</td>
+          <td>{{ mat.Mat_fecha }}</td>
+          <td>{{ mat.Mat_estado }}</td>
+          <td>{{ mat.Mat_metodo_pago }}</td>
+          <td>{{ mat.Mat_valor }}</td>
+          <td>{{ mat.Mat_fecha_pago }}</td>
+          <td>{{ mat.Mat_nivel }}</td>
+          <td class="actions-cell">
+          <a href="{% url 'editar_matricula' mat.pk %}" class="icon-btn" title="Editar">
+            <span class="material-icons-outlined">edit</span>
+          </a>
+          <div class="divider"></div>
+          <a href="{% url 'eliminar_matricula' mat.pk %}"
+            class="icon-btn"
+            title="Eliminar"
+            >
+            <span class="material-icons-outlined">delete</span>
+        </a>
+
+
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="9" class="no-activities">No hay matrículas registradas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Buscador JS -->
+<script>
+  document.getElementById('searchInput').addEventListener('keyup', function () {
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#matriculaTable tbody tr');
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(searchValue) ? '' : 'none';
+    });
+  });
+</script>
+
+{% endblock %}

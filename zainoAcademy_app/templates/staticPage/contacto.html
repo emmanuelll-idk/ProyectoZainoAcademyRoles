@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contáctanos </title>
+    <link rel="stylesheet" href="{% static 'css/staticPage/contacto.css' %}">
+    <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
+
+</head>
+<body>
+    
+    <!--Cabecera del sitio-->
+    <header>
+    <nav class="barra-navegacion">
+        <div class="logo">
+            <a href="{% url 'home' %}"><img src="{% static 'images/registration/LogoNormal-removebg-preview.png' %}" alt="LogoZaino"></a>
+        </div>
+
+        <nav class="nav">
+        <ul>
+                    <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+                    <li><a href="{% url 'contacto' %}">Contacto</a></li>
+                    <li><a href="{% url 'precios' %}">Precios</a></li>
+        </ul>
+    </nav>
+
+        <div class="butons">
+            <a class="botonIngresar" href="{% url 'login' %}">
+                <img src="{% static 'images/staticPage/boton.png' %}" alt="boton">
+            </a>
+            </div>
+    </nav>
+
+        <div id="hero">
+            <h2>Contáctanos</h2>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Contenedor que agrupa ambos bloques -->
+<section id="contacto-contenedor">
+    <!-- Sección izquierda -->
+    <section id="informacion">
+    <h2>Estamos a un toque</h2>
+    <p>Comunícate con nosotros si tienes alguna duda o inconveniente. Te <br> ofrecemos servicio las 24 horas del día.</p>
+    <div class="fila">
+        <article class="contacto">
+        <div class="circulo"></div>
+        <div class="info">
+            <h3>Celular</h3>
+            <p>+57 3028231814</p>
+        </div>
+        </article>
+        <article class="contacto">
+        <div class="circulo"></div>
+        <div class="info">
+            <h3>E-mail</h3>
+            <p>contacto@zainoacademy.edu.co</p>
+        </div>
+        </article>
+    </div>
+    </section>
+    <!-- Contacto -->
+    <section id="contacto">
+    <h2>Envíanos un mensaje</h2>
+    <form action="#">
+        <div class="campo">
+        <input type="text" placeholder="Nombre:" required>
+        <input type="email" placeholder="E-mail:" required>
+        <input type="text" placeholder="Mensaje:" required>
+        </div>
+        <button type="submit">ENVIAR</button>
+    </form>
+    </section>
+</section>
+    <!-- Pie de página -->
+    <footer>
+        <div class="footer-logo">
+        <img src="{% static 'images/staticPage/logoblanco.png'%}" alt="Logo principal blanco">
+        </div>
+    </footer>

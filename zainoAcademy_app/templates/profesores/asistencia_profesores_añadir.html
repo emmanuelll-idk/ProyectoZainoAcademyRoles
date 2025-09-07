@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Añadir asistencia - Zaino Academy</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/profesores/asistencia_profesores_añadir.css' %}">
+  <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,600,700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+      <div class="logo">
+          <img src="{% static 'images/profesores/Favicon.png' %}" alt="Logo Libro"/>
+          <img src="{% static 'images/profesores/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+      </div>
+      <nav>
+          <ul class="nav-list">
+              <li><a href="{% url 'dashboard_profesores' %}" class="nav-item active">
+                  <img src="{% static 'images/profesores/inicio.png' %}" class="nav-icon" alt="Inicio">
+                  Inicio
+              </a></li>
+
+              <li><a href="{% url 'actividad_profesores_consultar' %}" class="nav-item">
+                  <img src="{% static 'images/profesores/actividades.png' %}" class="nav-icon" alt="Actividades"> 
+                  Actividades - Material de apoyo
+              </a></li>
+
+              <li><a href="{% url 'asistencia_profesores_cursos' %}" class="nav-item">
+                  <img src="{% static 'images/profesores/asistencia.png' %}" class="nav-icon" alt="Asistencia"> 
+                  Asistencia
+              </a></li>
+
+              <li><a href="{% url 'reportes_profesores' %}" class="nav-item">
+                  <img src="{% static 'images/profesores/reportes.png' %}" class="nav-icon" alt="Reportes"> 
+                  Reportes
+              </a></li>
+          </ul>
+      </nav>
+      <div class="logout-container">
+          <form method="POST" action="{% url 'login' %}">
+              {% csrf_token %}
+              <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
+          </form>
+      </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+      <header class="header">
+          <h1 class="page-title">Añadir asistencia - {{ boletin.Cur.Cur_nombre }} / {{ boletin.Mtr.Mtr_nombre }}</h1>
+      </header>
+
+      <div class="content">
+          <form method="POST">
+              {% csrf_token %}
+              <table class="asistencia-table">
+                  <thead>
+                      <tr>
+                          <th>#</th>
+                          <th>Nombre</th>
+                          <th>Estado</th>
+                          <th>Comentario</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for ec in estudiantes_curso %}
+                      <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>{{ ec.Est.Est_nombre }}</td>
+                          <td>
+                              <label><input type="radio" name="estado_{{ ec.Est.Est_id }}" value="Presente" required> Presente</label>
+                              <label><input type="radio" name="estado_{{ ec.Est.Est_id }}" value="Ausente"> Ausente</label>
+                              <label><input type="radio" name="estado_{{ ec.Est.Est_id }}" value="Retardo"> Retardo</label>
+                              <label><input type="radio" name="estado_{{ ec.Est.Est_id }}" value="Parcial"> Parcial</label>
+                          </td>
+                          <td><input type="text" name="comentario_{{ ec.Est.Est_id }}" placeholder="Comentario"></td>
+                      </tr>
+                      {% empty %}
+                      <tr><td colspan="4">No hay estudiantes en este curso.</td></tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+
+              <div class="buttons">
+                  <a href="{% url 'asistencia_profesores_consultar' boletin.Bol_id %}" class="volver-btn">Volver</a>
+                  <button type="submit" class="guardar-btn">Guardar</button>
+              </div>
+          </form>
+      </div>
+  </main>
+</body>
+</html>

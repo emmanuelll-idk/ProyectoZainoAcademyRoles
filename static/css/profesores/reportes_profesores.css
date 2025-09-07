@@ -1,0 +1,115 @@
+body {
+    margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+    display: flex;
+    background: #f9f9f9;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background: #3C2E63;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    min-height: 100vh;
+}
+
+.sidebar .logo img {
+    width: 80px;
+    display: block;
+    margin: 0 auto;
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-menu li {
+    margin: 20px 0;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.nav-menu a.active, .nav-menu a:hover {
+    color: #00BFFF;
+}
+
+.logout-btn {
+    background: #00BFFF;
+    border: none;
+    padding: 10px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Main */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background: white;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.notification-icon {
+    width: 24px;
+    margin-right: 15px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 35px;
+    border-radius: 50%;
+}
+
+/* Content */
+.section-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    background: #4b3b73;
+    color: white;
+    text-decoration: none;
+    padding: 14px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.btn:hover {
+    background: #372c56;
+    transform: translateY(-2px);
+}

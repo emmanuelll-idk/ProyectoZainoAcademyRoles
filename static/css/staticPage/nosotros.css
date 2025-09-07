@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+
+
+.barra-navegacion{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8vw;
+    height: 15vh;
+    margin-right: 1vw;
+    margin-left: 1vw;
+}
+/* decoracion barra de navegacion */
+
+/* Elimina viñetas y pone los ítems en fila con espacio */
+header ul {
+    list-style: none;
+    display: flex;
+    gap: 30px; /* Espacio entre cada link */
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  /* Estilo para los enlaces */
+  header ul li a {
+    text-decoration: none;
+    color: #000;
+    font-size: 12px; /* Tamaño más legible */
+    transition: border-bottom 0.3s ease;
+  }
+  
+  /* Hover */
+  header ul li a:hover {
+    border-bottom: 2px solid #2196f3;
+  }
+  
+  .logo img {
+    width: 20vw;
+}
+
+.nav ul {
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-style: normal;
+    display: flex;
+    list-style: none;
+    gap: 2.5vw;
+    margin-left: 7vw;
+    margin-right: 16vw;
+}
+
+
+.nav ul li a {
+    text-decoration: none;
+    font-size: 3vh;
+    font-size: 1.1vw;
+    color: #000;
+}
+.butons{
+    display: flex;
+    gap: 1.5vw;
+}
+
+.butons a img {
+    height: 5vh;
+}
+.boton-derecha {
+    margin-left: auto; /* Empuja el botón hacia la derecha */
+    font-size: 12px; 
+    color: black;
+}
+
+
+  #informacion {
+    width: 100%;
+    padding: 100px 0; /* Espaciado arriba (100) y abajo (0) */
+    text-align: left;
+    position: relative;
+    margin-right: 20px;
+    margin-left: 120px;
+
+  }
+
+  /* Estilo general para el contenedor principal */
+#nosotros-contenedor {
+  display: flex; /* Usar flexbox para alinear elementos */
+  margin: 80px; /* Margen de 80px alrededor del contenedor */
+}
+
+
+/* Estilo para el título h2 */
+h2 { 
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 40px; /* Espacio debajo del titulo */
+  
+  font-weight: bold;
+  margin-left: 0px;
+}
+
+/* Estilo para el título h3 */
+h3 {
+  font-size: 1.5em; /* Tamaño de fuente más grande para el subtítulo */
+  margin-top: 20px; /* Espacio encima del subtítulo */
+  margin-bottom: 35px; /* Espacio debajo del subtítulo */
+}
+ p{
+  display: block;
+  font-size: 14px;
+  margin-bottom: 40px;
+  margin-left: 0px;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+
+
+/* Estilo para la imagen dentro del contenedor */
+.imagen-contenedor img {
+  height: 68vh; /* Mantener la proporción de la imagen */
+  margin-left: 0px;
+  margin-right: 200px;
+
+
+}
+
+
+.fila {
+  margin-left: 60px;
+}
+
+/* Contenedor padre en flex */
+.contacto-contenedor {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 40px;
+    background-color: #e0e0e0; /* fondo como en la imagen */
+  } /* Fin del contenedor */
+  
+  /* Estilo de la sección izquierda */
+  .informacion {
+    flex: 1;
+    min-width: 280px;
+  }
+  
+  .contacto {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .circulo {
+    width: 30px;
+    height: 30px;
+    background-color: #2196f3;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  .circulo2 {
+    width: 30px;
+    height: 30px;
+    background-color: #4A4063;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  
+  
+
+footer {
+    display: flex;                   /* Acomoda los elementos en fila */
+    justify-content: space-between; /* Espacio entre logo e iconos */
+    align-items: center;            /* Centra verticalmente */
+    padding: 10px 40px;             /* Margen interno alrededor */
+    background-color: #000;
+  }
+  
+  .footer-logo img {
+    width: 200px;                    /* Tamaño personalizado para el logo */
+    height: auto;
+  }
