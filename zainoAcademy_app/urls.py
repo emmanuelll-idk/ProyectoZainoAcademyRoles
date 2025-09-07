@@ -1,3 +1,11 @@
+#
+# Nombre del archivo: urls.py 
+# Descripción: Este archivo realiza la conexion entre los templates con las vistas
+# Autor: Stefany Danciela Abril Samaca
+# Fecha de creación: 2025-02-02 
+# # Última modificación: 2025-09-04
+#NOTAS: 
+
 from django.urls import path
 from . import views
 from django.conf import settings

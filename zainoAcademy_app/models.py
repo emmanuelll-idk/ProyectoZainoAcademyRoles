@@ -1,3 +1,11 @@
+#
+# Nombre del archivo: models.py 
+# Descripción: Este archivo realiza los modelos para usar en todo el sistema
+# Autor: David Santiago Alfonso Guzman
+# Fecha de creación: 2025-02-02 
+# # Última modificación: 2025-09-07
+#NOTAS: 
+
 from django.db import models
 
 class TipoUsuario(models.Model):

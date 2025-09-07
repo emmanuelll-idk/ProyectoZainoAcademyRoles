@@ -1,17 +1,26 @@
-from django.shortcuts import render, redirect, get_object_or_404
+#
+# Nombre del archivo: views.py 
+# Descripción: Este archivo realiza las vistas entre la base y los templates
+# Autor: Gabriela Muñoz Acero
+# Fecha de creación: 2025-02-02 
+# # Última modificación: 2025-09-04
+#NOTAS: 
+
+
+#Importaciones de libreias y otros archivos
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET, require_POST
 from django.http import HttpResponse, JsonResponse, FileResponse
 from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Periodo, Usuario, TipoUsuario, Boletin, Materia, Estudiante_Curso, Estudiantes, Actividad, Actividad_Entrega, MaterialApoyo, Asistencia, Profesores, Estado_Actividad, Estado_Asistencia, Curso, Directivos, Matricula, Acudiente, Asistencia, Estudiantes
 from datetime import date
 import json, io
-from .forms import  UsuarioForm, EstudiantesForm, DirectivosForm, AcudienteForm, MatriculaForm, CursoForm, MateriaForm
-from .models import Boletin
-from .forms import BoletinForm
-from django.views.decorators.http import require_GET, require_POST
+from .forms import  UsuarioForm, EstudiantesForm, DirectivosForm, AcudienteForm, MatriculaForm, CursoForm, MateriaForm, BoletinForm
 
 
-#Paginas Estaticas:
+
+#Paginas Estaticas y paginas de inicio:
 def inicio(request):
     return render (request, "staticPage/index.html")
 

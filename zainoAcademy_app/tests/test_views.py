@@ -1,3 +1,12 @@
+#
+# Nombre del archivo: test_models.py 
+# Descripción: Este archivo realiza las pruebas unitarias de los modelos de la base de datos
+# Autor: David Santiago Alfonso Guzman
+# Fecha de creación: 2025-09-02 
+# # Última modificación: 2025-09-07
+
+# NOTAS: Un solo error en un test de views usando dhasbaord y loggin corregir lo mas pronto
+
 import pytest
 from django.urls import reverse
 from zainoAcademy_app.models import Usuario, TipoUsuario, Periodo
