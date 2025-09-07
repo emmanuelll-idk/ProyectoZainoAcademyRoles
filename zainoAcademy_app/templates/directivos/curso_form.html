@@ -1,3 +1,12 @@
+<!-- 
+Nombre del archivo: curso_form.html 
+Descripción: Este archivo la lista  de los cursos creados
+Autor: David Santiago Alfonso Guzman
+Fecha de creación: 2025-04-18 
+Última modificación: 2025-09-05
+-->
+
+
 {% extends 'base_directivos.html' %}
 {% load static %}
 {% block page_title %}Curso{% endblock %}
@@ -52,6 +61,9 @@
   </table>
 </div>
 
+<!-- 
+JS para la lista de los estudiantes
+-->
 <script>
   document.getElementById('searchInput').addEventListener('keyup', function () {
     const searchValue = this.value.toLowerCase();
