@@ -888,18 +888,34 @@ def lista_matriculas(request):
     return render(request, 'directivos/matricula_form.html', {'matricula': matriculas})
 
 def crear_matricula(request):
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect('login')
+    
+    # Obtener el directivo basado en el usuario de la sesión
+    try:
+        directivo = Directivos.objects.get(Us=usuario)
+    except Directivos.DoesNotExist:
+        messages.error(request, 'No se encontró un directivo asociado a este usuario.')
+        return redirect('lista_matriculas')
+    
     if request.method == 'POST':
-        # ⚠️ IMPORTANTE: Incluir request.FILES para el archivo
         form = MatriculaForm(request.POST, request.FILES)
         
-        # Debugging temporal - puedes comentar estas líneas después
         print("POST data:", request.POST)
         print("FILES data:", request.FILES)
         print("Form is valid:", form.is_valid())
         
         if form.is_valid():
             try:
-                matricula = form.save()
+                # Guardar la matrícula sin hacer commit
+                matricula = form.save(commit=False)
+                # Asignar automáticamente el directivo de la sesión
+                matricula.Directivos_Dir = directivo
+                # Asignar automáticamente la fecha actual
+                matricula.Mat_fecha = date.today()
+                matricula.save()
+                
                 messages.success(request, f'Matrícula {matricula.Mat_id} registrada correctamente.')
                 return redirect('lista_matriculas')
             except Exception as e:
@@ -914,30 +930,42 @@ def crear_matricula(request):
     else:
         form = MatriculaForm()
     
-    # Agregar información adicional para debugging
     context = {
         'form': form,
+        'usuario': usuario,
+        'directivo': directivo,  # Pasar el directivo al contexto
         'estudiantes_count': Estudiantes.objects.count(),
-        'directivos_count': Directivos.objects.count(),
     }
     
     return render(request, 'directivos/matricula.html', context)
-
 def editar_matricula(request, pk):
     matricula = get_object_or_404(Matricula, pk=pk)
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect('login')
+    
+    # Obtener el directivo basado en el usuario de la sesión
+    try:
+        directivo = Directivos.objects.get(Us=usuario)
+    except Directivos.DoesNotExist:
+        messages.error(request, 'No se encontró un directivo asociado a este usuario.')
+        return redirect('lista_matriculas')
     
     if request.method == 'POST':
-        # ⚠️ IMPORTANTE: Incluir request.FILES para manejar archivos
         form = MatriculaForm(request.POST, request.FILES, instance=matricula)
         
-        # Debug temporal - puedes comentar estas líneas después
         print("POST data:", request.POST)
         print("FILES data:", request.FILES)
         print("Form is valid:", form.is_valid())
         
         if form.is_valid():
             try:
-                matricula_actualizada = form.save()
+                # Guardar la matrícula sin hacer commit
+                matricula_actualizada = form.save(commit=False)
+                # Mantener el directivo actual (no permitir cambiarlo)
+                # matricula_actualizada.Directivos_Dir = directivo  # Opcional: forzar directivo de sesión
+                matricula_actualizada.save()
+                
                 messages.success(request, f'Matrícula {matricula_actualizada.Mat_id} actualizada correctamente.')
                 return redirect('lista_matriculas')
             except Exception as e:
@@ -952,16 +980,15 @@ def editar_matricula(request, pk):
     else:
         form = MatriculaForm(instance=matricula)
     
-    # Agregar información adicional para debugging
     context = {
         'form': form,
-        'matricula': matricula,  # ✅ Pasar la matrícula al contexto
+        'matricula': matricula,
+        'usuario': usuario,
+        'directivo': directivo,  # Pasar el directivo al contexto
         'estudiantes_count': Estudiantes.objects.count(),
-        'directivos_count': Directivos.objects.count(),
     }
     
     return render(request, 'directivos/editar_matricula.html', context)
-
 def eliminar_matricula(request, pk):
     matricula = get_object_or_404(Matricula, pk=pk)
 

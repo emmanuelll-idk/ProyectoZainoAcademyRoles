@@ -88,7 +88,7 @@ class ProfesoresForm(forms.ModelForm):
         model = Profesores
         exclude = ['Pro_id', 'Us'] 
 
-# MATRÍCULA - CORREGIDA
+# MATRÍCULA - MODIFICADO PARA SESIÓN Y SIN FECHA MANUAL
 class MatriculaForm(forms.ModelForm):
     ESTADO_CHOICES = [
         ('', '---------'),
@@ -129,9 +129,9 @@ class MatriculaForm(forms.ModelForm):
         model = Matricula
         fields = [
             'Estudiantes_Est',
-            'Directivos_Dir', 
+            # REMOVIDO: 'Directivos_Dir' - se asignará automáticamente
+            # REMOVIDO: 'Mat_fecha' - se asignará automáticamente con fecha actual
             'Mat_nivel',
-            'Mat_fecha',
             'Mat_estado',
             'Mat_metodo_pago',
             'Mat_comprobante',
@@ -140,11 +140,7 @@ class MatriculaForm(forms.ModelForm):
         ]
         widgets = {
             'Estudiantes_Est': forms.Select(attrs={'class': 'form-control'}),
-            'Directivos_Dir': forms.Select(attrs={'class': 'form-control'}),
-            'Mat_fecha': forms.DateInput(attrs={
-                'type': 'date', 
-                'class': 'form-control'
-            }),
+            # REMOVIDO: widget para Mat_fecha
             'Mat_fecha_pago': forms.DateInput(attrs={
                 'type': 'date', 
                 'class': 'form-control'
@@ -162,9 +158,9 @@ class MatriculaForm(forms.ModelForm):
         }
         labels = {
             'Estudiantes_Est': 'Estudiante',
-            'Directivos_Dir': 'Directivo responsable',
+            # REMOVIDO: 'Directivos_Dir': 'Directivo responsable',
+            # REMOVIDO: 'Mat_fecha': 'Fecha de matrícula',
             'Mat_nivel': 'Nivel académico',
-            'Mat_fecha': 'Fecha de matrícula',
             'Mat_estado': 'Estado de la matrícula',
             'Mat_metodo_pago': 'Método de pago',
             'Mat_comprobante': 'Comprobante de pago',
@@ -174,10 +170,6 @@ class MatriculaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        # PERSONALIZAR EL QUERYSET DE DIRECTIVOS PARA MOSTRAR EL NOMBRE
-        self.fields['Directivos_Dir'].queryset = Directivos.objects.select_related('Us')
-        self.fields['Directivos_Dir'].empty_label = "-----------"
         
         # PERSONALIZAR EL QUERYSET DE ESTUDIANTES PARA MOSTRAR EL NOMBRE
         self.fields['Estudiantes_Est'].queryset = Estudiantes.objects.select_related('Usuario_us')
@@ -205,7 +197,7 @@ class MatriculaForm(forms.ModelForm):
             except (ValueError, TypeError):
                 raise forms.ValidationError('El valor debe ser un número válido')
         return valor
-
+    
 # CURSOS
 class CursoForm(forms.ModelForm):
     class Meta:

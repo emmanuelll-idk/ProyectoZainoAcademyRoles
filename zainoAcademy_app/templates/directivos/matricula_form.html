@@ -12,7 +12,6 @@ Fecha de creación: 2025-04-18
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/directivos/matricula_formStyles.css' %}">
 
-
 <!-- Alertas (mensajes de éxito, error, etc.) -->
 {% if messages %}
   <div class="message-container">
@@ -27,7 +26,6 @@ Fecha de creación: 2025-04-18
   <a href="{% url 'crear_matricula' %}" class="btn {% if request.resolver_match.url_name == 'crear_matricula' %}btn-primary{% else %}btn-secondary{% endif %}">Crear</a>
   <a href="{% url 'lista_matriculas' %}" class="btn {% if request.resolver_match.url_name == 'lista_matriculas' %}btn-primary{% else %}btn-secondary{% endif %}">Consultar</a>
 </div>
-
 
 <!-- Buscador -->
 <div class="search-container">
@@ -72,7 +70,6 @@ Fecha de creación: 2025-04-18
             >
             <span class="material-icons-outlined">delete</span>
         </a>
-
 
         </td>
       </tr>
