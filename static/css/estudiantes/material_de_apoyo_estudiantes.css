@@ -18,7 +18,7 @@ body {
     background-color: #fff;
     padding: 30px;
     border-radius: 5px;
-    max-width: 1500px;
+    max-width: 1700px;
     margin: auto;
     position: relative;
 }
@@ -50,14 +50,14 @@ body {
     padding: 14px;
     text-align: left;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 24px;
     border-bottom: 2px solid #2d91c2;
 }
 
 .materiales-apoyo tbody td {
-    padding: 12px 10px;
+    padding: 17px 10px;
     border-bottom: 1px solid #eee;
-    font-size: 16px;
+    font-size: 18px;
     color: #333;
 }
 
@@ -85,4 +85,51 @@ body {
     font-style: italic;
     color: #666;
     padding: 20px;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+    .materiales-apoyo thead {
+        display: none; /* Oculta los encabezados */
+    }
+
+    .materiales-apoyo table,
+    .materiales-apoyo tbody,
+    .materiales-apoyo tr,
+    .materiales-apoyo td {
+        display: block;
+        width: 100%;
+    }
+
+    .materiales-apoyo tr {
+        margin-bottom: 1.5rem;
+        border: 1px solid #4A3F61;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .materiales-apoyo td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+        border: none;
+        text-align: left;
+        font-size: 15px;
+    }
+
+    .materiales-apoyo td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #4A3F61;
+        font-size: 0.95rem;
+        margin-right: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    .materiales-apoyo tbody a {
+        margin-top: 0.3rem;
+        padding: 6px 10px;
+        font-size: 13px;
+    }
 }

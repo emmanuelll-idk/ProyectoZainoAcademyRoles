@@ -18,6 +18,15 @@ from datetime import date
 import json, io
 from .forms import  UsuarioForm, EstudiantesForm, DirectivosForm, AcudienteForm, MatriculaForm, CursoForm, MateriaForm, BoletinForm
 
+# Para los reportes de estudiantes
+
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from urllib.parse import urlencode
+from django.shortcuts import redirect
+from django.utils import timezone
 
 
 #Paginas Estaticas y paginas de inicio:
@@ -117,25 +126,36 @@ def dashboard_estudiantes(request):
 
     estudiante = get_object_or_404(Estudiantes, Usuario_us=usuario)
 
+    cursos = Estudiante_Curso.objects.filter(Est=estudiante).select_related('Cur')
+    curso_nombre = cursos[0].Cur.Cur_nombre if cursos.exists() else "Sin curso"
+
     boletines_qs = Boletin.objects.filter(
-        Cur_id__in=Estudiante_Curso.objects.filter(Est=estudiante).values_list("Cur_id", flat=True)
+        Cur_id__in=cursos.values_list("Cur_id", flat=True)
     )
 
     actividades_qs = Actividad.objects.filter(Bol__in=boletines_qs).distinct()
 
     pendientes = []
+    hoy = timezone.now().date()  
+
     for actividad in actividades_qs:
-        entrega = Actividad_Entrega.objects.filter(Act=actividad, Est=estudiante).first()
-        if not entrega or not entrega.Act_Archivo_Estudiante:  # no entregada
-            pendientes.append({
-                "actividad": actividad.Act_nombre,
-                "materia": actividad.Bol.Mtr.Mtr_nombre,
-                "estado": "Sin entregar"
-            })
+        if actividad.Act_fechaLimite >= hoy:
+            entrega = Actividad_Entrega.objects.filter(Act=actividad, Est=estudiante).first()
+            if not entrega or not entrega.archivos.exists():
+                pendientes.append({
+                    "actividad_obj": actividad,
+                    "materia_obj": actividad.Bol.Mtr,
+                    "periodo_obj": actividad.Bol.Per,
+                    "estado": "Sin entregar"
+                })
+
+    pendientes_count = len(pendientes)
 
     return render(request, 'estudiantes/dashboard_estudiantes.html', {
         'usuario': usuario,
-        'pendientes': pendientes[:4]  # limitar a 4 como en tu diseño
+        'curso_nombre': curso_nombre,
+        'pendientes': pendientes[:4],       
+        'pendientes_count': pendientes_count, 
     })
 
 
@@ -164,14 +184,14 @@ def editar_perfil_acudientes(request):
 
 
 
+
+
 # Vistas estudiantes:
 
 def consultar_periodos(request):
     periodos = Periodo.objects.all().order_by('Per_id')
     return render(request, 'estudiantes/periodo_estudiantes.html', {'periodos': periodos})
 
-def consultar_reportes(request):
-    return render(request, 'estudiantes/reportes_estudiantes.html')
 
 def get_boletines_estudiante(usuario, periodo):
     estudiantes_qs = Estudiantes.objects.filter(Usuario_us = usuario) 
@@ -209,14 +229,44 @@ def actividades_estudiantes(request, Per_id, Mtr_id):
     actividades_qs = Actividad.objects.filter(Bol__in=boletines_qs).distinct()
 
     estudiante = get_object_or_404(Estudiantes, Usuario_us=usuario)
+    fecha_hoy = timezone.now().date()
 
     actividades_con_calificacion = []
     for actividad in actividades_qs:
         entrega = Actividad_Entrega.objects.filter(Act=actividad, Est=estudiante).first()
+        fecha_vencida = actividad.Act_fechaLimite < fecha_hoy
+
+        if not entrega or not entrega.archivos.exists():
+            if fecha_vencida:
+                estado = "Retrasado"
+            else:
+                estado = "Sin entregar"
+        elif entrega.archivos.exists() and entrega.Act_calificacion is None:
+            estado = "Entregado"
+        elif entrega.Act_calificacion is not None:
+            estado = "Calificado"
+
         actividades_con_calificacion.append({
             "actividad": actividad,
-            "calificacion": entrega.Act_calificacion if entrega else None
+            "calificacion": entrega.Act_calificacion if entrega else None,
+            "entrega": entrega,
+            "estado": estado,
+            "fecha_vencida": fecha_vencida
         })
+
+    def ordenar(a):
+        if a["estado"] == "Sin entregar" and not a["fecha_vencida"]:
+            return 0
+        elif a["estado"] == "Entregado" and not a["fecha_vencida"]:
+            return 1
+        elif a["estado"] == "Calificado":
+            return 2
+        elif a["estado"] == "Retrasado":
+            return 3
+        else:
+            return 4
+
+    actividades_con_calificacion.sort(key=ordenar)
 
     return render(request, 'estudiantes/actividad_estudiantes_consultar.html', {
         "actividades": actividades_con_calificacion,
@@ -224,34 +274,75 @@ def actividades_estudiantes(request, Per_id, Mtr_id):
         "periodo": periodo
     })
 
+
+
 def subir_actividad_estudiante(request, Per_id, Mtr_id, Act_id):
     usuario = get_usuario_from_session(request)
     periodo = get_object_or_404(Periodo, pk=Per_id)
     materia = get_object_or_404(Materia, pk=Mtr_id)
     actividad = get_object_or_404(Actividad, pk=Act_id)
-
     estudiante = get_object_or_404(Estudiantes, Usuario_us=usuario)
 
-    entrega = Actividad_Entrega.objects.filter(Act=actividad, Est=estudiante).first()
+    entrega, created = Actividad_Entrega.objects.get_or_create(
+        Act=actividad,
+        Est=estudiante
+    )
 
-    if request.method == "POST":
-        archivo = request.FILES.get("archivo_estudiante")
-        if archivo:
-            entrega, created = Actividad_Entrega.objects.update_or_create(
-                Act=actividad,
-                Est=estudiante,
-                defaults={"Act_Archivo_Estudiante": archivo}
-            )
-            messages.success(request, "Actividad subida correctamente.")
+
+    fecha_hoy = timezone.now().date()
+    fecha_vencida = actividad.Act_fechaLimite < fecha_hoy 
+
+
+    mensaje_exito = request.GET.get("mensaje", None)
+
+    if request.method == "POST" and not fecha_vencida:
+        eliminar_ids = request.POST.getlist("eliminar_archivo")
+        if eliminar_ids:
+            entrega.archivos.filter(id__in=eliminar_ids).delete()
+
+        archivos = request.FILES.getlist("archivos_estudiante[]")
+        if archivos:
+            for archivo in archivos:
+                Actividad_EntregaArchivo.objects.create(
+                    entrega=entrega,
+                    archivo=archivo
+                )
+            mensaje = "Actividad subida correctamente!"
+        elif eliminar_ids:
+            mensaje = "Archivos eliminados correctamente!"
         else:
-            messages.error(request, "Debes seleccionar un archivo para subir.")
+            mensaje = None
+
+
+        if mensaje:
+            query_string = urlencode({'mensaje': mensaje})
+            return redirect(f'/estudiantes/periodos/{Per_id}/materias/{Mtr_id}/actividad/{Act_id}/subir/?{query_string}')
+        else:
+            return redirect('subir_actividad_estudiante', Per_id=Per_id, Mtr_id=Mtr_id, Act_id=Act_id)
 
     return render(request, "estudiantes/actividad_estudiantes_subir.html", {
         "actividad": actividad,
         "materia": materia,
         "periodo": periodo,
         "entrega": entrega,
+        "mensaje_exito": mensaje_exito,
+        "fecha_vencida": fecha_vencida,
     })
+
+
+def eliminar_archivo(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            archivo_id = data.get("archivo_id")
+            archivo = Actividad_EntregaArchivo.objects.get(pk=archivo_id)
+            archivo.delete()
+            return JsonResponse({"exito": True})
+        except Actividad_EntregaArchivo.DoesNotExist:
+            return JsonResponse({"exito": False, "error": "Archivo no encontrado"})
+        except json.JSONDecodeError:
+            return JsonResponse({"exito": False, "error": "Error al decodificar JSON"})
+    return JsonResponse({"exito": False, "error": "Método no permitido"})
 
 
 def materiales_apoyo_estudiantes(request, Per_id, Mtr_id):
@@ -269,6 +360,99 @@ def materiales_apoyo_estudiantes(request, Per_id, Mtr_id):
         "periodo": periodo
     })
 
+def consultar_reportes(request):
+    periodos = Periodo.objects.all() 
+    
+    return render(request, 'estudiantes/reportes_estudiantes.html', {'periodos': periodos})
+
+def reportes_estudiantes_descargar(request, Per_id):
+    periodo = get_object_or_404(Periodo, pk=Per_id)
+
+
+    context = {
+        'periodo': periodo
+    }
+
+    return render(request, 'estudiantes/reportes_estudiantes_descargar.html', context)
+
+def reporte_academico_pdf(request, periodo_id):
+    periodo = get_object_or_404(Periodo, pk=periodo_id)
+
+    usuario = get_usuario_from_session(request)
+    estudiante = get_object_or_404(Estudiantes, Usuario_us=usuario)
+
+    response = HttpResponse(content_type="application/pdf")
+    response['Content-Disposition'] = f'attachment; filename="reporte_{estudiante.Usuario_us.Us_nombre}_{periodo.Per_nombre}.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=A4)
+    elements = []
+    styles = getSampleStyleSheet()
+
+    elements.append(Paragraph("Reporte de Rendimiento Académico", styles['Title']))
+    elements.append(Paragraph(f"Estudiante: {estudiante.Usuario_us.Us_nombre}", styles['Normal']))
+    elements.append(Paragraph(f"Periodo: {periodo.Per_nombre}", styles['Normal']))
+    elements.append(Spacer(1, 20))
+
+    cursos = Estudiante_Curso.objects.filter(Est=estudiante).values_list("Cur", flat=True)
+    boletines = Boletin.objects.filter(Per=periodo, Cur__in=cursos)
+
+    for bol in boletines:
+        elements.append(Paragraph(f"Curso - Materia: {bol.Cur.Cur_nombre} - {bol.Mtr.Mtr_nombre}", styles['Heading3']))
+
+        actividades = Actividad.objects.filter(Bol=bol)
+        data = [["Actividad", "Calificación", "Fecha Entrega"]]
+
+        for act in actividades:
+            entrega = Actividad_Entrega.objects.filter(Act=act, Est=estudiante).first()
+            if entrega:
+                calificacion = entrega.Act_calificacion if entrega.Act_calificacion is not None else "Sin calificar"
+                fecha = entrega.Act_fecha_entrega.strftime("%d/%m/%Y")
+                data.append([act.Act_nombre, calificacion, fecha])
+            else:
+                data.append([act.Act_nombre, "Sin entregas", "-"])
+
+        table = Table(data, colWidths=[200, 100, 100])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e91d6")),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ]))
+        elements.append(table)
+        elements.append(Spacer(1, 20))
+
+    doc.build(elements)
+
+    return response
+
+
+def editar_perfil_estudiantes(request):
+    usuario = get_usuario_from_session(request)
+    estudiante = Estudiantes.objects.get(Usuario_us=usuario)
+
+    if request.method == "POST":
+        current_password = request.POST.get("current_password")
+        
+        if current_password != usuario.Us_contraseña:  
+            messages.error(request, "Contraseña actual incorrecta.")
+            return redirect("editar_perfil_estudiantes")
+        
+        usuario.Us_nombre = request.POST.get("username")
+        usuario.correo = request.POST.get("email")
+
+        new_password = request.POST.get("new_password")
+        if new_password:
+            usuario.Us_contraseña = new_password
+
+        usuario.save()
+        messages.success(request, "Perfil actualizado correctamente!")
+        return redirect("editar_perfil_estudiantes")
+
+    return render(request, 'estudiantes/editar_perfil_estudiantes.html', {'usuario': usuario})
+
+def ver_perfil_estudiantes(request):
+    usuario = get_usuario_from_session(request)
+    return render(request, 'estudiantes/ver_perfil_estudiantes.html', {'usuario': usuario})
 
 # Vistas Profesores:
 

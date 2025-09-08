@@ -11,9 +11,12 @@
 <body class="dashboard-page">
     <aside class="sidebar">
         <div class="logo">
-            <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
-            <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+            <a href="{% url 'dashboard_estudiantes' %}">
+                <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+                <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+            </a>
         </div>
+
         <nav>
             <ul class="nav-list">
                 <li>
@@ -48,18 +51,29 @@
     
     <main class="main-content">
         <header class="page-header">
-            <div class="header-icons">
+            <div class="header-container">
+                <h1 class="page-title">{% block page_title %}{% endblock %}</h1>
+                <div class="header-icons">
+                    <span class="user-name">{{ usuario.Us_nombre }}</span>
+                    <a href="{% url 'ver_perfil_estudiantes' %}">
+                        <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                    </a>
 
-                
-                <!-- Nombre -->
-                <span class="user-name">{{ usuario.Us_nombre }}</span>
-                
-                <!-- Avatar / Perfil -->
-                <a href="{% url 'editar_perfil_acudientes' %}">
-                    <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
-                </a>
+                    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+                    <div id="dropdown-menu" class="dropdown-menu">
+                        <a href="{% url 'dashboard_estudiantes' %}">Inicio</a>
+                        <a href="{% url 'consultar_periodos' %}">Actividades y material</a>
+                        <a href="{% url 'consultar_reportes' %}">Reportes</a>
+                        <form method="POST" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </header>
+
 
         <div class="dashboard-content">
             <!-- COLUMNA IZQUIERDA - MÁS GRANDE -->
@@ -67,9 +81,9 @@
                 <!-- Tarjeta de Saludo -->
                 <div class="greeting-card">
                     <div class="greeting-text">
-                        <h2>Hola {{ usuario.Us_nombre }}!</h2>
+                        <h2>Hola {{ usuario.Us_nombre }} del curso {{ curso_nombre }}!</h2>
                         <p>Bienvenido a tu entorno virtual, recuerda estar atento a las notificaciones y trabajos pendientes!</p>
-                        <a href="{% url 'actividades_acudientes' %}" class="btn-leer-mas">Leer más</a>
+                        <a href="{% url 'consultar_periodos' %}" class="btn-leer-mas">Leer más</a>
                     </div>
                     <div class="greeting-illustration">
                         <img src="{% static 'images/acudientes/lectura.png' %}" class="greeting-illustration" alt="Perfil">
@@ -83,15 +97,13 @@
                 <div class="notifications-table">
                     <div class="table-header">
                         <div class="col-header">Actividades Pendientes</div>
-                        <div class="col-header">Materia</div>
                         <div class="col-header">Estado</div>
                     </div>
 
                     {% if pendientes %}
                         {% for p in pendientes %}
                         <div class="table-row">
-                            <div class="col-data activity-name"><a href="{% url 'subir_actividad_estudiante' p.periodo.Per_id p.materia.Mtr_id p.actividad.Act_id %}">{{ p.actividad.Act_nombre }}</a></div>
-                            <div class="col-data subject">{{ p.materia }}</div>
+                            <div class="col-data activity-name"><a href="{% url 'subir_actividad_estudiante' p.periodo_obj.Per_id p.materia_obj.Mtr_id p.actividad_obj.Act_id %}">{{ p.actividad_obj.Act_nombre }}</a></div>
                             <div class="col-data status">• {{ p.estado }}</div>
                         </div>
                         {% endfor %}
@@ -153,7 +165,7 @@
                         </div>
                         <div class="info-row">
                             <span class="info-label">Pendientes</span>
-                            <span class="info-value pending-count">4 pendientes</span>
+                            <span class="info-value pending-count">{{ pendientes_count }} pendientes</span>
                         </div>
                     </div>
                 </div>
@@ -245,5 +257,13 @@
         renderCalendar(currentDate);
     </script>
 
+    <!-- Esto es para la hamburguesa chicos -->
+
+    <script>
+    function toggleMenu() {
+        const menu = document.getElementById("dropdown-menu");
+        menu.classList.toggle("show");
+    }
+    </script>
 </body>
 </html>

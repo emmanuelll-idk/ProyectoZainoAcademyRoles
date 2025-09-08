@@ -268,7 +268,6 @@ class Actividad(models.Model):
         return self.Act_nombre
 
 class Actividad_Entrega(models.Model):
-    Act_Archivo_Estudiante = models.FileField(upload_to='archivos/estudiantes/')
     Act_fecha_entrega = models.DateField(auto_now_add=True)
     Act_calificacion = models.FloatField(null=True, blank=True)
     Act = models.ForeignKey('Actividad', on_delete=models.CASCADE)
@@ -277,8 +276,26 @@ class Actividad_Entrega(models.Model):
     class Meta:
         db_table = 'actividad_entrega'
         unique_together = ('Act', 'Est')
+
     def __str__(self):
         return f"{self.Act} - {self.Est}"
+
+
+class Actividad_EntregaArchivo(models.Model):
+    id = models.AutoField(primary_key=True)
+    entrega = models.ForeignKey(
+        Actividad_Entrega,
+        on_delete=models.CASCADE,
+        related_name='archivos'
+    )
+    archivo = models.FileField(upload_to='archivos/estudiantes/')
+
+    class Meta:
+        db_table = 'actividad_entrega_archivo'
+
+    def __str__(self):
+        return f"Archivo {self.archivo.name} de {self.entrega}"
+
 
 class MaterialApoyo(models.Model):
     Mate_id = models.AutoField(primary_key=True)

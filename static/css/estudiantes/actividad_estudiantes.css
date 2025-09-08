@@ -37,7 +37,7 @@ body, html {
 
 /* ====== NOMBRE DE LA MATERIA ====== */
 .materia-nombre h3 {
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 600;
     margin: 0;
     color: white;
@@ -57,7 +57,7 @@ body, html {
     padding: 6px 12px;
     text-decoration: none;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     transition: 0.2s ease-in-out;
     display: inline-block;
@@ -83,4 +83,37 @@ h2{
     color: #000;
 }
 
+@media (max-width: 768px) {
+    .materias-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;  
+        justify-content: center; 
+        gap: 50px;
+    }
 
+    .materia-card {
+        width: 90%; 
+        flex-direction: column; 
+        align-items: center;    
+        text-align: center;     
+        gap: 20px; 
+    }
+
+    .materia-nombre h3 {
+        font-size: 30px;
+        margin-bottom: 0; 
+    }
+
+    .materia-opciones {
+        flex-direction: column; 
+        gap: 8px;
+        align-items: center;   
+    }
+
+    .materia-opciones a {
+        width: 100%;            
+        max-width: 250px;       
+        text-align: center;
+    }
+}

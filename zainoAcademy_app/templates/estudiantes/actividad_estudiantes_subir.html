@@ -1,5 +1,4 @@
 {% extends "estudiantes/base.html" %}
-
 {% load static %}
 
 {% block extra_css %}
@@ -7,26 +6,29 @@
 {% endblock %}
 
 {% block mockUp %}
-
 <div class="contenido">
-    
     <h1>{{ actividad.Act_nombre }}</h1>
 
     <div class="seccion-boxes">
-        
-        <div class="seccion">
+        <div class="seccion 
+            {% if entrega and entrega.Act_calificacion %}
+                estado-calificado
+            {% elif entrega and entrega.archivos.exists %}
+                estado-entregado
+            {% else %}
+                estado-sin-entregar
+            {% endif %}">
             <p class="subtitulo">Estado</p>
             <p class="texto">
                 {% if entrega and entrega.Act_calificacion %}
-                    Calificado
-                {% elif entrega and entrega.Act_Archivo_Estudiante %}
+                    Calificado <span class="chulito-verde">✔</span>
+                {% elif entrega and entrega.archivos.exists %}
                     Entregado
                 {% else %}
-                    Pendiente
+                    Sin entregar
                 {% endif %}
             </p>
         </div>
-        
 
         <div class="seccion">
             <p class="subtitulo">Fecha límite</p>
@@ -48,8 +50,6 @@
             <p class="subtitulo">Descripción</p>
             <p class="texto">{{ actividad.Act_descripcion }}</p>
         </div>
-
-
     </div>
 
     <hr>
@@ -58,27 +58,118 @@
         <p class="subtitulo">Subir Actividad</p>
 
         {% if mensaje_exito %}
-            <div class="mensaje-exito">{{ mensaje_exito }}</div>
+            <div class="mensaje-exito" id="mensaje-exito">{{ mensaje_exito }}</div>
+            <script>
+                setTimeout(() => {
+                    const msg = document.getElementById("mensaje-exito");
+                    if (msg) {
+                        msg.style.transition = "opacity 0.5s ease";
+                        msg.style.opacity = "0";
+                        setTimeout(() => msg.remove(), 500);
+                    }
+                }, 3000); 
+            </script>
         {% endif %}
 
         <form method="post" enctype="multipart/form-data" class="form-subida">
             {% csrf_token %}
-            <input type="file" name="archivo_estudiante" id="archivo" required>
-            <button type="submit" class="btn-subir">Subir Archivo</button>
+
+            {% if entrega and entrega.archivos.exists %}
+                <div class="archivo-subido">
+                    <p>Archivos existentes:</p>
+                    {% for archivo in entrega.archivos.all %}
+                    <div id="archivo-{{ archivo.id }}">
+                        📎 <a href="{{ archivo.archivo.url }}" target="_blank">{{ archivo.archivo.name|truncatechars:30 }}</a>
+                        <button type="button" class="btn-eliminar" data-id="{{ archivo.id }}" {% if fecha_vencida %}disabled{% endif %}>❌</button>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <input type="file" name="archivos_estudiante[]" id="archivo" multiple {% if fecha_vencida %}disabled{% endif %}>
+            <div id="archivos-lista"></div> 
+
+            <button type="submit" class="btn-subir" {% if fecha_vencida %}disabled{% endif %}>
+                Subir Archivos
+            </button>
+            {% if fecha_vencida %}
+                <p style="color:red; margin-top:5px;">La fecha límite ya pasó, no se pueden subir más archivos.</p>
+            {% endif %}
         </form>
 
-        {% if entrega and entrega.Act_Archivo_Estudiante %}
-            <div class="archivo-subido">
-                <a href="{{ entrega.Act_Archivo_Estudiante.url }}" target="_blank">
-                    📎 {{ entrega.Act_Archivo_Estudiante.name|slice:"20:" }}
-                </a>
-                <a class="cambiar-archivo" href="#" onclick="document.getElementById('archivo').click(); return false;">
-                    Cambiar
-                </a>
-            </div>
-        {% endif %}
+
     </div>
 </div>
 
+<script>
+const inputArchivo = document.getElementById("archivo");
+const listaArchivos = document.getElementById("archivos-lista");
+let archivosSeleccionados = [];
+
+// Cada vez que se seleccionan archivos nuevos
+inputArchivo.addEventListener("change", (e) => {
+    // Agregar los nuevos archivos a la lista existente
+    archivosSeleccionados = archivosSeleccionados.concat(Array.from(e.target.files));
+    renderLista();
+    updateInputFiles();
+});
+
+function renderLista() {
+    listaArchivos.innerHTML = "";
+    archivosSeleccionados.forEach((archivo, index) => {
+        const div = document.createElement("div");
+        div.textContent = archivo.name + " ";
+        
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = "❌";
+        btn.addEventListener("click", () => {
+            archivosSeleccionados.splice(index, 1);
+            renderLista();
+            updateInputFiles();
+        });
+
+        div.appendChild(btn);
+        listaArchivos.appendChild(div);
+    });
+}
+
+function updateInputFiles() {
+    const dataTransfer = new DataTransfer();
+    archivosSeleccionados.forEach(file => dataTransfer.items.add(file));
+    inputArchivo.files = dataTransfer.files;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".archivo-subido")?.addEventListener("click", function(e) {
+        if (e.target.classList.contains("btn-eliminar")) {
+            const btn = e.target;
+            const archivoId = btn.dataset.id;
+
+            fetch("{% url 'eliminar_archivo' %}", {  
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ "archivo_id": archivoId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exito) {
+                    document.getElementById(`archivo-${archivoId}`).remove();
+                } else {
+                    alert(data.error || "No se pudo eliminar el archivo");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Error al comunicarse con el servidor");
+            });
+        }
+    });
+});
+
+</script>
 
 {% endblock %}

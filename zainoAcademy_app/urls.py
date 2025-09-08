@@ -36,14 +36,19 @@ urlpatterns = [
     path('acudientes/asistencia_list/', views.asistencia_list_acudientes, name='asistencia_list_acudientes'),
     path('asistencia/pdf/', views.asistencia_pdf_acudientes, name='asistencia_pdf_acudientes'),
 
+    #Estudiantes
+
     path('estudiantes/periodos/', views.consultar_periodos , name='consultar_periodos'),
     path('estudiantes/reportes/', views.consultar_reportes , name='consultar_reportes'),
     path('estudiantes/periodos/<int:Per_id>/', views.materias_estudiantes, name='materias_estudiante'), # Per_id, ese "periodo" es la variable que definí en mi template
     path('estudiantes/periodos/<int:Per_id>/materias/<int:Mtr_id>/', views.actividades_estudiantes, name='actividades_estudiantes'),
     path("estudiantes/periodos/<int:Per_id>/materias/<int:Mtr_id>/actividad/<int:Act_id>/subir/", views.subir_actividad_estudiante, name="subir_actividad_estudiante"),
-    path("estudiantes/periodos/<int:Per_id>/materias/<int:Mtr_id>/materiales/", views.materiales_apoyo_estudiantes,name="materiales_apoyo_estudiantes"
-),
-
+    path("estudiantes/periodos/<int:Per_id>/materias/<int:Mtr_id>/materiales/", views.materiales_apoyo_estudiantes,name="materiales_apoyo_estudiantes"),
+    path('estudiantes/reportes/descargar/<int:Per_id>/',views.reportes_estudiantes_descargar,name='reportes_estudiantes_descargar'),
+    path("estudiantes/reportes/<int:periodo_id>/", views.reporte_academico_pdf, name="reporte_academico_pdf"),
+    path('estudiantes/editar_perfil/', views.editar_perfil_estudiantes, name='editar_perfil_estudiantes'),
+    path('perfil/', views.ver_perfil_estudiantes, name='ver_perfil_estudiantes'),
+    path('eliminar-archivo/', views.eliminar_archivo, name='eliminar_archivo'),
 
     # Acudientes
     path('acudientes/actividades/', views.actividades_acudientes, name='actividades_acudientes'),

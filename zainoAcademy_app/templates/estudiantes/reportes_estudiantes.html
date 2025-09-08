@@ -1,5 +1,63 @@
 {% extends "estudiantes/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/estudiantes/periodo_estudiantes.css' %}">
+{% endblock %}
+
+{% block page_title %}Reportes{% endblock %}
 
 {% block mockUp %}
-  <h1>Reportes:</h1>
+<div class="contenedor-actividad">
+    <h2 class="subtitulo">Seleccione Periodo:</h2>
+    <hr class="linea">
+
+    {% if periodos %}
+        <div class="periodos-container">
+            {% for periodo in periodos %}
+                <div class="periodo-card" onclick="selectPeriodo(this)" data-id="{{ periodo.Per_id }}">
+                    <h3 class="periodo-name">{{ periodo.Per_nombre }}</h3>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="contenedor-continuar">
+            <button class="btn-continuar" id="continuar-btn" disabled>Continuar</button>
+        </div>
+    {% else %}
+        <p>No hay periodos disponibles</p>
+    {% endif %}
+</div>
+
+<script>
+let selectedPeriodoId = null;
+
+function selectPeriodo(cardEl) {
+    document.querySelectorAll('.periodo-card').forEach(c => c.classList.remove('selected'));
+    cardEl.classList.add('selected');
+
+    // Guardamos el ID del periodo seleccionado
+    selectedPeriodoId = cardEl.dataset.id;
+
+    const btn = document.getElementById('continuar-btn');
+    if (selectedPeriodoId) {
+        btn.disabled = false;
+        btn.classList.add('enabled');
+    } else {
+        btn.disabled = true;
+        btn.classList.remove('enabled');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('continuar-btn');
+
+    btn.addEventListener('click', function() {
+        if (selectedPeriodoId) {
+            // Redirige al HTML de descarga filtrado por periodo
+            window.location.href = "{% url 'reportes_estudiantes_descargar' 0 %}".replace('0', selectedPeriodoId);
+        }
+    });
+});
+</script>
 {% endblock %}

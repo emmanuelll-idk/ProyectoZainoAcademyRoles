@@ -1,0 +1,23 @@
+{% extends "estudiantes/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/estudiantes/periodo_estudiantes.css' %}">
+{% endblock %}
+
+{% block page_title %}Descargar Reporte{% endblock %}
+
+{% block mockUp %}
+<div class="contenedor-actividad">
+    <h2 class="subtitulo">Reporte Académico</h2>
+    <hr class="linea">
+
+    <p>Periodo seleccionado: <strong>{{ periodo.Per_nombre }}</strong></p>
+
+    <div class="contenedor-continuar" style="margin-top: 2rem;">
+        <a href="{% url 'reporte_academico_pdf' periodo.Per_id %}" class="btn-descargar">
+            Descargar Reporte Académico
+        </a>
+    </div>
+</div>
+{% endblock %}

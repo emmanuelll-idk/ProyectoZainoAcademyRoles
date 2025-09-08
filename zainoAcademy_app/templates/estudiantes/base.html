@@ -13,9 +13,13 @@
 <body class="dashboard-page">
     <aside class="sidebar">
         <div class="logo">
-            <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
-            <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+            <a href="{% url 'dashboard_estudiantes' %}">
+                <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+                <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+            </a>
         </div>
+
+
         <nav>
             <ul class="nav-list">
                 <li>
@@ -27,17 +31,19 @@
 
                 <li>
                 <a href="{% url 'consultar_periodos' %}" 
-                    class="nav-item {% if request.resolver_match.url_name == 'consultar_periodos' %}active{% endif %}">
-                    <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades y material de apoyo
+                class="nav-item {% if request.resolver_match.url_name in 'consultar_periodos,actividades_estudiantes,materiales_apoyo_estudiantes,materias_estudiantes,subir_actividad_estudiante' %}active{% endif %}">
+                <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades y material de apoyo
                 </a>
+
                 </li>
 
                 <li>
-                <a href="{% url 'consultar_reportes' %}" 
-                    class="nav-item {% if request.resolver_match.url_name == 'consultar_reportes' %}active{% endif %}">
-                    <img src="{% static 'images/acudientes/asistencia.png' %}" class="nav-icon" alt="Reportes"> Reportes
-                </a>
+                    <a href="{% url 'consultar_reportes' %}" 
+                    class="nav-item {% if request.resolver_match.url_name in 'consultar_reportes,reportes_estudiantes_descargar,reporte_academico_pdf' %}active{% endif %}">
+                        <img src="{% static 'images/acudientes/asistencia.png' %}" class="nav-icon" alt="Reportes"> Reportes
+                    </a>
                 </li>
+
             </ul>
         </nav>
         <div class="logout-container">
@@ -54,9 +60,21 @@
                 <h1 class="page-title">{% block page_title %}{% endblock %}</h1>
                 <div class="header-icons">
                     <span class="user-name">{{ usuario.Us_nombre }}</span>
-                    <a href="{% url 'editar_perfil_acudientes' %}">
+                    <a href="{% url 'ver_perfil_estudiantes' %}">
                         <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
                     </a>
+
+                    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+                    <div id="dropdown-menu" class="dropdown-menu">
+                        <a href="{% url 'dashboard_estudiantes' %}">Inicio</a>
+                        <a href="{% url 'consultar_periodos' %}">Actividades y material</a>
+                        <a href="{% url 'consultar_reportes' %}">Reportes</a>
+                        <form method="POST" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </header>
@@ -70,19 +88,22 @@
             {% endblock %}
         </main> 
 
-<!-- Modal logout -->
-    <div id="logout-modal" class="modal">
-        <div class="modal-content">
-            <h2>¿Cerrar Sesión?</h2>
-            <div class="modal-actions">
-                <form method="POST" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-confirm">Confirmar</button>
-                </form>
-                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+    {% if request.resolver_match.url_name != 'editar_perfil_estudiante' %}
+        <!-- Modal logout -->
+        <div id="logout-modal" class="modal">
+            <div class="modal-content">
+                <h2>¿Cerrar Sesión?</h2>
+                <div class="modal-actions">
+                    <form method="POST" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-confirm">Confirmar</button>
+                    </form>
+                    <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
+
 
     <script>
         const modal = document.getElementById('logout-modal');
@@ -91,4 +112,13 @@
         window.onclick = function(event) {
             if (event.target == modal) { closeModal(); }
         }
+    </script>
+
+<!-- Esto es para la hamburguesa chicos -->
+
+    <script>
+    function toggleMenu() {
+        const menu = document.getElementById("dropdown-menu");
+        menu.classList.toggle("show");
+    }
     </script>

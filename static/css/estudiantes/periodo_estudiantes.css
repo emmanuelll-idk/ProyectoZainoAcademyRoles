@@ -146,6 +146,23 @@
   transform: translateY(0);
 }
 
+
+/*Reportes estudiantes*/
+
+.btn-descargar {
+    background-color: #4A3F61;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.btn-descargar:hover {
+    background-color: #3a3250; 
+}
+
 /* 🔹 Responsive */
 @media (max-width: 768px) {
   .contenedor-actividad {
