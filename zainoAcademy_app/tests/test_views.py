@@ -9,8 +9,7 @@
 
 import pytest
 from django.urls import reverse
-from zainoAcademy_app.models import Usuario, TipoUsuario, Periodo
-
+from zainoAcademy_app.models import Usuario, TipoUsuario, Periodo, Curso , Materia
 @pytest.mark.django_db
 def test_inicio_view(client):
     url = reverse("home")  # corregido
@@ -60,3 +59,68 @@ def test_dashboard_directivos_requires_login(client):
     response = client.get(url)
     assert response.status_code == 302  # requiere login 
     assert reverse("login") in response.url
+
+    
+# --------------------------------------------------------
+# CURSOS
+# --------------------------------------------------------
+@pytest.mark.django_db
+def test_consultar_cursos(client):
+    Curso.objects.create(Cur_nombre="Matemáticas")
+    url = reverse("consultar_cursos")
+    response = client.get(url)
+    assert response.status_code == 200
+    assert "Matemáticas" in response.content.decode()
+
+@pytest.mark.django_db
+def test_crear_curso_post(client):
+    url = reverse("crear_curso")
+    response = client.post(url, {"Cur_nombre": "Historia"})
+    assert response.status_code in (200, 302)
+    assert Curso.objects.filter(Cur_nombre="Historia").exists()
+
+# --------------------------------------------------------
+# MATERIAS
+# --------------------------------------------------------
+@pytest.mark.django_db
+def test_consultar_materias(client):
+    Materia.objects.create(Mtr_nombre="Física")
+    url = reverse("consultar_materias")
+    response = client.get(url)
+    assert response.status_code == 200
+    assert "Física" in response.content.decode()
+
+@pytest.mark.django_db
+def test_crear_materia_post(client):
+    url = reverse("crear_materia")
+    response = client.post(url, {"Mtr_nombre": "Química"})
+    assert response.status_code in (200, 302)
+    assert Materia.objects.filter(Mtr_nombre="Química").exists()
+
+# --------------------------------------------------------
+# PERIODOS
+# --------------------------------------------------------
+@pytest.mark.django_db
+def test_consultar_periodos(client):
+    Periodo.objects.create(Per_nombre="2025-1")
+    url = reverse("consultar_periodos")
+    response = client.get(url)
+    assert response.status_code == 200
+    assert "2025-1" in response.content.decode()
+
+@pytest.mark.django_db
+def test_crear_periodo_post(client):
+    url = reverse("crear_periodo")
+    response = client.post(url, {"Per_nombre": "2025-2"})
+    assert response.status_code in (200, 302)
+    assert Periodo.objects.filter(Per_nombre="2025-2").exists()
+
+# --------------------------------------------------------
+# MATRÍCULAS (requieren datos de usuario y estudiante)
+# --------------------------------------------------------
+@pytest.mark.django_db
+def test_consultar_matriculas(client):
+    url = reverse("consultar_matriculas")
+    response = client.get(url)
+    assert response.status_code == 200
+    # Aquí solo se valida que la página exista aunque no haya registros
