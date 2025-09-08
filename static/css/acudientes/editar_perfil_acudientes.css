@@ -87,12 +87,11 @@ html, body {
 .logout-container {
     position: absolute;
     bottom: 1.5rem;
-    left: 0;
-    width: 100%;
+    left: 1.2rem;
+    right: 1.2rem;
     text-align: center;
 }
 
-/* Botón cerrar sesión */
 .logout-btn {
     display: inline-block;
     width: 85%;  /* ocupa casi todo el ancho */
@@ -111,6 +110,73 @@ html, body {
 .logout-btn:hover {
     background-color: #352c4d;
     transform: scale(1.05);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    color: #4a4063;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.btn-confirm, .btn-cancel {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.btn-confirm {
+    background: #4A4063;
+    color: #fff;
+}
+
+.btn-confirm:hover {
+    background: #4A4063;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    background: #E0E6ED;
+    color: #4A4063;
+}
+
+.btn-cancel:hover {
+    background: #D0D6DD;
+    transform: translateY(-2px);
 }
 
 /* ========== MAIN CONTENT ========== */
@@ -286,30 +352,6 @@ html, body {
     box-shadow: 0 0 5px rgba(30, 145, 214, 0.2);
 }
 
-/* ===== MODAL ===== */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-.modal-content {
-    background: white;
-    padding: 3rem;
-    border-radius: 15px;
-    text-align: center;
-    max-width: 400px;
-}
-
-.modal-content h2 {
-    margin-bottom: 1.5rem;
-    color: #4a4063;
-}
 
 /* ========== ANIMATIONS ========== */
 @keyframes fadeInOut {
@@ -319,7 +361,6 @@ html, body {
     100% { opacity: 0; transform: translateY(-10px); }
 }
 
-/* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
     .sidebar {
         width: 80px;
@@ -330,6 +371,14 @@ html, body {
         max-width: 60px;
     }
     
+    .header-icons {
+        margin-left: 150px;
+    }
+    
+    .page-title {
+        font-size: 2rem; /* Título más pequeño en móvil */
+    }
+    
     .nav-item span:not(.nav-icon) {
         display: none;
     }
@@ -337,22 +386,142 @@ html, body {
     .main-content {
         margin-left: 80px;
         width: calc(100% - 80px);
+        padding: 1rem;
     }
     
-    .page-title {
-        font-size: 2rem;
-    }
-    
-    .dashboard-content {
-        grid-template-columns: 1fr;
-    }
-    
-    .edit-profile {
+    .greeting-card {
         flex-direction: column;
-        align-items: center;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .greeting-illustration {
+        width: 155px;
+        height: 155px;
+    }
+    
+    .greeting-text h2 {
+        font-size: 1.5rem;
+    }
+    
+    .right-column {
+        flex-direction: column;
+        position: static;
+    }
+    
+    .table-header,
+    .table-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .col-header {
+        display: none;
+    }
+    
+    .table-row {
+        background: #f8f9ff;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+
+/* ===== HAMBURGER & DROPDOWN ===== */
+
+.hamburger {
+    display: none;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4a4063;
+}
+
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 70px; /* debajo del header */
+    right: 0.5rem;
+    width: 350px; /* casi todo el ancho en móviles */
+    background: rgba(255, 255, 255, 0.95); /* ligeramente transparente */
+    backdrop-filter: blur(10px); /* efecto glass */
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s ease;
+    z-index: 200;
+    flex-wrap: nowrap;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-family: "Comfortaa", sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background-color: rgba(30, 145, 214, 0.1); /* azul suave al pasar */
+    color: #1e91d6;
+}
+
+.dropdown-menu.show {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 1024px) {
+    .hamburger {
+        display: block;
+        font-size: 2rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #4a4063;
+        transition: transform 0.2s ease;
     }
 
-    .profile-form {
-        flex-direction: column;
+    .hamburger:hover {
+        transform: scale(1.1);
     }
+
+    .sidebar {
+        display: none; 
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+.dropdown-menu .dropdown-logout-btn {
+    background-color: #1e91d6 !important;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dropdown-menu .dropdown-logout-btn:hover {
+    background-color: #6A5B8C !important;
+    transform: scale(1.02);
 }

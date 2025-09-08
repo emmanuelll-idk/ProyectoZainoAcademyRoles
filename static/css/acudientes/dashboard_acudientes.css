@@ -93,7 +93,7 @@ html, body {
 
 .logout-btn {
     display: inline-block;
-    width: 85%;  /* ocupa casi todo el ancho */
+    width: 85%;
     background-color: #4a4063;
     color: #fff;
     padding: 0.9rem 1.2rem;
@@ -113,12 +113,11 @@ html, body {
 
 /* ========== MAIN CONTENT ========== */
 .main-content {
-    margin-left: 260px; /* ✅ compensa el sidebar fijo */
+    margin-left: 260px;
     width: calc(100% - 260px);
     padding: 1.5rem;
     background-color: #f5f6fa;
     height: 100vh;
-    overflow: hidden;
 }
 
 /* ========== HEADER ========== */
@@ -176,7 +175,7 @@ html, body {
     align-items: stretch;
 }
 
-/* ========== COLUMNA IZQUIERDA (MÁS GRANDE) ========== */
+/* ========== COLUMNA IZQUIERDA ========== */
 .left-column {
     display: flex;
     flex-direction: column;
@@ -251,10 +250,10 @@ html, body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    background: transparent; /* Sin fondo para que el header quede fuera */
-    padding: 0; /* Sin padding general */
-    box-shadow: none; /* Sin sombra */
-    font-family: "Comfortaa", sans-serif; /* Asegurar fuente */
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    font-family: "Comfortaa", sans-serif;
 }
 
 .notifications-header {
@@ -263,7 +262,7 @@ html, body {
     align-items: center;
     margin-bottom: 1.5rem;
     flex-shrink: 0;
-    padding: 0 0.5rem; /* Solo un poco de padding lateral */
+    padding: 0 0.5rem;
 }
 
 .notifications-header h3 {
@@ -289,41 +288,117 @@ html, body {
     transform: translateY(-1px);
 }
 
-/* ========== TABLE HEADERS (FUERA DE LAS TARJETAS) ========== */
-.table-headers {
+/* ========== ESTRUCTURA NUEVA MEJORADA ========== */
+.notifications-table {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.table-header {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
     gap: 1.5rem;
-    padding: 0 1.5rem;
+    padding: 1px 16px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #4a4063;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: "Comfortaa", sans-serif;
     margin-bottom: 1rem;
     flex-shrink: 0;
 }
 
-.header-col {
-    font-size: 1rem;
-    color: #4a4063;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.col-header {
     font-family: "Comfortaa", sans-serif;
 }
 
-.header-col:nth-child(2),
-.header-col:nth-child(3) {
+.col-header:nth-child(2),
+.col-header:nth-child(3) {
     text-align: center;
 }
 
-/* ========== NOTIFICATIONS CARDS CONTAINER ========== */
-.notifications-table {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding-right: 0.5rem; /* Para el scroll */
+.table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    align-items: center;
+    min-height: 68.5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* ========== NOTIFICATION CARD ========== */
+.table-row:hover {
+    background-color: #f9fafb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(30, 145, 214, 0.15);
+}
+
+.col-data {
+    grid-column: 1 / -1; 
+    text-align: center; 
+    color: #666; 
+    font-style: italic;
+}
+
+.col-data:nth-child(1) {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #4a4063;
+}
+
+.col-data:nth-child(2) {
+    justify-content: center;
+    text-align: center;
+}
+
+.col-data:nth-child(2) {
+    font-size: 0.85rem;
+    color: #4a4063;
+    font-weight: 500;
+    background-color: #e8f4f8;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    border: 1px solid #d1e7f0;
+    white-space: nowrap;
+}
+
+.col-data:nth-child(3) {
+    justify-content: center;
+    text-align: center;
+}
+
+.status-pendiente {
+    color: #dc2626;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.status-pendiente::before {
+    content: "•";
+    font-size: 1.2rem;
+}
+
+/* ========== COMPATIBILIDAD CON ESTRUCTURA ANTERIOR ========== */
+.table-headers {
+    display: none; /* Ocultamos los headers anteriores */
+}
+
+.notifications-container {
+    display: none; /* Ocultamos el contenedor anterior */
+}
+
 .notification-card {
     background: white;
     border-radius: 15px;
@@ -344,7 +419,6 @@ html, body {
     box-shadow: 0 4px 20px rgba(30, 145, 214, 0.15);
 }
 
-/* ========== CARD CONTENT ========== */
 .card-activity {
     display: flex;
     flex-direction: column;
@@ -403,47 +477,7 @@ html, body {
     font-size: 1.2rem;
 }
 
-/* ========== RESPONSIVE PARA NOTIFICACIONES ========== */
-@media (max-width: 768px) {
-    .notifications-header h3 {
-        font-size: 1.4rem;
-    }
-    
-    .table-headers {
-        display: none; /* Ocultar headers en móvil */
-    }
-    
-    .notification-card {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1.2rem;
-    }
-    
-    .card-subject,
-    .card-status {
-        align-items: flex-start;
-        text-align: left;
-    }
-    
-    /* Mostrar labels en móvil */
-    .card-subject::before {
-        content: "MATERIA: ";
-        font-size: 0.75rem;
-        color: #999;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-    
-    .card-status::before {
-        content: "ESTADO: ";
-        font-size: 0.75rem;
-        color: #999;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-}
-
-/* ========== COLUMNA DERECHA (MÁS PEQUEÑA) ========== */
+/* ========== COLUMNA DERECHA ========== */
 .right-column {
     display: flex;
     flex-direction: column;
@@ -451,16 +485,13 @@ html, body {
     height: 100%;
 }
 
-/* -------------------- CALENDARIO -------------------- */
-
-/* Sección general del calendario */
+/* ========== CALENDARIO ========== */
 .calendar-section {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
 }
 
-/* Encabezado del mes y flechas (afuera del cuadro) */
 .calendar-top {
     display: flex;
     justify-content: space-between;
@@ -475,7 +506,6 @@ html, body {
     margin: 0;
 }
 
-/* Flechas de navegación */
 .calendar-nav {
     display: flex;
     gap: 0.5rem;
@@ -495,7 +525,6 @@ html, body {
     background: #dcdde1;
 }
 
-/* Caja blanca del calendario (solo para los días) */
 .calendar-widget {
     background: white;
     border-radius: 15px;
@@ -503,7 +532,6 @@ html, body {
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
 }
 
-/* Grid del calendario */
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -511,14 +539,12 @@ html, body {
     text-align: center;
 }
 
-/* Encabezado de días (LU, MA, etc.) */
 .day-header {
     font-weight: bold;
     color: #7f8c8d;
     font-size: 0.9rem;
 }
 
-/* Celda de cada día */
 .day-cell {
     padding: 10px 0;
     border-radius: 8px;
@@ -527,23 +553,21 @@ html, body {
     transition: background 0.2s ease, color 0.2s ease;
 }
 
-/* Hover sobre los días */
 .day-cell:hover {
     background: #f1f2f6;
 }
 
-/* Día actual */
 .current-day {
     background: #3498db;
     color: white;
     font-weight: bold;
 }
 
-/* Días del mes anterior o siguiente (grisados) */
 .prev-month {
     color: #bdc3c7;
 }
-/* ========== acudient PROFILE ========== */
+
+/* ========== ACUDIENT PROFILE ========== */
 .acudient-profile {
     background-color: #a0d9fc;
     border-radius: 20px;
@@ -552,22 +576,22 @@ html, body {
     text-align: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     flex: 0.8;
-    position: relative; /* 👈 importantísimo */
+    position: relative;
 }
 
 .acudient-avatar {
     width: 125px;
     height: 125px;
-    background-color: #fff;      /* círculo blanco (cámbialo o quítalo) */
+    background-color: #fff;
     border-radius: 50%;
     margin: 0 auto 0.8rem;
     display: grid;
     place-items: center;
-    overflow: hidden;            /* recorta cualquier borde de la imagen */
+    overflow: hidden;
 }
 
 .avatar-img {
-    width: 100%;                  /* tamaño del dibujo dentro del círculo */
+    width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
@@ -576,7 +600,7 @@ html, body {
 .icon-item {
     width: 50px;
     height: 50px;
-    margin: 0 auto 15px auto; /* centrado con margen abajo */
+    margin: 0 auto 15px auto;
     background: #1e91d6;
     border-radius: 50%;
     display: flex;
@@ -661,6 +685,7 @@ html, body {
     font-weight: 700;
 }
 
+/* ========== MODAL ========== */
 .modal {
     display: none;
     position: fixed;
@@ -728,8 +753,103 @@ html, body {
     transform: translateY(-2px);
 }
 
+/* ========== HAMBURGER & DROPDOWN ========== */
+.hamburger {
+    display: none;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4a4063;
+}
+
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    right: 0.5rem;
+    width: 350px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s ease;
+    z-index: 200;
+    flex-wrap: nowrap;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-family: "Comfortaa", sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background-color: rgba(30, 145, 214, 0.1);
+    color: #1e91d6;
+}
+
+.dropdown-menu.show {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown-menu .dropdown-logout-btn {
+    background-color: #1e91d6 !important;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dropdown-menu .dropdown-logout-btn:hover {
+    background-color: #6A5B8C !important;
+    transform: scale(1.02);
+}
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1024px) {
+    .hamburger {
+        display: block;
+        font-size: 2rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #4a4063;
+        transition: transform 0.2s ease;
+    }
+
+    .hamburger:hover {
+        transform: scale(1.1);
+    }
+
+    .sidebar {
+        display: none; 
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
     .dashboard-content {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -761,8 +881,8 @@ html, body {
     }
     
     .main-content {
-        margin-left: 80px;
-        width: calc(100% - 80px);
+        margin-left: 0;
+        width: 100%;
         padding: 1rem;
     }
     
@@ -770,6 +890,12 @@ html, body {
         flex-direction: column;
         text-align: center;
         gap: 1rem;
+    }
+    
+    .greeting-illustration {
+        width: 155px;
+        height: 155px;
+        flex: 1;
     }
     
     .greeting-text h2 {
@@ -796,5 +922,12 @@ html, body {
         border-radius: 8px;
         padding: 1rem;
         margin-bottom: 0.5rem;
+    }
+
+    .col-data:nth-child(2) {
+        background: none;
+        border: none;
+        padding: 0;
+        justify-content: flex-start;
     }
 }

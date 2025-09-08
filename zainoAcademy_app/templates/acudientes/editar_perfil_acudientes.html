@@ -12,8 +12,8 @@
 <body class="dashboard-page">
     <aside class="sidebar">
         <div class="logo">
-            <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
-            <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+            <a href="{% url 'dashboard_acudientes' %}"><img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/></a>
+            <a href="{% url 'dashboard_acudientes' %}"><img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" /></a>
         </div>
         <nav>
             <ul class="nav-list">
@@ -33,7 +33,7 @@
         <div class="logout-container">
             <form method="POST" action="{% url 'login' %}">
                 {% csrf_token %}
-                <button type="submit" class="logout-btn">Cerrar sesión</button>
+                <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
             </form>
         </div>
     </aside>
@@ -43,9 +43,6 @@
             <h1 class="page-title">Editar perfil</h1>
     <div class="header-icons">
             <!-- Notificaciones -->
-            <a href="{% url 'notificaciones_acudientes' %}">
-                <img src="{% static 'images/acudientes/notificaciones.png' %}" class="header-icon" alt="Notificaciones">
-            </a>
             
             <!-- Nombre -->
 
@@ -56,6 +53,19 @@
                 <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
             </a>
         </div>
+
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+                
+            <div id="dropdown-menu" class="dropdown-menu">
+                    <a href="{% url 'dashboard_acudientes' %}">Inicio</a>
+                    <a href="{% url 'actividades_acudientes' %}">Actividades</a>
+                    <a href="{% url 'asistencia_acudientes' %}">Asistencia</a>
+                    <form method="POST" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
+                    </form>
+            </div>
+            
     </header>
 
         <section class="edit-profile">
@@ -91,8 +101,28 @@
                 </div>
             </div>
         </main>
-        
-    </main>
+
+        <div id="logout-modal" class="modal">
+        <div class="modal-content">
+            <h2>¿Cerrar Sesión?</h2>
+            <div class="modal-actions">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-confirm">Confirmar</button>
+                </form>
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('logout-modal');
+        function openModal() { modal.style.display = 'flex'; }
+        function closeModal() { modal.style.display = 'none'; }
+        window.onclick = function(event) {
+            if (event.target == modal) { closeModal(); }
+        }
+    </script>
 
         <script>
         document.querySelector(".profile-form").addEventListener("submit", async function(event){
@@ -130,3 +160,12 @@
             document.getElementById("modal").style.display = "none";
         });
 </script>
+
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById("dropdown-menu");
+        menu.classList.toggle("show");
+    }
+    </script>
+</body>
+</html>

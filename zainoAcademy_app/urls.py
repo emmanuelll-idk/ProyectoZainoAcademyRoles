@@ -58,8 +58,7 @@ urlpatterns = [
     path('acudientes/actualizar_perfil/', views.actualizar_perfil_acudientes, name='actualizar_perfil_acudientes'),
 
 
-    # Profesores:
-
+    #Profesores
     path('profesores/actividades/crear/<int:bol_id>/', views.actividad_profesores_crear_actividad, name='actividad_profesores_crear_actividad'),
     path('profesores/actividades/lista/', views.actividad_profesores_lista, name='actividad_profesores_lista'),
     path('profesores/actividades/consultar/', views.actividad_profesores_consultar, name='actividad_profesores_consultar'),

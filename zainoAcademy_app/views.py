@@ -3,8 +3,8 @@
 # Descripción: Este archivo realiza las vistas entre la base y los templates
 # Autor: Gabriela Muñoz Acero
 # Fecha de creación: 2025-02-02 
-# # Última modificación: 2025-09-04
-#NOTAS: 
+# # Última modificación: 2025-09-08
+#NOTAS: Se realizco migracion de los archivos y vistas por acudinetes
 
 
 #Importaciones de libreias y otros archivos
@@ -1297,43 +1297,97 @@ def eliminar_periodo(request, id):
     })
 
 
-
 #Acudiente
 
 def dashboard_acudientes(request):
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect('login')
+
     try:
-        usuario = get_usuario_from_session(request)
-        if not usuario:
-            return redirect('login')
+        acudiente = Acudiente.objects.get(Usu_id=usuario.Us_id)
+        print(f"✅ Acudiente encontrado: {acudiente}")
+    except Acudiente.DoesNotExist:
+        print("❌ Acudiente no encontrado")
+        return redirect('login')
 
-        # traer acudiente y estudiantes a cargo
-        acudiente = Acudiente.objects.get(Usuario_Us=usuario)
-        estudiantes_a_cargo = [acudiente.Estudiantes_Est]
-
-        actividades_pendientes = []
-        if estudiantes_a_cargo:
-            actividades_pendientes = Actividad.objects.filter(
-                Esta_Actividad_id=2,
-                Bol__Cur__estudiante_curso__Est=estudiantes_a_cargo[0]
-            ).select_related('Bol__Mtr', 'Esta_Actividad')
-
-        context = {
-            'usuario': usuario,
-            'estudiantes_a_cargo': estudiantes_a_cargo,
-            'actividades_pendientes': actividades_pendientes,
-            'total_pendientes': len(actividades_pendientes),
-        }
-        return render(request, 'acudientes/dashboard_acudientes.html', context)
-
-    except Exception as e:
-        print(f"❌ Error en dashboard_acudientes: {e}")
+    # Obtener estudiantes a cargo
+    estudiantes_a_cargo = Estudiantes.objects.filter(Acu=acudiente)
+    print(f"👥 Estudiantes a cargo: {estudiantes_a_cargo.count()}")
+    
+    if not estudiantes_a_cargo.exists():
+        print("⚠️  No hay estudiantes a cargo")
         return render(request, 'acudientes/dashboard_acudientes.html', {
-            'usuario': None,
-            'estudiantes_a_cargo': [],
-            'actividades_pendientes': [],
-            'total_pendientes': 0,
+            'usuario': usuario,
+            'pendientes': []
         })
 
+    pendientes = []
+    
+    for estudiante in estudiantes_a_cargo:
+        print(f"\n🎓 Procesando estudiante: {estudiante.Usu_id.Us_nombre}")
+        
+        # Obtener cursos del estudiante
+        estudiante_cursos = Estudiante_Curso.objects.filter(Est=estudiante)
+        print(f"📚 Estudiante_Curso encontrados: {estudiante_cursos.count()}")
+        
+        for est_cur in estudiante_cursos:
+            print(f"  📖Curso: {est_cur.Cur_id}")
+            
+            # Obtener boletines del curso
+            boletines = Boletin.objects.filter(Cur_id=est_cur.Cur_id)
+            print(f"  📋 Boletines en el curso: {boletines.count()}")
+            
+            for boletin in boletines:
+                print(f"    📝 Boletin: {boletin} - Materia: {boletin.Mtr.Mtr_nombre}")
+                
+                # Obtener actividades del boletín
+                actividades = Actividad.objects.filter(Bol=boletin)
+                print(f"    📌 Actividades en el boletín: {actividades.count()}")
+                
+                for actividad in actividades:
+                    print(f"      🔍 Actividad: {actividad.Act_nombre}")
+                    
+                    # Verificar entrega
+                    try:
+                        entrega = Actividad_Entrega.objects.get(Act=actividad, Est=estudiante)
+                        print(f"      ✅ Entrega encontrada - Archivo: {bool(entrega.Act_Archivo_Estudiante)}")
+                        
+                        # Si no hay archivo, es pendiente
+                        if not entrega.Act_Archivo_Estudiante:
+                            pendientes.append({
+                                "actividad": actividad.Act_nombre,
+                                "materia": boletin.Mtr.Mtr_nombre,
+                                "estado": "Pendiente",
+                                "estudiante": estudiante.Usu_id.Us_nombre
+                            })
+                            print(f"      ⚠️  PENDIENTE: Sin archivo")
+                        else:
+                            print(f"      ✅ COMPLETA: Con archivo")
+                            
+                    except Actividad_Entrega.DoesNotExist:
+                        print(f"      ❌ No hay entrega registrada")
+                        # Si no hay entrega, es pendiente
+                        pendientes.append({
+                            "actividad": actividad.Act_nombre,
+                            "materia": boletin.Mtr.Mtr_nombre,
+                            "estado": "Pendiente",
+                            "estudiante": estudiante.Usu_id.Us_nombre
+                        })
+
+    print(f"\n🎯 RESULTADO FINAL:")
+    print(f"Total pendientes encontradas: {len(pendientes)}")
+    for p in pendientes:
+        print(f"  - {p['actividad']} ({p['materia']}) - {p['estado']}")
+
+    # Limitar a 4 elementos
+    pendientes_limitadas = pendientes[:4]
+    print(f"Pendientes a enviar al template: {len(pendientes_limitadas)}")
+
+    return render(request, 'acudientes/dashboard_acudientes.html', {
+        'usuario': usuario,
+        'pendientes': pendientes_limitadas
+    })
 
 def dashboard_acudientes_calendar(request):
     usuario = get_usuario_from_session(request)
@@ -1484,20 +1538,16 @@ def asistencia_pdf_acudientes(request):
         return HttpResponse("Faltan datos", status=400)
 
     try:
-        # estudiante
         estudiante = Estudiantes.objects.get(Est_id=estudiante_id)
-        # periodo
         periodo = Periodo.objects.get(Per_id=periodo_id)
-        # estudiante_curso
-        est_curso = Estudiante_Curso.objects.get(Est=estudiante)
-    except (Estudiantes.DoesNotExist, Periodo.DoesNotExist, Estudiante_Curso.DoesNotExist):
+    except (Estudiantes.DoesNotExist, Periodo.DoesNotExist):
         return HttpResponse("Datos no encontrados", status=404)
 
-    # 🔎 Traer la asistencia real de ese estudiante y periodo
+    # Consultar asistencias directamente sin necesidad de est_curso específico
     asistencias = Asistencia.objects.filter(
-        Est_Cur=est_curso,
-        Est_Cur__Cur__boletin__Per=periodo   # ← ajusta si tu Periodo se relaciona distinto
-    ).select_related("Esta_Asistencia").order_by("Ast_fecha")
+        Est_Cur__Est=estudiante,
+        Est_Cur__Cur__boletin__Per=periodo
+    ).select_related("Esta_Asistencia", "Est_Cur").order_by("Ast_fecha")
 
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
