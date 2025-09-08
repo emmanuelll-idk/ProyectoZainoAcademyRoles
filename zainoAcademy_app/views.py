@@ -13,7 +13,7 @@ from django.views.decorators.http import require_GET, require_POST
 from django.http import HttpResponse, JsonResponse, FileResponse
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Periodo, Usuario, TipoUsuario, Boletin, Materia, Estudiante_Curso, Estudiantes, Actividad, Actividad_Entrega, MaterialApoyo, Asistencia, Profesores, Estado_Actividad, Estado_Asistencia, Curso, Directivos, Matricula, Acudiente, Asistencia, Estudiantes
+from .models import Periodo, Usuario, TipoUsuario, Boletin, Materia, Estudiante_Curso, Estudiantes, Actividad, Actividad_Entrega, MaterialApoyo, Asistencia, Profesores, Estado_Actividad, Estado_Asistencia, Curso, Directivos, Matricula, Acudiente, Asistencia, Estudiantes, Actividad_EntregaArchivo
 from datetime import date
 import json, io
 from .forms import  UsuarioForm, EstudiantesForm, DirectivosForm, AcudienteForm, MatriculaForm, CursoForm, MateriaForm, BoletinForm
