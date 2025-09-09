@@ -354,7 +354,9 @@
             <h1 class="page-title">{% block page_title %}Actividad{% endblock %}</h1>
             <div class="header-icons">
                 <span class="user-name">{{ usuario.Us_nombre }}</span>
-                <div class="user-avatar"></div>
+                <a href="{% url 'ver_perfil_directivos' %}">
+                  <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                </a>
             </div>
         </header>
 

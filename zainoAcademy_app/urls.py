@@ -30,7 +30,7 @@ urlpatterns = [
     path('acudientes/asistencia/', views.asistencia_acudientes, name='asistencia_acudientes'),
     path('acudientes/notificaciones/', views.notificaciones_acudientes, name='notificaciones_acudientes'),
     path('acudientes/editar_perfil/', views.editar_perfil_acudientes, name='editar_perfil_acudientes'),
-    path('acudientes/actualizar_perfil/', views.actualizar_perfil_acudientes, name='actualizar_perfil_acudientes'),
+    path('acudientes/perfil/', views.ver_perfil_acudientes, name='ver_perfil_acudientes'),
     path('acudientes/dashboard_acudientes/', views.dashboard_acudientes_calendar, name="dashboard_acudientes"),
     path('acudientes/actividades_list/', views.actividades_list_acudientes, name='actividades_list_acudientes'),
     path('acudientes/asistencia_list/', views.asistencia_list_acudientes, name='asistencia_list_acudientes'),
@@ -49,13 +49,6 @@ urlpatterns = [
     path('estudiantes/editar_perfil/', views.editar_perfil_estudiantes, name='editar_perfil_estudiantes'),
     path('perfil/', views.ver_perfil_estudiantes, name='ver_perfil_estudiantes'),
     path('eliminar-archivo/', views.eliminar_archivo, name='eliminar_archivo'),
-
-    # Acudientes
-    path('acudientes/actividades/', views.actividades_acudientes, name='actividades_acudientes'),
-    path('acudientes/asistencia/', views.asistencia_acudientes, name='asistencia_acudientes'),
-    path('acudientes/notificaciones/', views.notificaciones_acudientes, name='notificaciones_acudientes'),
-    path('acudientes/editar_perfil/', views.editar_perfil_acudientes, name='editar_perfil_acudientes'),
-    path('acudientes/actualizar_perfil/', views.actualizar_perfil_acudientes, name='actualizar_perfil_acudientes'),
 
 
     #Profesores
@@ -79,6 +72,9 @@ urlpatterns = [
     path('directivos/',views.dashboard_directivos, name='dashboard_directivo'),
     path('dirrectivos/notificaciones/',views.notificaciones_directivos, name='notificaciones_directivos'),
     path('dirrectivos/periodo/',views.periodo_crear_directivos, name='periodo_directivos'),
+    path('directivos/dashboard_directivos/', views.dashboard_directivos_calendar, name="dashboard_directivos"),
+    path('directivos/editar_perfil/', views.editar_perfil_directivos, name='editar_perfil_directivos'),
+    path('directivos/perfil/', views.ver_perfil_directivos, name='ver_perfil_directivos'),
 
     #Directivos Usuarios:
     path('usuario/crear/', views.crear_usuario, name='crear_usuario'),
@@ -115,8 +111,8 @@ urlpatterns = [
     path('materia/eliminar/<int:id>/', views.eliminar_materia, name='eliminar_materia'),
 
 #Directivos Periodo
-path('dirrectivos/periodo/', views.periodo_crear_directivos, name='periodo_directivos'),
-path('dirrectivos/periodo/consultar/', views.periodo_consultar_directivos, name='periodo_directivos_consultar'),
+path('directivos/periodo/', views.periodo_crear_directivos, name='periodo_directivos'),
+path('directivos/periodo/consultar/', views.periodo_consultar_directivos, name='periodo_directivos_consultar'),
 path('directivos/periodo/editar/<int:id>/', views.editar_periodo, name='editar_periodo'),
 path('directivos/periodo/eliminar/<int:id>/', views.eliminar_periodo, name='eliminar_periodo'),
 

@@ -1,0 +1,29 @@
+{% extends 'base_directivos.html' %}
+{% load static %}
+{% block page_title %}Mi perfil{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/directivos/ver_perfil_directivos.css' %}">
+
+<section class="view-profile">
+    <div class="profile-container">
+        <div class="left-column">
+            <div class="profile-pic">
+                <img src="{% static 'images/acudientes/perfil.png' %}" alt="Foto de perfil">
+            </div>
+            <p class="profile-name">{{ usuario.Us_nombre }}</p>
+            <p class="profile-role">Directivo</p>
+        </div>
+
+        <div class="right-column">
+            <div class="profile-info">
+                <p><strong>Nombre de usuario:</strong><br><br> {{ usuario.Us_nombre }}</p><br>
+                <p><strong>E-mail:</strong><br><br> {{ usuario.correo }}</p>
+            </div>
+
+            <a href="{% url 'editar_perfil_directivos' %}">
+                <button class="edit-btn">Editar perfil</button>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

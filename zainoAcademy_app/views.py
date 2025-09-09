@@ -90,34 +90,6 @@ def get_usuario_from_session(request):
             return None
     return None
 
-@csrf_exempt
-def actualizar_perfil_acudientes(request):
-    if request.method == 'POST':
-        usuario = get_usuario_from_session(request)
-        if not usuario:
-            return JsonResponse({'error': 'Usuario no autenticado'}, status=403)
-
-        try:
-            data = json.loads(request.body.decode('utf-8'))
-
-            usuario.Us_nombre = data.get('username', usuario.Us_nombre)
-            usuario.correo = data.get('email', usuario.correo)
-            usuario.Us_contraseña = data.get('password', usuario.Us_contraseña)
-
-            # ✅ Solución: asegurarse de que fecha_registro tenga un valor
-            if not usuario.fecha_registro:
-                usuario.fecha_registro = date.today()
-
-            usuario.save()
-
-            # Actualizamos el nombre en la sesión
-            request.session['usuario_nombre'] = usuario.Us_nombre
-
-            return JsonResponse({'success': True})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 def dashboard_estudiantes(request):
     usuario = get_usuario_from_session(request)
@@ -160,7 +132,74 @@ def dashboard_estudiantes(request):
 
 
 def dashboard_directivos(request):
-    return HttpResponse('<h1>Dashboard Directivos - Login Exitoso!</h1>')
+    usuario = get_usuario_from_session(request)
+
+    # Traer las 5 matrículas más recientes
+    matriculas_recientes = Matricula.objects.select_related("Estudiantes_Est", "Directivos_Dir")\
+        .order_by('-Mat_fecha')[:5]
+
+    return render(request, 'directivos/dashboard_directivos.html', {
+        'usuario': usuario,
+        'matriculas_recientes': matriculas_recientes
+    })
+
+
+def dashboard_directivos_calendar(request):
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect('login')
+
+    # Aseguramos que fecha_registro no esté vacío
+    if not usuario.fecha_registro:
+        usuario.fecha_registro = date.today()
+        usuario.save()
+
+    today = date.today().isoformat()  # Para el input date
+
+    return render(request, "directivos/dashboard_directivos.html", {
+        "usuario": usuario,
+        "today": today
+    })
+
+def editar_perfil_directivos(request):
+    usuario = get_usuario_from_session(request)
+
+    try:
+        # Buscar el directivo asociado al usuario logueado
+        directivo = Directivos.objects.get(Us=usuario)
+    except Directivos.DoesNotExist:
+        messages.error(request, "No se encontró el perfil de directivo asociado a este usuario.")
+        return redirect("home")  # Ajusta la redirección a donde quieras enviar en caso de error
+
+    if request.method == "POST":
+        current_password = request.POST.get("current_password")
+        
+        # Validar contraseña actual
+        if current_password != usuario.Us_contraseña:  
+            messages.error(request, "Contraseña actual incorrecta.")
+            return redirect("editar_perfil_directivos")
+        
+        # Actualizar datos básicos
+        usuario.Us_nombre = request.POST.get("username")
+        usuario.correo = request.POST.get("email")
+
+        # Actualizar contraseña si se proporciona una nueva
+        new_password = request.POST.get("new_password")
+        if new_password:
+            usuario.Us_contraseña = new_password
+
+        usuario.save()
+        messages.success(request, "Perfil actualizado correctamente!")
+        return redirect("editar_perfil_directivos")
+
+    return render(request, 'directivos/editar_perfil_directivos.html', {
+        'usuario': usuario,
+        'directivo': directivo
+    })
+
+def ver_perfil_directivos(request):
+    usuario = get_usuario_from_session(request)
+    return render(request, 'directivos/ver_perfil_directivos.html', {'usuario': usuario})
 
 def dashboard_acudientes(request):
     usuario = get_usuario_from_session(request)
@@ -173,15 +212,6 @@ def actividades_acudientes(request):
 def asistencia_acudientes(request):
     usuario = get_usuario_from_session(request)
     return render(request, 'acudientes/asistencia_acudientes.html', {'usuario': usuario})
-
-def notificaciones_acudientes(request):
-    usuario = get_usuario_from_session(request)
-    return render(request, 'acudientes/notificaciones_acudientes.html', {'usuario': usuario})
-
-def editar_perfil_acudientes(request):
-    usuario = get_usuario_from_session(request)
-    return render(request, 'acudientes/editar_perfil_acudientes.html', {'usuario': usuario})
-
 
 
 
@@ -678,14 +708,11 @@ def get_cargo_directivo(request):
             return None
     return None
 
-
+ 
 #--------------------------------------------
 #Directivos
 #----------------------------------------------
-def dashboard_directivos(request):
-    usuario = get_usuario_from_session(request)
-    return render(request, 'directivos/dashboard_directivos.html', {'usuario': usuario})
-    
+
 
 def dashboard_cargo_directivos(request):
     cargo = get_cargo_directivo(request)
@@ -1474,7 +1501,43 @@ def notificaciones_acudientes(request):
 
 def editar_perfil_acudientes(request):
     usuario = get_usuario_from_session(request)
-    return render(request, 'acudientes/editar_perfil_acudientes.html', {'usuario': usuario})
+
+    try:
+        # Buscar el acudiente asociado al usuario logueado
+        acudiente = Acudiente.objects.get(Usuario_Us=usuario)
+    except Acudiente.DoesNotExist:
+        messages.error(request, "No se encontró el perfil de acudiente asociado a este usuario.")
+        return redirect("home")  # Ajusta la redirección a donde quieras enviar en caso de error
+
+    if request.method == "POST":
+        current_password = request.POST.get("current_password")
+        
+        # Validar contraseña actual
+        if current_password != usuario.Us_contraseña:  
+            messages.error(request, "Contraseña actual incorrecta.")
+            return redirect("editar_perfil_acudientes")
+        
+        # Actualizar datos básicos
+        usuario.Us_nombre = request.POST.get("username")
+        usuario.correo = request.POST.get("email")
+
+        # Actualizar contraseña si se proporciona una nueva
+        new_password = request.POST.get("new_password")
+        if new_password:
+            usuario.Us_contraseña = new_password
+
+        usuario.save()
+        messages.success(request, "Perfil actualizado correctamente!")
+        return redirect("editar_perfil_acudientes")
+
+    return render(request, 'acudientes/editar_perfil_acudientes.html', {
+        'usuario': usuario,
+        'acudiente': acudiente
+    })
+
+def ver_perfil_acudientes(request):
+    usuario = get_usuario_from_session(request)
+    return render(request, 'acudientes/ver_perfil_acudientes.html', {'usuario': usuario})
 
 def actividades_list_acudientes(request):
     usuario = get_usuario_from_session(request)

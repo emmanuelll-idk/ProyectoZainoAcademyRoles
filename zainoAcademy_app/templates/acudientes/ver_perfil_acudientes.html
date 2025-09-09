@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar perfil - Zaino Academy</title>
-    <link rel="stylesheet" href="{% static 'css/acudientes/editar_perfil_acudientes.css' %}">
+    <title>Ver perfil - Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/acudientes/ver_perfil_acudientes.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
 </head>
@@ -40,7 +40,7 @@
 
     <main class="main-content">
         <header class="page-header">
-            <h1 class="page-title">Editar perfil</h1>
+            <h1 class="page-title">Ver perfil</h1>
     <div class="header-icons">
             <!-- Notificaciones -->
             
@@ -68,49 +68,25 @@
             
     </header>
 
-        <section class="edit-profile">
-            <div class="profile-form">
+        <section class="view-profile">
+            <div class="profile-container">
                 <div class="left-column">
-                {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                        <div class="message {{ message.tags }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                <form method="POST">
-                    {% csrf_token %}
-                    <label for="username">Nombre de usuario</label><br><br>
-                    <input type="text" id="username" name="username" value="{{ usuario.Us_nombre }}" required><br><br>
-
-                    <label for="email">E-mail</label><br><br>
-                    <input type="email" id="email" name="email" value="{{ usuario.correo }}" required><br><br>
-
-                    <label for="current_password">Contraseña actual</label><br><br>
-                    <div class="password-wrapper">
-                        <input type="password" id="current_password" name="current_password" required>
-                        <span class="toggle-password" onclick="togglePassword('current_password')">(•)</span>
-                    </div><br><br>
-
-                    <label for="new_password">Nueva contraseña (opcional)</label><br><br>
-                    <div class="password-wrapper">
-                        <input type="password" id="new_password" name="new_password">
-                        <span class="toggle-password" onclick="togglePassword('new_password')">(•)</span>
-                    </div><br><br>
-
-                    <button type="submit" class="save-btn">Guardar</button>
-                </form>
-
-                </div>
-
-                <div class="right-column">
                     <div class="profile-pic">
                         <img src="{% static 'images/acudientes/perfil.png' %}" alt="Foto de perfil">
                     </div>
                     <p class="profile-name">{{ usuario.Us_nombre }}</p>
                     <p class="profile-role">Acudiente</p>
+                </div>
+
+                <div class="right-column">
+                    <div class="profile-info">
+                        <p><strong>Nombre de usuario:</strong><br><br> {{ usuario.Us_nombre }}</p><br>
+                        <p><strong>E-mail:</strong><br><br> {{ usuario.correo }}</p>
+                    </div>
+
+                    <a href="{% url 'editar_perfil_acudientes' %}">
+                        <button class="edit-btn">Editar perfil</button>
+                    </a>
                 </div>
             </div>
         </section>
@@ -136,17 +112,6 @@
             if (event.target == modal) { closeModal(); }
         }
     </script>
-
-<script>
-function togglePassword(id) {
-    const input = document.getElementById(id);
-    if (input.type === "password") {
-        input.type = "text";
-    } else {
-        input.type = "password";
-    }
-}
-</script>
 
 <script>
     function toggleMenu() {

@@ -1,0 +1,115 @@
+/* ====== SECCIÓN VER PERFIL ====== */
+.view-profile {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+    padding: 1rem;
+}
+
+/* ====== CONTENEDOR DE PERFIL ====== */
+.profile-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    gap: 3rem;
+    padding: 2rem;
+    border-radius: 15px;
+
+}
+
+/* ====== COLUMNA IZQUIERDA ====== */
+.left-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #1e91d6;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4a4063;
+}
+
+.profile-role {
+    font-size: 1rem;
+    color: #777;
+}
+
+/* ====== COLUMNA DERECHA ====== */
+.right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.profile-info p {
+    font-size: 1rem;
+    color: #4a4063;
+    margin-bottom: 0.8rem;
+}
+
+.profile-info strong {
+    color: #4a4063;
+}
+
+/* ====== BOTÓN EDITAR ====== */
+.edit-btn {
+    margin-top: 1rem;
+    padding: 0.9rem 2rem;
+    border: none;
+    border-radius: 12px;
+    background-color: #4a4063;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.edit-btn:hover {
+    background-color: #352c4d;
+    transform: scale(1.05);
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 1024px) {
+    .profile-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-column, .right-column {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 1.5rem;
+    }
+
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+    }
+}
+
