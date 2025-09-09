@@ -8,6 +8,8 @@
 
 
 #Importaciones de libreias y otros archivos
+from django.core.mail import send_mail
+from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 from django.http import HttpResponse, JsonResponse, FileResponse
@@ -16,6 +18,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Periodo, Usuario, TipoUsuario, Boletin, Materia, Estudiante_Curso, Estudiantes, Actividad, Actividad_Entrega, MaterialApoyo, Asistencia, Profesores, Estado_Actividad, Estado_Asistencia, Curso, Directivos, Matricula, Acudiente, Asistencia, Estudiantes, Actividad_EntregaArchivo
 from datetime import date
 import json, io
+import logging
 from .forms import  UsuarioForm, EstudiantesForm, DirectivosForm, AcudienteForm, MatriculaForm, CursoForm, MateriaForm, BoletinForm
 
 # Para los reportes de estudiantes
@@ -47,8 +50,120 @@ def inicio(request):
 def nosotros(request):
     return render (request, "staticPage/nosotros.html")
 
+
+# Configurar logging
+logger = logging.getLogger(__name__)
+
 def contacto(request):
-    return render (request, "staticPage/contacto.html")
+    if request.method == 'POST':
+        try:
+            # Obtener datos del formulario
+            nombre = request.POST.get('nombre', '').strip()
+            email = request.POST.get('email', '').strip()
+            mensaje = request.POST.get('mensaje', '').strip()
+            
+            print(f"DEBUG - Datos recibidos: nombre={nombre}, email={email}, mensaje={mensaje}")
+            
+            # Validaciones básicas
+            if not all([nombre, email, mensaje]):
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'Todos los campos son obligatorios'
+                })
+            
+            # Debug de configuración de email
+            print(f"DEBUG - EMAIL_HOST_USER: {settings.EMAIL_HOST_USER}")
+            print(f"DEBUG - EMAIL_HOST: {settings.EMAIL_HOST}")
+            print(f"DEBUG - EMAIL_PORT: {settings.EMAIL_PORT}")
+            print(f"DEBUG - EMAIL_USE_TLS: {settings.EMAIL_USE_TLS}")
+            
+            # Enviar email al administrador
+            admin_subject = f'Nuevo mensaje de contacto de {nombre}'
+            admin_message = f'''
+Has recibido un nuevo mensaje de contacto:
+
+Nombre: {nombre}
+Email: {email}
+Mensaje: {mensaje}
+
+---
+Este mensaje fue enviado desde el formulario de contacto de ZainoAcademy.
+            '''
+            
+            print("DEBUG - Intentando enviar email al administrador...")
+            
+            send_mail(
+                subject=admin_subject,
+                message=admin_message,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[settings.ADMIN_EMAIL],
+                fail_silently=False,
+            )
+            
+            print("DEBUG - Email al administrador enviado exitosamente")
+            
+            # Enviar email de confirmación al usuario
+            user_subject = 'Hemos recibido tu mensaje - ZainoAcademy'
+            user_message = f'''
+Hola {nombre},
+
+Hemos recibido tu mensaje y te contactaremos pronto.
+
+Tu mensaje:
+"{mensaje}"
+
+Gracias por contactarnos.
+
+Saludos,
+Equipo ZainoAcademy
+            '''
+            
+            print("DEBUG - Intentando enviar email de confirmación al usuario...")
+            
+            send_mail(
+                subject=user_subject,
+                message=user_message,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[email],
+                fail_silently=False,
+            )
+            
+            print("DEBUG - Email de confirmación enviado exitosamente")
+            
+            return JsonResponse({
+                'success': True, 
+                'message': 'Mensaje enviado correctamente. Te contactaremos pronto.'
+            })
+            
+        except Exception as e:
+            # Log detallado del error
+            error_msg = str(e)
+            print(f"ERROR DETALLADO: {error_msg}")
+            logger.error(f"Error enviando email: {error_msg}")
+            
+            # Diferentes tipos de errores comunes
+            if "authentication" in error_msg.lower():
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'Error de autenticación con el servidor de correo'
+                })
+            elif "connection" in error_msg.lower():
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'No se pudo conectar al servidor de correo'
+                })
+            elif "timeout" in error_msg.lower():
+                return JsonResponse({
+                    'success': False, 
+                    'error': 'Tiempo de espera agotado. Inténtalo de nuevo.'
+                })
+            else:
+                return JsonResponse({
+                    'success': False, 
+                    'error': f'Error técnico: {error_msg}'
+                })
+    
+    return render(request, "staticPage/contacto.html")
 
 def precios(request):
     return render (request, "staticPage/precio.html")
@@ -1564,18 +1679,34 @@ def lista_matriculas(request):
     return render(request, 'directivos/matricula_form.html', {'matricula': matriculas})
 
 def crear_matricula(request):
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect('login')
+    
+    # Obtener el directivo basado en el usuario de la sesión
+    try:
+        directivo = Directivos.objects.get(Us=usuario)
+    except Directivos.DoesNotExist:
+        messages.error(request, 'No se encontró un directivo asociado a este usuario.')
+        return redirect('lista_matriculas')
+    
     if request.method == 'POST':
-        # ⚠️ IMPORTANTE: Incluir request.FILES para el archivo
         form = MatriculaForm(request.POST, request.FILES)
         
-        # Debugging temporal - puedes comentar estas líneas después
         print("POST data:", request.POST)
         print("FILES data:", request.FILES)
         print("Form is valid:", form.is_valid())
         
         if form.is_valid():
             try:
-                matricula = form.save()
+                # Guardar la matrícula sin hacer commit
+                matricula = form.save(commit=False)
+                # Asignar automáticamente el directivo de la sesión
+                matricula.Directivos_Dir = directivo
+                # Asignar automáticamente la fecha actual
+                matricula.Mat_fecha = date.today()
+                matricula.save()
+                
                 messages.success(request, f'Matrícula {matricula.Mat_id} registrada correctamente.')
                 return redirect('lista_matriculas')
             except Exception as e:
@@ -1590,30 +1721,42 @@ def crear_matricula(request):
     else:
         form = MatriculaForm()
     
-    # Agregar información adicional para debugging
     context = {
         'form': form,
+        'usuario': usuario,
+        'directivo': directivo,  # Pasar el directivo al contexto
         'estudiantes_count': Estudiantes.objects.count(),
-        'directivos_count': Directivos.objects.count(),
     }
     
     return render(request, 'directivos/matricula.html', context)
-
 def editar_matricula(request, pk):
     matricula = get_object_or_404(Matricula, pk=pk)
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect('login')
+    
+    # Obtener el directivo basado en el usuario de la sesión
+    try:
+        directivo = Directivos.objects.get(Us=usuario)
+    except Directivos.DoesNotExist:
+        messages.error(request, 'No se encontró un directivo asociado a este usuario.')
+        return redirect('lista_matriculas')
     
     if request.method == 'POST':
-        # ⚠️ IMPORTANTE: Incluir request.FILES para manejar archivos
         form = MatriculaForm(request.POST, request.FILES, instance=matricula)
         
-        # Debug temporal - puedes comentar estas líneas después
         print("POST data:", request.POST)
         print("FILES data:", request.FILES)
         print("Form is valid:", form.is_valid())
         
         if form.is_valid():
             try:
-                matricula_actualizada = form.save()
+                # Guardar la matrícula sin hacer commit
+                matricula_actualizada = form.save(commit=False)
+                # Mantener el directivo actual (no permitir cambiarlo)
+                # matricula_actualizada.Directivos_Dir = directivo  # Opcional: forzar directivo de sesión
+                matricula_actualizada.save()
+                
                 messages.success(request, f'Matrícula {matricula_actualizada.Mat_id} actualizada correctamente.')
                 return redirect('lista_matriculas')
             except Exception as e:
@@ -1628,16 +1771,15 @@ def editar_matricula(request, pk):
     else:
         form = MatriculaForm(instance=matricula)
     
-    # Agregar información adicional para debugging
     context = {
         'form': form,
-        'matricula': matricula,  # ✅ Pasar la matrícula al contexto
+        'matricula': matricula,
+        'usuario': usuario,
+        'directivo': directivo,  # Pasar el directivo al contexto
         'estudiantes_count': Estudiantes.objects.count(),
-        'directivos_count': Directivos.objects.count(),
     }
     
     return render(request, 'directivos/editar_matricula.html', context)
-
 def eliminar_matricula(request, pk):
     matricula = get_object_or_404(Matricula, pk=pk)
 
