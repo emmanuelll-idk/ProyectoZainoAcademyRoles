@@ -205,9 +205,6 @@ def dashboard_acudientes(request):
     usuario = get_usuario_from_session(request)
     return render(request, 'acudientes/dashboard_acudientes.html', {'usuario': usuario})
 
-def actividades_acudientes(request):
-    usuario = get_usuario_from_session(request)
-    return render(request, 'acudientes/actividades_acudientes.html', {'usuario': usuario})
 
 def asistencia_acudientes(request):
     usuario = get_usuario_from_session(request)
@@ -1332,84 +1329,67 @@ def dashboard_acudientes(request):
         return redirect('login')
 
     try:
-        acudiente = Acudiente.objects.get(Usu_id=usuario.Us_id)
+        acudiente = Acudiente.objects.get(Usuario_Us=usuario)
         print(f"✅ Acudiente encontrado: {acudiente}")
     except Acudiente.DoesNotExist:
         print("❌ Acudiente no encontrado")
         return redirect('login')
 
-    # Obtener estudiantes a cargo
-    estudiantes_a_cargo = Estudiantes.objects.filter(Acu=acudiente)
+    # Obtener estudiantes a cargo (ManyToMany)
+    estudiantes_a_cargo = acudiente.Estudiantes_Est.all()
     print(f"👥 Estudiantes a cargo: {estudiantes_a_cargo.count()}")
-    
+
     if not estudiantes_a_cargo.exists():
-        print("⚠️  No hay estudiantes a cargo")
         return render(request, 'acudientes/dashboard_acudientes.html', {
             'usuario': usuario,
             'pendientes': []
         })
 
     pendientes = []
-    
+
     for estudiante in estudiantes_a_cargo:
-        print(f"\n🎓 Procesando estudiante: {estudiante.Usu_id.Us_nombre}")
-        
+        print(f"\n🎓 Procesando estudiante: {estudiante.Usuario_us.Us_nombre}")
+
         # Obtener cursos del estudiante
         estudiante_cursos = Estudiante_Curso.objects.filter(Est=estudiante)
         print(f"📚 Estudiante_Curso encontrados: {estudiante_cursos.count()}")
-        
+
         for est_cur in estudiante_cursos:
-            print(f"  📖Curso: {est_cur.Cur_id}")
-            
-            # Obtener boletines del curso
-            boletines = Boletin.objects.filter(Cur_id=est_cur.Cur_id)
+            boletines = Boletin.objects.filter(Cur=est_cur.Cur)
             print(f"  📋 Boletines en el curso: {boletines.count()}")
-            
+
             for boletin in boletines:
-                print(f"    📝 Boletin: {boletin} - Materia: {boletin.Mtr.Mtr_nombre}")
-                
-                # Obtener actividades del boletín
                 actividades = Actividad.objects.filter(Bol=boletin)
                 print(f"    📌 Actividades en el boletín: {actividades.count()}")
-                
+
                 for actividad in actividades:
                     print(f"      🔍 Actividad: {actividad.Act_nombre}")
-                    
-                    # Verificar entrega
+
                     try:
                         entrega = Actividad_Entrega.objects.get(Act=actividad, Est=estudiante)
-                        print(f"      ✅ Entrega encontrada - Archivo: {bool(entrega.Act_Archivo_Estudiante)}")
-                        
-                        # Si no hay archivo, es pendiente
-                        if not entrega.Act_Archivo_Estudiante:
+
+                        if not entrega.archivos.exists():  # usa related_name="archivos"
                             pendientes.append({
                                 "actividad": actividad.Act_nombre,
                                 "materia": boletin.Mtr.Mtr_nombre,
                                 "estado": "Pendiente",
-                                "estudiante": estudiante.Usu_id.Us_nombre
+                                "estudiante": estudiante.Usuario_us.Us_nombre
                             })
-                            print(f"      ⚠️  PENDIENTE: Sin archivo")
+                            print("      ⚠️ PENDIENTE: sin archivo")
                         else:
-                            print(f"      ✅ COMPLETA: Con archivo")
-                            
+                            print("      ✅ COMPLETA: con archivo")
+
                     except Actividad_Entrega.DoesNotExist:
-                        print(f"      ❌ No hay entrega registrada")
-                        # Si no hay entrega, es pendiente
                         pendientes.append({
                             "actividad": actividad.Act_nombre,
                             "materia": boletin.Mtr.Mtr_nombre,
                             "estado": "Pendiente",
-                            "estudiante": estudiante.Usu_id.Us_nombre
+                            "estudiante": estudiante.Usuario_us.Us_nombre
                         })
-
-    print(f"\n🎯 RESULTADO FINAL:")
-    print(f"Total pendientes encontradas: {len(pendientes)}")
-    for p in pendientes:
-        print(f"  - {p['actividad']} ({p['materia']}) - {p['estado']}")
+                        print("      ❌ No hay entrega registrada")
 
     # Limitar a 4 elementos
     pendientes_limitadas = pendientes[:4]
-    print(f"Pendientes a enviar al template: {len(pendientes_limitadas)}")
 
     return render(request, 'acudientes/dashboard_acudientes.html', {
         'usuario': usuario,
@@ -1439,16 +1419,9 @@ def actividades_acudientes(request):
         return redirect('login')
     
     try:
-        # Obtener el acudiente basado en el usuario de la sesión
         acudiente = Acudiente.objects.get(Usuario_Us=usuario)
         
-        # Obtener todos los estudiantes a cargo de este acudiente
-        # Nota: Según tu modelo, un acudiente tiene UN estudiante (ForeignKey)
-        # Si quieres que sea muchos estudiantes, deberías cambiar el modelo
-        estudiantes_a_cargo = [acudiente.Estudiantes_Est]
-        
-        # Si quisieras múltiples estudiantes, usarías:
-        # estudiantes_a_cargo = Acudiente.objects.filter(Usuario_Us=usuario).select_related('Estudiantes_Est')
+        estudiantes_a_cargo = acudiente.Estudiantes_Est.all()
         
         context = {
             'usuario': usuario,
@@ -1458,7 +1431,6 @@ def actividades_acudientes(request):
         return render(request, 'acudientes/actividades_acudientes.html', context)
         
     except Acudiente.DoesNotExist:
-        # Si no existe el acudiente, mostrar página sin estudiantes
         context = {
             'usuario': usuario,
             'estudiantes_a_cargo': [],

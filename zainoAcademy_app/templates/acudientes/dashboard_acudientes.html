@@ -11,8 +11,11 @@
 <body class="dashboard-page">
     <aside class="sidebar">
         <div class="logo">
-            <a href="{% url 'dashboard_acudientes' %}"><img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/></a>
-            <a href="{% url 'dashboard_acudientes' %}"><img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" /></a>
+            <a href="{% url 'dashboard_acudientes' %}">
+                <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+            </a>
+            <a href="{% url 'dashboard_acudientes' %}">
+                <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
             </a>
         </div>
         <nav>
@@ -20,11 +23,9 @@
                 <li><a href="{% url 'dashboard_acudientes' %}" class="nav-item active">
                     <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
                 </a></li>
-                
                 <li><a href="{% url 'actividades_acudientes' %}" class="nav-item">
                     <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades
                 </a></li>
-                
                 <li><a href="{% url 'asistencia_acudientes' %}" class="nav-item">
                     <img src="{% static 'images/acudientes/asistencia.png' %}" class="nav-icon" alt="Asistencia"> Asistencia
                 </a></li>
@@ -41,45 +42,39 @@
     <main class="main-content">
         <header class="page-header">
             <div class="header-icons">
-                <!-- Notificaciones -->
-                
-                <!-- Nombre -->
                 <span class="user-name">{{ usuario.Us_nombre }}</span>
-                
-                <!-- Avatar / Perfil -->
                 <a href="{% url 'ver_perfil_acudientes' %}">
                     <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
                 </a>
             </div>
-
             <button class="hamburger" onclick="toggleMenu()">☰</button>
                 
             <div id="dropdown-menu" class="dropdown-menu">
-                    <a href="{% url 'dashboard_acudientes' %}">Inicio</a>
-                    <a href="{% url 'actividades_acudientes' %}">Actividades</a>
-                    <a href="{% url 'asistencia_acudientes' %}">Asistencia</a>
-                    <form method="POST" action="{% url 'login' %}">
-                        {% csrf_token %}
-                        <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
-                    </form>
+                <a href="{% url 'dashboard_acudientes' %}">Inicio</a>
+                <a href="{% url 'actividades_acudientes' %}">Actividades</a>
+                <a href="{% url 'asistencia_acudientes' %}">Asistencia</a>
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
+                </form>
             </div>
         </header>
 
         <div class="dashboard-content">
-            <!-- COLUMNA IZQUIERDA - MÁS GRANDE -->
+            <!-- IZQUIERDA -->
             <div class="left-column">
                 <div class="greeting-card">
-    <div class="greeting-text">
-    <h2>Hola, {{ usuario.Us_nombre }}!</h2>
-            <p>Bienvenido a tu entorno virtual, recuerda estar atento a las notificaciones y trabajos pendientes de tu Estudiante!</p>
-            <a href="{% url 'actividades_acudientes' %}" class="btn-leer-mas">Leer más</a>
-    </div>
-    <div class="greeting-illustration">
-        <img src="{% static 'images/acudientes/lectura.png' %}" class="greeting-illustration" alt="Perfil">
-    </div>
-</div>
+                    <div class="greeting-text">
+                        <h2>Hola, {{ usuario.Us_nombre }}!</h2>
+                        <p>Bienvenido a tu entorno virtual, recuerda estar atento a las notificaciones y trabajos pendientes de tu estudiante.</p>
+                        <a href="{% url 'actividades_acudientes' %}" class="btn-leer-mas">Leer más</a>
+                    </div>
+                    <div class="greeting-illustration">
+                        <img src="{% static 'images/acudientes/lectura.png' %}" class="greeting-illustration" alt="Lectura">
+                    </div>
+                </div>
 
-                <!-- Sección de Notificaciones -->
+                <!-- Notificaciones -->
                 <div class="notifications-section">
                     <div class="notifications-header">
                         <h3>Notificaciones</h3>
@@ -87,32 +82,34 @@
                     </div>
                     
                     <div class="notifications-table">
-        <div class="table-header">
-            <div class="col-header">ACTIVIDADES PENDIENTES</div>
-            <div class="col-header">MATERIA</div>
-            <div class="col-header">ESTADO</div>
-        </div>
+                        <div class="table-header">
+                            <div class="col-header">ACTIVIDAD</div>
+                            <div class="col-header">MATERIA</div>
+                            <div class="col-header">ESTUDIANTE</div>
+                            <div class="col-header">ESTADO</div>
+                        </div>
 
-        {% if pendientes and pendientes|length > 0 %}
-            {% for p in pendientes %}
-            <div class="table-row">
-                <div class="col-data">{{ p.actividad }}</div>
-                <div class="col-data">{{ p.materia }}</div>
-                <div class="col-data status-pendiente">{{ p.estado }}</div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="table-row">
-                <div class="col-data">
-                    No hay actividades pendientes
+                        {% if pendientes and pendientes|length > 0 %}
+                            {% for p in pendientes %}
+                            <div class="table-row">
+                                <div class="col-data">{{ p.actividad }}</div>
+                                <div class="col-data">{{ p.materia }}</div>
+                                <div class="col-data">{{ p.estudiante }}</div>
+                                <div class="col-data status-pendiente">{{ p.estado }}</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="table-row">
+                                <div class="col-data" colspan="4">
+                                    No hay actividades pendientes
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        {% endif %}
-    </div>
-                </div>
-            </div>
 
-            <!-- COLUMNA DERECHA -->
+            <!-- DERECHA -->
             <div class="right-column">
                 <div class="calendar-section">
                     <div class="calendar-top">
@@ -122,7 +119,6 @@
                             <button class="nav-btn next-btn" onclick="changeMonth(1)">›</button>
                         </div>
                     </div>
-
                     <div class="calendar-widget">
                         <div class="calendar-grid" id="calendar-grid">
                             <div class="day-header">DO</div>
@@ -136,18 +132,17 @@
                     </div>
                 </div>
 
-                <!-- Perfil del Estudiante -->
+                <!-- Perfil -->
                 <div class="acudient-profile">
                     <div class="acudient-avatar">
                         <img src="{% static 'images/acudientes/perfil.png' %}" alt="Perfil" class="avatar-img">
                     </div>
                     <h4 class="acudient-name">{{ usuario.Us_nombre }}</h4>
                     <p class="acudient-role">Acudiente</p>
-
                     <div class="acudient-info">
                         <div class="info-row">
                             <span class="info-label">Estado</span>
-                            <span class="info-value">Acudiente</span>
+                            <span class="info-value">Activo</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">Fecha registro</span>
@@ -156,7 +151,7 @@
                         <div class="info-row">
                             <span class="info-label">Pendientes</span>
                             <span class="info-value pending-count">
-                                {{ total_pendientes }} pendientes
+                                {{ pendientes|length }} pendientes
                             </span>
                         </div>
                     </div>
@@ -184,15 +179,10 @@
         const menu = document.getElementById("dropdown-menu");
         menu.classList.toggle("show");
     }
-    </script>
-
-    <script>
-        const modal = document.getElementById('logout-modal');
-        function openModal() { modal.style.display = 'flex'; }
-        function closeModal() { modal.style.display = 'none'; }
-        window.onclick = function(event) {
-            if (event.target == modal) { closeModal(); }
-        }
+    const modal = document.getElementById('logout-modal');
+    function openModal() { modal.style.display = 'flex'; }
+    function closeModal() { modal.style.display = 'none'; }
+    window.onclick = function(event) { if (event.target == modal) { closeModal(); } }
     </script>
 
     <script>
@@ -201,10 +191,7 @@
             const month = date.getMonth();
             const year = date.getFullYear();
             const monthYear = document.getElementById("calendar-month-year");
-            const months = [
-                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-            ];
+            const months = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
             monthYear.textContent = `${months[month]}, ${year}`;
 
             const calendarGrid = document.querySelector(".calendar-grid");
@@ -230,20 +217,11 @@
             }
 
             let today = new Date();
-            let formatter = new Intl.DateTimeFormat("es-CO", {
-                timeZone: "America/Bogota",
-                day: "numeric", month: "numeric", year: "numeric"
-            });
-            let parts = formatter.formatToParts(today);
-            let todayDay = parseInt(parts.find(p => p.type === "day").value);
-            let todayMonth = parseInt(parts.find(p => p.type === "month").value) - 1;
-            let todayYear = parseInt(parts.find(p => p.type === "year").value);
-
             for (let i = 1; i <= lastDate; i++) {
                 const dayCell = document.createElement("div");
                 dayCell.classList.add("day-cell");
                 dayCell.textContent = i;
-                if (year === todayYear && month === todayMonth && i === todayDay) {
+                if (year === today.getFullYear() && month === today.getMonth() && i === today.getDate()) {
                     dayCell.classList.add("current-day");
                 }
                 calendarGrid.appendChild(dayCell);
