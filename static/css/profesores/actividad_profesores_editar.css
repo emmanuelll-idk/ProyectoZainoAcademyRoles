@@ -1,0 +1,285 @@
+/* CSS para actividad_profesores_editar - Consistente con el diseño base */
+
+/* Main Content - Siguiendo la estructura base */
+.main-content {
+    margin-left: 130px;
+    padding: 20px;
+    min-height: 100vh;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+/* Título principal */
+.main-content h1 {
+    font-size: 24px;
+    color: #3d2f5b;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* Formulario principal */
+
+/* Grupos de formulario - Manteniendo consistencia */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group:last-of-type {
+    margin-bottom: 20px;
+}
+
+/* Labels - Siguiendo el estilo base */
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+/* Inputs - Manteniendo el estilo existente */
+.form-group input[type="text"],
+.form-group input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus {
+    outline: none;
+    border-color: #3d2f5b;
+    box-shadow: 0 0 5px rgba(61, 47, 91, 0.3);
+}
+
+/* Textarea - Nuevo pero consistente con el estilo */
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    font-family: inherit;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3d2f5b;
+    box-shadow: 0 0 5px rgba(61, 47, 91, 0.3);
+}
+
+/* Input de archivo - Siguiendo el estilo base */
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    font-family: inherit;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+.form-group input[type="file"]:focus {
+    outline: none;
+    border-color: #3d2f5b;
+    box-shadow: 0 0 5px rgba(61, 47, 91, 0.3);
+}
+
+/* Información del archivo actual */
+.form-group p {
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    border-left: 3px solid #3d2f5b;
+    color: #666;
+    font-size: 14px;
+}
+
+.form-group p a {
+    color: #3d2f5b;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-group p a:hover {
+    text-decoration: underline;
+}
+
+/* Acciones del formulario - Manteniendo la estructura base */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+/* Botones - Siguiendo exactamente el estilo base */
+.submit-btn,
+.volver-btn {
+    background: #3d2f5b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 500;
+    transition: background 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.submit-btn:hover,
+.volver-btn:hover {
+    background: #2a1f41;
+}
+
+.submit-btn:active,
+.volver-btn:active {
+    transform: translateY(1px);
+}
+
+
+.form-group input:invalid:not(:placeholder-shown),
+.form-group textarea:invalid:not(:placeholder-shown) {
+    border-color: #dc3545;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* Responsive Design - Siguiendo el patrón base */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 200px;
+    }
+    
+    form {
+        padding: 20px;
+    }
+    
+    .main-content h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .submit-btn,
+    .volver-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 640px) {
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+    
+    form {
+        padding: 15px;
+    }
+    
+    .main-content h1 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    
+    .form-group {
+        margin-bottom: 12px;
+    }
+    
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group textarea,
+    .form-group input[type="file"] {
+        font-size: 16px; /* Evita zoom en iOS */
+    }
+}
+
+/* Placeholder styling */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #999;
+    opacity: 1;
+}
+
+/* Loading state para el botón de submit */
+.submit-btn:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+.submit-btn:disabled:hover {
+    background-color: #999;
+}
+
+/* Animación sutil para el formulario */
+form {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos adicionales para mejorar la accesibilidad */
+.form-group input:focus,
+.form-group textarea:focus {
+    position: relative;
+    z-index: 1;
+}
+
+/* Mejora visual para campos requeridos */
+.form-group input:required + label::after,
+.form-group textarea:required + label::after {
+    content: " *";
+    color: #dc3545;
+}
+
+/* Hover effects para mejor UX */
+.form-group input[type="file"]:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+/* Focus visible para mejor accesibilidad */
+.submit-btn:focus-visible,
+.volver-btn:focus-visible {
+    outline: 2px solid #3d2f5b;
+    outline-offset: 2px;
+}

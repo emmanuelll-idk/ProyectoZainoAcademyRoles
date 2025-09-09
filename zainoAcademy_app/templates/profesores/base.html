@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Profesor - Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/profesores/dashboard_profesores.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,600,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    {% block extra_css %}{% endblock %}
+
+</head>
+<body class="dashboard-page">
+    <aside class="sidebar">
+        <div class="logo">
+            <a href="{% url 'dashboard_profesores' %}">
+            <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+            <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+            </a>
+        </div>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'dashboard_profesores' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard_profesores' %}active{% endif %}">
+                    <img src="{% static 'images/profesores/inicio.png' %}" class="nav-icon" alt="Inicio">
+                    Inicio
+                </a></li>
+
+                <li><a href="{% url 'actividad_profesores_consultar' %}" class="nav-item {% if request.resolver_match.url_name in 'actividad_profesores_consultar, actividad_profesores_consultar_cursos, actividad_profesores_crear_actividad, actividad_profesores_calificaciones, actividad_profesores_lista, actividades_por_curso_materia, actividad_profesores_eliminar, actividad_profesores_editar, lista_actividades_calificar, materialApoyo_subir, materialApoyo_consultar' %}active{% endif %}">
+                    <img src="{% static 'images/profesores/actividades.png' %}" class="nav-icon" alt="Actividades"> 
+                    Actividades - Material de apoyo
+                </a></li>
+
+                <li><a href="{% url 'asistencia_profesores_cursos' %}" class="nav-item {% if request.resolver_match.url_name in 'asistencia_profesores_cursos, asistencia_profesores_añadir, asistencia_profesores_consultar' %}active{% endif %}">
+                    <img src="{% static 'images/profesores/asistencia.png' %}" class="nav-icon" alt="Asistencia"> 
+                    Asistencia
+                </a></li>
+
+                <li><a href="{% url 'reportes_profesores' %}" class="nav-item {% if request.resolver_match.url_name in 'reportes_profesores, reportes_profesores_descargar' %}active{% endif %}">
+                    <img src="{% static 'images/profesores/reportes.png' %}" class="nav-icon" alt="Reportes"> 
+                    Reportes
+                </a></li>
+            </ul>
+        </nav>
+        <div class="logout-container">
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+    
+    <main class="main-content">
+        <header class="page-header">
+            <div class="header-icons">
+                <!-- Nombre -->
+                <span class="user-name">{{ usuario.Us_nombre }}</span>
+                
+                <!-- Avatar / Perfil -->
+                <a href="{% url 'editar_perfil_profesores' %}">
+                    <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                </a>
+
+                <button class="hamburger" onclick="toggleMenu()">☰</button>
+                
+                <div id="dropdown-menu" class="dropdown-menu">
+                    <a href="{% url 'dashboard_profesores' %}">Inicio</a>
+                    <a href="{% url 'actividad_profesores_consultar' %}">Actividades</a>
+                    <a href="{% url 'asistencia_profesores_cursos' %}">Asistencia</a>
+                    <a href="{% url 'reportes_profesores' %}">Reportes</a>
+                    <form method="POST" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <div id="logout-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>¿Cerrar Sesión?</h2>
+            <div class="modal-actions">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-confirm">Confirmar</button>
+                </form>
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('logout-modal');
+        function openModal() { modal.style.display = 'flex'; }
+        function closeModal() { modal.style.display = 'none'; }
+        window.onclick = function(event) {
+            if (event.target == modal) { closeModal(); }
+        }
+    </script>
+    
+    <script>
+    function toggleMenu() {
+        const menu = document.getElementById("dropdown-menu");
+        menu.classList.toggle("show");
+    }
+    </script>
+
+            {% block mockUp %}
+
+            {% endblock %}
+        </main>

@@ -28,6 +28,17 @@ from urllib.parse import urlencode
 from django.shortcuts import redirect
 from django.utils import timezone
 
+# Importaciones Stefany
+
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from django.db.models import Count
+from django.utils.timezone import localtime
+from collections import defaultdict
+
+
 
 #Paginas Estaticas y paginas de inicio:
 def inicio(request):
@@ -90,6 +101,30 @@ def get_usuario_from_session(request):
             return None
     return None
 
+def reset_password(request):
+    exito = False  
+
+    if request.method == "POST":
+        correo = request.POST.get("correo")
+        documento = request.POST.get("documento")
+        nueva_contraseña = request.POST.get("new_password")
+        confirmar_contraseña = request.POST.get("confirm_password")
+
+        try:
+            usuario = Usuario.objects.get(correo=correo, documento=documento)
+        except Usuario.DoesNotExist:
+            messages.error(request, "Correo o documento incorrecto.")
+            return redirect("reset_password")
+
+        if nueva_contraseña != confirmar_contraseña:
+            messages.error(request, "Las contraseñas no coinciden.")
+            return redirect("reset_password")
+
+        usuario.Us_contraseña = nueva_contraseña
+        usuario.save()
+        exito = True  
+
+    return render(request, "registration/reset_password.html", {"exito": exito})
 
 def dashboard_estudiantes(request):
     usuario = get_usuario_from_session(request)
@@ -481,15 +516,160 @@ def ver_perfil_estudiantes(request):
     usuario = get_usuario_from_session(request)
     return render(request, 'estudiantes/ver_perfil_estudiantes.html', {'usuario': usuario})
 
+
 # Vistas Profesores:
+
+from django.utils import timezone
+
+from django.utils import timezone
 
 def dashboard_profesores(request):
     usuario = get_usuario_from_session(request)
-    return render(request, 'profesores/dashboard_profesores.html', {'usuario': usuario})
+    if not usuario:
+        return redirect('login')
 
-def actividad_profesores_calificaciones(request):
+    profesor = usuario.profesores_set.first()
+    hoy = timezone.localdate()
+
+    actividades_abiertas = (
+        Actividad.objects
+        .filter(Bol__Pro=profesor, Act_fechaLimite__gte=hoy)  # Ojo: Bol__Pro (sin _id porque ya es FK)
+        .annotate(total_entregas=Count('entregas'))
+        .order_by('Act_fechaLimite')
+    )
+
+    return render(request, 'profesores/dashboard_profesores.html', {
+        'usuario': usuario,
+        'actividades_abiertas': actividades_abiertas,
+    })
+
+
+
+
+
+
+def actividad_profesores_calificaciones(request, act_id):
     usuario = get_usuario_from_session(request)
-    return render(request, 'profesores/actividad_profesores_calificaciones.html', {'usuario': usuario})
+    if not usuario:
+        return redirect('login')
+
+    actividad = get_object_or_404(Actividad, Act_id=act_id)
+
+    try:
+        profesor = Profesores.objects.get(Us=usuario)
+    except Profesores.DoesNotExist:
+        messages.error(request, "No tienes permisos de profesor.")
+        return redirect('dashboard_profesores')
+
+    # Traemos entregas y sus archivos
+    entregas = Actividad_Entrega.objects.filter(Act=actividad).select_related("Est")
+    for entrega in entregas:
+        entrega.archivos_lista = Actividad_EntregaArchivo.objects.filter(entrega=entrega)
+
+    # Guardar notas
+    if request.method == "POST":
+        for entrega in entregas:
+            calificacion = request.POST.get(f"calificacion_{entrega.id}")
+            if calificacion:
+                entrega.Act_calificacion = float(calificacion)
+                entrega.save()
+        messages.success(request, "Calificaciones guardadas correctamente.")
+        return redirect(
+            "actividad_profesores_consultar_cursos",
+            periodo_id=actividad.Bol.Per.Per_id  # 👈 Ahora se obtiene desde Boletín → Periodo
+        )
+
+    estudiantes = Estudiantes.objects.filter(
+        estudiante_curso__Cur=actividad.Bol.Cur
+    ).distinct()
+
+    context = {
+        "actividad": actividad,
+        "entregas": entregas,
+        "usuario": usuario,
+        "estudiantes": estudiantes,
+        "curso": actividad.Bol.Cur,
+        "materia": actividad.Bol.Mtr,
+        "periodo_id": actividad.Bol.Per.Per_id,  # 👈 Igual que en el redirect
+    }
+    return render(request, "profesores/actividades_por_curso_materia.html", context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+def actividades_por_curso_materia(request, bol_id):
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect('login')
+
+    boletin = get_object_or_404(Boletin, Bol_id=bol_id)  
+
+    curso = boletin.Cur
+    materia = boletin.Mtr
+
+    estudiantes_curso = Estudiantes.objects.filter(
+        estudiante_curso__Cur=curso
+    ).distinct()
+
+    actividades = Actividad.objects.filter(Bol=boletin)
+
+    entregas = Actividad_Entrega.objects.filter(
+        Act__in=actividades,
+        Est__in=estudiantes_curso
+    ).select_related('Est', 'Act')
+
+    return render(request, 'profesores/actividades_por_curso_materia.html', {
+        'usuario': usuario,
+        'curso': curso,
+        'materia': materia,
+        'actividades': actividades,
+        'entregas': entregas,
+        'estudiantes': estudiantes_curso,
+        "periodo_id": boletin.Per_id,
+    })
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Boletin, Actividad_EntregaArchivo
+
+def guardar_calificaciones(request, bol_id):
+    if request.method == "POST":
+        bol = get_object_or_404(Boletin, Bol_id=bol_id)
+
+        # obtenemos todas las entregas de ese boletín
+        entregas_archivos = Actividad_EntregaArchivo.objects.filter(
+            entrega__Act__Bol=bol
+        ).select_related("entrega")
+
+        for archivo_entrega in entregas_archivos:
+            entrega = archivo_entrega.entrega
+            # el input tiene el formato: calificacion_<id de la entrega>
+            calificacion_key = f"calificacion_{entrega.id}"
+            calificacion_valor = request.POST.get(calificacion_key)
+
+            if calificacion_valor:
+                try:
+                    calificacion_valor = float(calificacion_valor)
+                    # guardamos la nota en el objeto entrega (no en el archivo)
+                    entrega.Act_calificacion = calificacion_valor
+                    entrega.save()
+                except ValueError:
+                    continue  # si no es número, lo ignoramos
+
+        messages.success(request, "✅ Calificaciones guardadas correctamente.")
+        return redirect("actividad_profesores_consultar_cursos", periodo_id=bol.Per.Per_id)
+
+    messages.error(request, "Método no permitido.")
+    return redirect("dashboard_profesores")
 
 
 def actividad_profesores_consultar_cursos(request, periodo_id):
@@ -499,7 +679,6 @@ def actividad_profesores_consultar_cursos(request, periodo_id):
 
     profesor = usuario.profesores_set.first()
 
-    # Cursos + materias que el profesor tiene en ese periodo
     boletines = Boletin.objects.filter(Pro=profesor, Per_id=periodo_id).select_related('Cur', 'Mtr')
 
     return render(request, 'profesores/actividad_profesores_consultar_cursos.html', {
@@ -514,7 +693,7 @@ def actividad_profesores_consultar(request):
     if not usuario:
         return redirect('login')
 
-    periodos = Periodo.objects.all()  # todos los periodos disponibles
+    periodos = Periodo.objects.all()
 
     return render(request, 'profesores/actividad_profesores_consultar.html', {
         'usuario': usuario,
@@ -523,43 +702,108 @@ def actividad_profesores_consultar(request):
 
 
 def actividad_profesores_crear_actividad(request, bol_id):
-    usuario = get_usuario_from_session(request)
-    if not usuario:
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
         return redirect('login')
+    
+    try:
+        usuario_custom = Usuario.objects.get(pk=usuario_id)
+        profesor = Profesores.objects.get(Us_id=usuario_custom.Us_id)
+    except (Usuario.DoesNotExist, Profesores.DoesNotExist):
+        messages.error(request, "No se encontró información del profesor")
+        return redirect('dashboard_profesores')
+    
+    boletin = get_object_or_404(Boletin, pk=bol_id, Pro_id=profesor.Pro_id)
+    
+    actividades = Actividad.objects.filter(Bol=boletin).select_related('Esta_Actividad')
+    
+    if request.method == 'POST':
+        try:
+            estado_pendiente = Estado_Actividad.objects.get(Esta_Actividad_Estado='Pendiente')
+            
+            
+            Actividad.objects.create(
+                Act_nombre=request.POST.get('Act_nombre'),
+                Act_descripcion=request.POST.get('Act_descripcion'),
+                Act_fechaLimite=request.POST.get('Act_fechaLimite'),
+                Act_comentario=request.POST.get('Act_comentario', ''),
+                Act_Archivo_Profesor=request.FILES.get('Act_Archivo_Profesor'),
+                Bol=boletin,
+                Esta_Actividad=estado_pendiente
+            )
+            
+            messages.success(request, "Actividad creada exitosamente")
+            # 👇 cambio importante: redirigir al dashboard
+            return redirect('dashboard_profesores')
+        except Exception as e:
+            messages.error(request, f"Error al crear actividad: {str(e)}")
+    
+    context = {
+        'boletin': boletin,
+        'actividades': actividades,
+        'usuario': usuario_custom
+    }
+    
+    return render(request, 'profesores/actividad_profesores_crear_actividad.html', context)
 
-    boletin = Boletin.objects.get(Bol_id=bol_id)  # el boletín viene de la URL
-    estado = Estado_Actividad.objects.get_or_create(Esta_Actividad_Estado="Pendiente")[0]
+
+def actividad_profesores_editar(request, act_id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+    
+    try:
+        usuario_custom = Usuario.objects.get(pk=usuario_id)
+        profesor = Profesores.objects.get(Us_id=usuario_custom.Us_id)
+    except (Usuario.DoesNotExist, Profesores.DoesNotExist):
+        messages.error(request, "No se encontró información del profesor")
+        return redirect('dashboard_profesores')
+    
+    actividad = get_object_or_404(Actividad, pk=act_id, Bol__Pro_id=profesor.Pro_id)
 
     if request.method == 'POST':
-        nombre = request.POST.get('Act_nombre')
-        fecha = request.POST.get('Act_fechaLimite')
-        descripcion = request.POST.get('Act_descripcion')
-        archivo = request.FILES.get('Act_Archivo_Profesor')
+        actividad.Act_nombre = request.POST.get('Act_nombre')
+        actividad.Act_descripcion = request.POST.get('Act_descripcion')
+        actividad.Act_fechaLimite = request.POST.get('Act_fechaLimite')
+        actividad.Act_comentario = request.POST.get('Act_comentario', '')
+        if request.FILES.get('Act_Archivo_Profesor'):
+            actividad.Act_Archivo_Profesor = request.FILES.get('Act_Archivo_Profesor')
+        
+        actividad.save()
+        messages.success(request, "Actividad actualizada exitosamente")
+        return redirect('actividad_profesores_crear_actividad', bol_id=actividad.Bol.pk)
 
-        Actividad.objects.create(
-            Act_nombre=nombre,
-            Act_fechaLimite=fecha,
-            Act_descripcion=descripcion,
-            Act_Archivo_Profesor=archivo,
-            Bol=boletin,
-            Esta_Actividad=estado
-        )
+    context = {
+        'actividad': actividad
+    }
+    return render(request, 'profesores/actividad_profesores_editar.html', context)
 
-        return redirect('actividad_profesores_lista')  # redirigir a listado
+def actividad_profesores_eliminar(request, act_id):
+    usuario_id = request.session.get('usuario_id')
+    if not usuario_id:
+        return redirect('login')
+    
+    try:
+        usuario_custom = Usuario.objects.get(pk=usuario_id)
+        profesor = Profesores.objects.get(Us_id=usuario_custom.Us_id)
+    except (Usuario.DoesNotExist, Profesores.DoesNotExist):
+        messages.error(request, "No se encontró información del profesor")
+        return redirect('dashboard_profesores')
+    
+    actividad = get_object_or_404(Actividad, pk=act_id, Bol__Pro_id=profesor.Pro_id)
+    bol_id = actividad.Bol.pk
+    actividad.delete()
+    messages.success(request, "Actividad eliminada exitosamente")
+    return redirect('actividad_profesores_crear_actividad', bol_id=bol_id)
 
-    return render(request, 'profesores/actividad_profesores_crear_actividad.html', {
-        'usuario': usuario,
-        'boletin': boletin
-    })
 
 def actividad_profesores_lista(request):
     usuario = get_usuario_from_session(request)
     if not usuario:
         return redirect('login')
 
-    profesor = usuario.profesores_set.first()  # obtengo el profesor del usuario
+    profesor = usuario.profesores_set.first()
 
-    # ✅ Buscar actividades relacionadas con los boletines de ese profesor
     actividades = Actividad.objects.filter(Bol__Pro=profesor)
 
     return render(request, 'profesores/actividad_profesores_lista.html', {
@@ -572,51 +816,168 @@ def asistencia_profesores_añadir(request, bol_id):
     if not usuario:
         return redirect('login')
 
-    boletin = Boletin.objects.get(Bol_id=bol_id)
-    estudiantes_curso = Estudiante_Curso.objects.filter(Cur=boletin.Cur).select_related("Est")
+    boletin = get_object_or_404(Boletin, Bol_id=bol_id)
+    estudiantes_curso = Estudiante_Curso.objects.filter(
+        Cur=boletin.Cur
+    ).select_related("Est__Usuario_us")
+
+    estados = Estado_Asistencia.objects.all()
 
     if request.method == 'POST':
         for ec in estudiantes_curso:
             estado_nombre = request.POST.get(f'estado_{ec.Est.Est_id}')
+            comentario = request.POST.get(f'comentario_{ec.Est.Est_id}', "")
 
-            if estado_nombre:  # solo si se eligió algo
-                # Buscar el estado en la tabla Estado_Asistencia
-                estado_obj, _ = Estado_Asistencia.objects.get_or_create(Esta_Asistencia_Estado=estado_nombre)
+            if estado_nombre:
+                estado_obj, _ = Estado_Asistencia.objects.get_or_create(
+                    Esta_Asistencia_Estado=estado_nombre
+                )
 
-                # Crear asistencia
-                Asistencia.objects.create(
+                asistencia = Asistencia.objects.create(
                     Ast_fecha=date.today(),
                     Est_Cur=ec,
                     Esta_Asistencia=estado_obj
                 )
+
+                if comentario.strip():
+                    if "comentarios" not in request.session:
+                        request.session["comentarios"] = {}
+                    request.session["comentarios"][str(asistencia.Ast_id)] = comentario
+                    request.session.modified = True
 
         return redirect('asistencia_profesores_consultar', bol_id=boletin.Bol_id)
 
     return render(request, 'profesores/asistencia_profesores_añadir.html', {
         'usuario': usuario,
         'boletin': boletin,
-        'estudiantes': [ec.Est for ec in estudiantes_curso],  # pasamos solo los estudiantes
+        'estudiantes_curso': estudiantes_curso,
+        'estados': estados
     })
-
 
 def asistencia_profesores_consultar(request, bol_id):
     usuario = get_usuario_from_session(request)
     if not usuario:
         return redirect('login')
 
-    # Obtenemos el boletín
-    boletin = Boletin.objects.get(Bol_id=bol_id)
+    boletin = get_object_or_404(Boletin, Bol_id=bol_id)
+    estudiantes_curso = Estudiante_Curso.objects.filter(
+        Cur=boletin.Cur
+    ).select_related("Est__Usuario_us")
 
-    # Filtramos asistencias por los estudiantes de ese curso
     asistencias = Asistencia.objects.filter(
-        Est_Cur__Cur=boletin.Cur
-    ).select_related('Est_Cur')
+        Est_Cur__in=estudiantes_curso
+    ).select_related("Est_Cur__Est__Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
 
-    return render(request, 'profesores/asistencia_profesores_consultar.html', {
-        'usuario': usuario,
-        'asistencias': asistencias,
-        'boletin': boletin,
+    comentarios_session = request.session.get("comentarios", {})
+
+    if request.method == "POST":
+        if "editar" in request.POST:
+            ast_id = request.POST.get("asistencia_id")
+            estado_nombre = request.POST.get("estado")
+            comentario = request.POST.get("comentario", "")
+
+            asistencia = get_object_or_404(Asistencia, Ast_id=ast_id)
+            if estado_nombre:
+                estado_obj = Estado_Asistencia.objects.get(Esta_Asistencia_Estado=estado_nombre)
+                asistencia.Esta_Asistencia = estado_obj
+                asistencia.Ast_fecha = date.today()
+                asistencia.save()
+
+            if comentario.strip():
+                comentarios_session[str(asistencia.Ast_id)] = comentario
+            else:
+                comentarios_session.pop(str(asistencia.Ast_id), None)
+            request.session["comentarios"] = comentarios_session
+            request.session.modified = True
+
+            return redirect("asistencia_profesores_consultar", bol_id=bol_id)
+
+        if "eliminar" in request.POST:
+            ast_id = request.POST.get("asistencia_id")
+            asistencia = get_object_or_404(Asistencia, Ast_id=ast_id)
+            asistencia.delete()
+            comentarios_session.pop(str(ast_id), None)
+            request.session["comentarios"] = comentarios_session
+            request.session.modified = True
+            return redirect("asistencia_profesores_consultar", bol_id=bol_id)
+
+    asistencias_dict = defaultdict(dict)
+    fechas = sorted(set(a.Ast_fecha for a in asistencias))
+
+    for a in asistencias:
+        estudiante = a.Est_Cur.Est.Usuario_us.Us_nombre
+        comentario = comentarios_session.get(str(a.Ast_id), "")
+        asistencias_dict[estudiante][a.Ast_fecha] = {
+            "estado": a.Esta_Asistencia.Esta_Asistencia_Estado,
+            "comentario": comentario
+        }
+
+    tabla_asistencias = []
+    for ec in estudiantes_curso:
+        fila = {"estudiante": ec.Est.Usuario_us.Us_nombre, "fechas": []}
+        for f in fechas:
+            datos = asistencias_dict.get(ec.Est.Usuario_us.Us_nombre, {}).get(f)
+            fila["fechas"].append(datos)
+        tabla_asistencias.append(fila)
+
+    estados = Estado_Asistencia.objects.all()
+
+    return render(request, "profesores/asistencia_profesores_consultar.html", {
+        "usuario": usuario,
+        "boletin": boletin,
+        "tabla_asistencias": tabla_asistencias,
+        "fechas": fechas,
+        "estados": estados
     })
+
+
+def lista_actividades_calificar(request, curso_id):
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect('login')
+        
+    curso = get_object_or_404(Curso, Cur_id=curso_id)
+    
+    try:
+        profesor = Profesores.objects.get(Us=usuario)
+    except Profesores.DoesNotExist:
+        messages.error(request, "No tienes permisos de profesor.")
+        return redirect('dashboard_profesores')
+    
+    actividades = Actividad.objects.filter(
+        Bol__Pro=profesor,
+        Bol__Cur=curso
+    ).order_by('-Act_fechaLimite')
+    
+    # Obtener el periodo_id desde cualquier boletín del profesor y curso
+    periodo_id = None
+    boletin = Boletin.objects.filter(Pro=profesor, Cur=curso).first()
+    if boletin:
+        periodo_id = boletin.Per.Per_id
+    
+    for actividad in actividades:
+        total_estudiantes = Estudiantes.objects.filter(
+            estudiante_curso__Cur=curso
+        ).distinct().count()
+        
+        # Conteo de entregas basado en Actividad_EntregaArchivo
+        total_entregas = Actividad_EntregaArchivo.objects.filter(
+            entrega__Act=actividad
+        ).values('entrega').distinct().count()
+        
+        actividad.total_estudiantes = total_estudiantes
+        actividad.total_entregas = total_entregas
+    
+    context = {
+        'curso': curso,
+        'actividades': actividades,
+        'usuario': usuario,
+        'periodo_id': periodo_id,
+    }
+    return render(request, 'profesores/lista_actividades_calificar.html', context)
+
+
+
 
 
 def asistencia_profesores_cursos(request, periodo_id=None):
@@ -627,7 +988,6 @@ def asistencia_profesores_cursos(request, periodo_id=None):
     profesor = usuario.profesores_set.first()
     periodos = Periodo.objects.all()
 
-    # Si ya eligió un periodo, buscamos sus cursos/materias en ese periodo
     boletines = []
     if periodo_id:
         boletines = Boletin.objects.filter(Pro=profesor, Per_id=periodo_id).select_related('Cur', 'Mtr')
@@ -665,11 +1025,12 @@ def materialApoyo_subir(request, bol_id):
         'boletin': boletin
     })
 
-
 def materialApoyo_consultar(request, bol_id):
     materiales = MaterialApoyo.objects.filter(Bol_id=bol_id)
+    for m in materiales:
+        print(m.__dict__)
     boletin = Boletin.objects.get(Bol_id=bol_id)
-    periodo_id = boletin.Per_id  # obtiene el ID del periodo relacionado
+    periodo_id = boletin.Per_id
 
     return render(request, "profesores/materialApoyo_consultar.html", {
         "materiales": materiales,
@@ -677,20 +1038,311 @@ def materialApoyo_consultar(request, bol_id):
         "periodo_id": periodo_id,
     })
 
+def materialApoyo_editar(request, Mate_id):
+    material = get_object_or_404(MaterialApoyo, Mate_id=Mate_id)
+
+    if request.method == 'POST':
+        form = MaterialApoyoForm(request.POST, request.FILES, instance=material)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, 'Material actualizado exitosamente.')
+                return redirect('materialApoyo_consultar', bol_id=material.Bol.Bol_id)
+            except Exception as e:
+                messages.error(request, f'Error al actualizar el material: {str(e)}')
+        else:
+            messages.error(request, 'Por favor corrige los errores en el formulario.')
+    else:
+        form = MaterialApoyoForm(instance=material)
+
+    context = {
+        'form': form,
+        'material': material,
+        'boletin': material.Bol,
+        'usuario': request.user
+    }
+    return render(request, 'profesores/materialApoyo_editar.html', context)
+
+
+def materialApoyo_eliminar(request, Mate_id):
+    material = get_object_or_404(MaterialApoyo, Mate_id=Mate_id)
+    bol_id = material.Bol.Bol_id
+
+    if request.method == 'POST':
+        try:
+            material.delete()
+            messages.success(request, 'Material eliminado exitosamente.')
+        except Exception as e:
+            messages.error(request, f'Error al eliminar el material: {str(e)}')
+
+    return redirect('materialApoyo_consultar', bol_id=bol_id)
+
+
+def materialApoyo_confirmar_eliminar(request, Mate_id):
+    material = get_object_or_404(MaterialApoyo, Mate_id=Mate_id)
+
+    if request.method == 'POST':
+        bol_id = material.Bol.Bol_id
+        material.delete()
+        messages.success(request, 'Material eliminado exitosamente.')
+        return redirect('materialApoyo_consultar', bol_id=bol_id)
+
+    context = {
+        'material': material,
+        'boletin': material.Bol,
+        'usuario': request.user
+    }
+
+    return render(request, 'profesores/materialApoyo_confirmar_eliminar.html', context)
 
 
 def notificaciones_profesores(request):
     usuario = get_usuario_from_session(request)
     return render(request, 'profesores/notificaciones_profesores.html', {'usuario': usuario})
 
-def reportes_profesores_descargar(request):
-    usuario = get_usuario_from_session(request)
-    return render(request, 'profesores/reportes_profesores_descargar.html', {'usuario': usuario})
+def reportes_profesores_descargar(request, periodo_id):
+  usuario = get_usuario_from_session(request)
+  if not usuario:
+    return redirect('login')
+  periodo = get_object_or_404(Periodo, Per_id=periodo_id)
+  return render(request, 'profesores/reportes_profesores_descargar.html', {
+    'usuario': usuario,
+    'periodo': periodo
+  })
 
 def reportes_profesores(request):
     usuario = get_usuario_from_session(request)
-    return render(request, 'profesores/reportes_profesores.html', {'usuario': usuario})
+    
+    periodos = Periodo.objects.all().order_by('Per_id')
+    
+    return render(request, 'profesores/reportes_profesores.html', {
+        'usuario': usuario,
+        'periodos': periodos, 
+    })
 
+def generar_reporte_asistencias_pdf(request, periodo_id):
+    """Genera un PDF con el reporte de asistencias de un periodo específico."""
+    usuario = get_usuario_from_session(request)
+
+    if not usuario:
+        return redirect('login')
+
+    profesor = usuario.profesores_set.first()
+    if not profesor:
+        return HttpResponse("No se encontró información del profesor", status=400)
+    
+    # Obtener el objeto Periodo y filtrar por él
+    periodo = get_object_or_404(Periodo, Per_id=periodo_id)
+
+    boletines = Boletin.objects.filter(
+        Pro=profesor,
+        Per=periodo
+    ).select_related('Per', 'Cur', 'Mtr')
+
+    # Validación principal: si no hay boletines (y por lo tanto datos) para este periodo
+    if not boletines.exists():
+        messages.error(request, f"No hay datos de asistencias para el periodo '{periodo.Per_nombre}'.")
+        # Redirigir a la página anterior (donde se seleccionó el periodo)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    # Si hay datos, procede a generar el PDF
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    elements = []
+    styles = getSampleStyleSheet()
+
+    elements.append(Paragraph("Reporte de Asistencias", styles["Title"]))
+    elements.append(Paragraph(f"Profesor: {usuario.Us_nombre}", styles["Normal"]))
+    elements.append(Paragraph(f"Período: {periodo.Per_nombre}", styles["Heading2"]))
+    elements.append(Spacer(1, 20))
+
+    for boletin in boletines:
+        elements.append(Paragraph(f"Curso: {boletin.Cur.Cur_nombre} - Materia: {boletin.Mtr.Mtr_nombre}", styles["Heading3"]))
+        estudiantes_curso = Estudiante_Curso.objects.filter(Cur=boletin.Cur).select_related("Est__Usuario_us")
+        asistencias = Asistencia.objects.filter(
+            Est_Cur__in=estudiantes_curso
+        ).select_related("Est_Cur__Est__Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
+        
+        if asistencias.exists():
+            data = [["Estudiante", "Fecha", "Estado"]]
+            for asistencia in asistencias:
+                data.append([
+                    asistencia.Est_Cur.Est.Usuario_us.Us_nombre,
+                    asistencia.Ast_fecha.strftime("%d/%m/%Y"),
+                    asistencia.Esta_Asistencia.Esta_Asistencia_Estado
+                ])
+            
+            table = Table(data, colWidths=[200, 100, 100])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#1e91d6")),
+                ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+                ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0,0), (-1,0), 10),
+                ('BOTTOMPADDING', (0,0), (-1,0), 8),
+                ('GRID', (0,0), (-1,-1), 1, colors.black),
+                ('BACKGROUND', (0,1), (-1,-1), colors.HexColor("#f9f9f9")),
+                ('FONTSIZE', (0,1), (-1,-1), 9),
+            ]))
+            
+            elements.append(table)
+            elements.append(Spacer(1, 15))
+        else:
+            elements.append(Paragraph("No hay registros de asistencia para este curso.", styles["Normal"]))
+            elements.append(Spacer(1, 15))
+    
+    doc.build(elements)
+    buffer.seek(0)
+    
+    response = FileResponse(
+        buffer, 
+        as_attachment=True, 
+        filename=f"Reporte_Asistencias_{usuario.Us_nombre.replace(' ', '_')}_{periodo.Per_nombre.replace(' ', '_')}.pdf"
+    )
+    return response
+
+
+def generar_reporte_rendimiento_pdf(request, periodo_id):
+    """Genera un PDF con el reporte de rendimiento académico de un periodo específico."""
+    usuario = get_usuario_from_session(request)
+
+    if not usuario:
+        return redirect('login')
+
+    profesor = usuario.profesores_set.first()
+    if not profesor:
+        return HttpResponse("No se encontró información del profesor", status=400)
+    
+    periodo = get_object_or_404(Periodo, Per_id=periodo_id)
+
+    actividades = Actividad.objects.filter(
+        Bol__Pro=profesor,
+        Bol__Per=periodo
+    ).select_related('Bol__Per', 'Bol__Cur', 'Bol__Mtr').prefetch_related('entregas__Est__Usuario_us')
+
+    # Validación principal: si no hay actividades (y por lo tanto datos) para este periodo
+    if not actividades.exists():
+        messages.error(request, f"No hay datos de rendimiento académico para el periodo '{periodo.Per_nombre}'.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    # Si hay datos, procede a generar el PDF
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    elements = []
+    styles = getSampleStyleSheet()
+
+    elements.append(Paragraph("Reporte de Rendimiento Académico", styles["Title"]))
+    elements.append(Paragraph(f"Profesor: {usuario.Us_nombre}", styles["Normal"]))
+    elements.append(Paragraph(f"Período: {periodo.Per_nombre}", styles["Heading2"]))
+    elements.append(Spacer(1, 20))
+
+    materias_cursos = {}
+    for actividad in actividades:
+        key = f"{actividad.Bol.Cur.Cur_nombre} - {actividad.Bol.Mtr.Mtr_nombre}"
+        if key not in materias_cursos:
+            materias_cursos[key] = []
+        materias_cursos[key].append(actividad)
+    
+    for materia_curso, actividades_mc in materias_cursos.items():
+        elements.append(Paragraph(f"Curso - Materia: {materia_curso}", styles["Heading3"]))
+        data = [["Actividad", "Estudiante", "Calificación", "Fecha Entrega"]]
+        
+        has_deliveries = False
+        for actividad in actividades_mc:
+            entregas = actividad.entregas.all()
+            if entregas:
+                has_deliveries = True
+                for entrega in entregas:
+                    calificacion = str(entrega.Act_calificacion) if entrega.Act_calificacion else "Sin calificar"
+                    fecha_entrega = entrega.Act_fecha_entrega.strftime("%d/%m/%Y") if entrega.Act_fecha_entrega else "No entregada"
+                    data.append([
+                        actividad.Act_nombre,
+                        entrega.Est.Usuario_us.Us_nombre,
+                        calificacion,
+                        fecha_entrega
+                    ])
+            else:
+                data.append([actividad.Act_nombre, "Sin entregas", "-", "-"])
+        
+        if len(data) > 1:
+            table = Table(data, colWidths=[120, 120, 80, 80])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#1e91d6")),
+                ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+                ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0,0), (-1,0), 9),
+                ('BOTTOMPADDING', (0,0), (-1,0), 8),
+                ('GRID', (0,0), (-1,-1), 1, colors.black),
+                ('BACKGROUND', (0,1), (-1,-1), colors.HexColor("#f9f9f9")),
+                ('FONTSIZE', (0,1), (-1,-1), 8),
+            ]))
+            
+            elements.append(table)
+            elements.append(Spacer(1, 15))
+        else:
+            elements.append(Paragraph("No hay actividades registradas para esta materia.", styles["Normal"]))
+            elements.append(Spacer(1, 15))
+    
+    doc.build(elements)
+    buffer.seek(0)
+    
+    response = FileResponse(
+        buffer, 
+        as_attachment=True, 
+        filename=f"Reporte_Rendimiento_{usuario.Us_nombre.replace(' ', '_')}_{periodo.Per_nombre.replace(' ', '_')}.pdf"
+    )
+    return response
+
+def editar_perfil_profesores(request):
+    usuario = get_usuario_from_session(request)
+    return render(request, 'profesores/editar_perfil_profesores.html', {'usuario': usuario})
+
+@csrf_exempt
+def actualizar_perfil_profesores(request):
+    if request.method == 'POST':
+        usuario = get_usuario_from_session(request)
+        if not usuario:
+            return JsonResponse({'error': 'Usuario no autenticado'}, status=403)
+
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+
+            usuario.Us_nombre = data.get('username', usuario.Us_nombre)
+            usuario.correo = data.get('email', usuario.correo)
+            usuario.Us_contraseña = data.get('password', usuario.Us_contraseña)
+
+            # ✅ Solución: asegurarse de que fecha_registro tenga un valor
+            if not usuario.fecha_registro:
+                usuario.fecha_registro = date.today()
+
+            usuario.save()
+
+            # Actualizamos el nombre en la sesión
+            request.session['usuario_nombre'] = usuario.Us_nombre
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+def dashboard_profesores_calendar(request):
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect('login')
+
+    # Aseguramos que fecha_registro no esté vacío
+    if not usuario.fecha_registro:
+        usuario.fecha_registro = date.today()
+        usuario.save()
+
+    today = date.today().isoformat()  # Para el input date
+
+    return render(request, "profesores/dashboard_profesores.html", {
+        "usuario": usuario,
+        "today": today
+    })
 
 
 #DIRECTIVOS SANTIAGO 
@@ -1436,6 +2088,7 @@ def actividades_acudientes(request):
             'estudiantes_a_cargo': [],
         }
         return render(request, 'acudientes/actividades_acudientes.html', context)
+
 
 def asistencia_acudientes(request):
     usuario = get_usuario_from_session(request)

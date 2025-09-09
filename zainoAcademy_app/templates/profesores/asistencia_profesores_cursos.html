@@ -1,53 +1,11 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Asistencia - Cursos</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/profesores/asistencia_profesores_cursos.css' %}">
-  <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,600,700&display=swap" rel="stylesheet" />
-</head>
-<body>
-  <!-- ===== SIDEBAR ===== -->
-  <aside class="sidebar">
-      <div class="logo">
-          <img src="{% static 'images/profesores/Favicon.png' %}" alt="Logo Libro"/>
-          <img src="{% static 'images/profesores/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
-      </div>
-      <nav>
-          <ul class="nav-list">
-              <li><a href="{% url 'dashboard_profesores' %}" class="nav-item active">
-                  <img src="{% static 'images/profesores/inicio.png' %}" class="nav-icon" alt="Inicio">
-                  Inicio
-              </a></li>
+{% extends "profesores/base.html" %}
+{% load static %}
 
-              <li><a href="{% url 'actividad_profesores_consultar' %}" class="nav-item">
-                  <img src="{% static 'images/profesores/actividades.png' %}" class="nav-icon" alt="Actividades"> 
-                  Actividades - Material de apoyo
-              </a></li>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profesores/asistencia_profesores_cursos.css' %}">
+{% endblock %}
 
-              <li><a href="{% url 'asistencia_profesores_cursos' %}" class="nav-item">
-                  <img src="{% static 'images/profesores/asistencia.png' %}" class="nav-icon" alt="Asistencia"> 
-                  Asistencia
-              </a></li>
-
-              <li><a href="{% url 'reportes_profesores' %}" class="nav-item">
-                  <img src="{% static 'images/profesores/reportes.png' %}" class="nav-icon" alt="Reportes"> 
-                  Reportes
-              </a></li>
-          </ul>
-      </nav>
-      <div class="logout-container">
-          <form method="POST" action="{% url 'login' %}">
-              {% csrf_token %}
-              <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
-          </form>
-      </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main-content">
+{% block mockUp %}
     <header class="header">
       <h1 class="page-title">Lista de cursos:</h1>
     </header>
@@ -80,5 +38,4 @@
       <a href="{% url 'dashboard_profesores' %}" class="volver-btn">Volver</a>
     </div>
   </main>
-</body>
-</html>
+{% endblock %}

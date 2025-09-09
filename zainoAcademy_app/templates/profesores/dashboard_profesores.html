@@ -1,70 +1,11 @@
-<!DOCTYPE html>
+{% extends "profesores/base.html" %}
 {% load static %}
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Profesor - Zaino Academy</title>
-    <link rel="stylesheet" href="{% static 'css/profesores/dashboard_profesores.css' %}">
-    <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,600,700&display=swap" rel="stylesheet" />
-</head>
-<body class="dashboard-page">
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="sidebar">
-        <div class="logo">
-            <img src="{% static 'images/profesores/Favicon.png' %}" alt="Logo Libro"/>
-            <img src="{% static 'images/profesores/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
-        </div>
-        <nav>
-            <ul class="nav-list">
-                <li><a href="{% url 'dashboard_profesores' %}" class="nav-item active">
-                    <img src="{% static 'images/profesores/inicio.png' %}" class="nav-icon" alt="Inicio">
-                    Inicio
-                </a></li>
 
-                <li><a href="{% url 'actividad_profesores_consultar' %}" class="nav-item">
-                    <img src="{% static 'images/profesores/actividades.png' %}" class="nav-icon" alt="Actividades"> 
-                    Actividades - Material de apoyo
-                </a></li>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profesores/dashboard_profesores.css' %}">
+{% endblock %}
 
-                <li><a href="{% url 'asistencia_profesores_cursos' %}" class="nav-item">
-                    <img src="{% static 'images/profesores/asistencia.png' %}" class="nav-icon" alt="Asistencia"> 
-                    Asistencia
-                </a></li>
-
-                <li><a href="{% url 'reportes_profesores' %}" class="nav-item">
-                    <img src="{% static 'images/profesores/reportes.png' %}" class="nav-icon" alt="Reportes"> 
-                    Reportes
-                </a></li>
-            </ul>
-        </nav>
-        <div class="logout-container">
-            <form method="POST" action="{% url 'login' %}">
-                {% csrf_token %}
-                <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
-            </form>
-        </div>
-    </aside>
-    
-    <!-- ===== MAIN ===== -->
-    <main class="main-content">
-        <header class="page-header">
-            <div class="header-icons">
-                <!-- Notificaciones -->
-                <a href="{% url 'notificaciones_profesores' %}">
-                    <img src="{% static 'images/profesores/notificaciones.png' %}" class="header-icon" alt="Notificaciones">
-                </a>
-                
-                <!-- Nombre -->
-                <span class="user-name">{{ usuario.Us_nombre }}</span>
-                
-                <!-- Avatar / Perfil -->
-                <a href="#">
-                    <img src="{% static 'images/profesores/perfil.png' %}" class="user-avatar" alt="Perfil">
-                </a>
-            </div>
-        </header>
-
+{% block mockUp %}
         <div class="dashboard-content">
             <!-- COLUMNA IZQUIERDA -->
             <div class="left-column">
@@ -72,8 +13,8 @@
                 <div class="greeting-card">
                     <div class="greeting-text">
                         <h2>Hola, {{ usuario.Us_nombre }}!</h2>
-                        <p>Hoy tienes 3 pendientes nuevos. Revisa tu muro para más información.</p>
-                        <a href="{% url 'notificaciones_profesores' %}" class="btn-leer-mas">Leer más</a>
+                        <p>Bienvenido a tu entorno virtual, recuerda estar atento <br> a las notificaciones y trabajos pendientes</p>
+                        <a href="{% url 'actividad_profesores_consultar' %}" class="btn-leer-mas">Leer más</a>
                     </div>
                     <div class="greeting-illustration">
                         <img src="{% static 'images/profesores/lectura.png' %}" alt="Ilustración">
@@ -81,117 +22,60 @@
                 </div>
 
                 <!-- Notificaciones -->
+                <!-- sección de actividades abiertas -->
                 <div class="notifications-section">
                     <div class="notifications-header">
-                        <h3>Notificaciones</h3>
-                        <a href="{% url 'notificaciones_profesores' %}" class="ver-todo-btn">Ver todo</a>
+                        <h3>Actividades abiertas</h3>
                     </div>
-                    
+
                     <div class="notifications-table">
                         <div class="table-header">
-                            <div class="col-header">Nombre estudiante</div>
-                            <div class="col-header">Designación</div>
-                            <div class="col-header">Estado</div>
+                            <div class="col-header">Título</div>
+                            <div class="col-header">Fecha límite</div>
+                            <div class="col-header">Entregas</div>
                         </div>
-                        
+
+                        {% for act in actividades_abiertas %}
                         <div class="table-row">
-                            <div class="col-data name-with-avatar">
-                                <div class="student-avatar-small">
-                                    <img src="{% static 'images/profesores/perfil.png' %}" alt="Avatar">
-                                </div>
-                                Nombre estudiante
+                            <div class="col-data">
+                                <a href="{% url 'actividad_profesores_calificaciones' act.Act_id %}" class="activity-link">
+                                    {{ act.Act_nombre }}
+                                </a>
                             </div>
-                            <div class="col-data">Estudiante</div>
-                            <div class="col-data status-pendientes">• 3 pendientes</div>
+                            <div class="col-data">{{ act.Act_fechaLimite|date:"d/m/Y" }}</div>
+                            <div class="col-data status-pendientes">• {{ act.total_entregas }} entregas</div>
                         </div>
+                        {% empty %}
                         <div class="table-row">
-                            <div class="col-data name-with-avatar">
-                                <div class="student-avatar-small">
-                                    <img src="{% static 'images/profesores/perfil.png' %}" alt="Avatar">
-                                </div>
-                                Nombre estudiante
-                            </div>
-                            <div class="col-data">Estudiante</div>
-                            <div class="col-data status-sin-pendientes">• Sin pendientes</div>
+                            <div class="col-data" style="grid-column: 1 / -1;">No tienes actividades abiertas en este momento</div>
                         </div>
-                        <div class="table-row">
-                            <div class="col-data name-with-avatar">
-                                <div class="student-avatar-small">
-                                    <img src="{% static 'images/profesores/perfil.png' %}" alt="Avatar">
-                                </div>
-                                Nombre estudiante
-                            </div>
-                            <div class="col-data">Estudiante</div>
-                            <div class="col-data status-pendientes">• 5 pendientes</div>
-                        </div>
-                        <div class="table-row">
-                            <div class="col-data name-with-avatar">
-                                <div class="student-avatar-small">
-                                    <img src="{% static 'images/profesores/perfil.png' %}" alt="Avatar">
-                                </div>
-                                Nombre estudiante
-                            </div>
-                            <div class="col-data">Estudiante</div>
-                            <div class="col-data status-sin-pendientes">• Sin pendientes</div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
+
             </div>
 
             <!-- COLUMNA DERECHA -->
             <div class="right-column">
-                <!-- Calendario -->
-                <div class="calendar-widget">
-                    <div class="calendar-header">
-                        <button class="nav-btn prev-btn">‹</button>
-                        <h4>Noviembre, 2024</h4>
-                        <button class="nav-btn next-btn">›</button>
+                <div class="calendar-section">
+                    <div class="calendar-top">
+                        <h4 id="calendar-month-year"></h4>
+                        <div class="calendar-nav">
+                            <button class="nav-btn prev-btn" onclick="changeMonth(-1)">‹</button>
+                            <button class="nav-btn next-btn" onclick="changeMonth(1)">›</button>
+                        </div>
                     </div>
-                    
-                    <div class="calendar-grid">
-                        <div class="day-header">DO</div>
-                        <div class="day-header">LU</div>
-                        <div class="day-header">MA</div>
-                        <div class="day-header">MI</div>
-                        <div class="day-header">JU</div>
-                        <div class="day-header">VI</div>
-                        <div class="day-header">SA</div>
-                        
-                        <div class="day-cell">27</div>
-                        <div class="day-cell">28</div>
-                        <div class="day-cell">29</div>
-                        <div class="day-cell">30</div>
-                        <div class="day-cell">31</div>
-                        <div class="day-cell">01</div>
-                        <div class="day-cell">02</div>
-                        <div class="day-cell">03</div>
-                        <div class="day-cell">04</div>
-                        <div class="day-cell">05</div>
-                        <div class="day-cell current-day">06</div>
-                        <div class="day-cell">07</div>
-                        <div class="day-cell">08</div>
-                        <div class="day-cell">09</div>
-                        <div class="day-cell">10</div>
-                        <div class="day-cell">11</div>
-                        <div class="day-cell">12</div>
-                        <div class="day-cell">13</div>
-                        <div class="day-cell">14</div>
-                        <div class="day-cell">15</div>
-                        <div class="day-cell">16</div>
-                        <div class="day-cell">17</div>
-                        <div class="day-cell">18</div>
-                        <div class="day-cell">19</div>
-                        <div class="day-cell">20</div>
-                        <div class="day-cell">21</div>
-                        <div class="day-cell">22</div>
-                        <div class="day-cell">23</div>
-                        <div class="day-cell">24</div>
-                        <div class="day-cell">25</div>
-                        <div class="day-cell">26</div>
-                        <div class="day-cell">27</div>
-                        <div class="day-cell">28</div>
-                        <div class="day-cell">29</div>
-                        <div class="day-cell">30</div>
+
+                    <div class="calendar-widget">
+                        <div class="calendar-grid" id="calendar-grid">
+                            <div class="day-header">DO</div>
+                            <div class="day-header">LU</div>
+                            <div class="day-header">MA</div>
+                            <div class="day-header">MI</div>
+                            <div class="day-header">JU</div>
+                            <div class="day-header">VI</div>
+                            <div class="day-header">SA</div>
+                        </div>
                     </div>
                 </div>
 
@@ -202,16 +86,7 @@
                     </div>
                     <h4 class="student-name">{{ usuario.Us_nombre }}</h4>
                     <p class="student-role">Profesor</p>
-                    
-                    <div class="student-info">
-                        <div class="profile-icons">
-                            <div class="icon-item">
-                                <img src="{% static 'images/profesores/mensajes.png' %}" alt="Email" class="info-icon">
-                            </div>
-                            <div class="icon-item">
-                                <img src="{% static 'images/profesores/notificaciones.png' %}" alt="Teléfono" class="info-icon">
-                            </div>
-                        </div>
+                
                         
                         <div class="info-row">
                             <span class="info-label">Estado</span>
@@ -230,39 +105,65 @@
             </div>
         </div>
     </main>
-    
-    <!-- Modal Cerrar Sesión -->
-    <div id="logout-modal" class="modal">
-        <div class="modal-content">
-            <h2>¿Cerrar Sesión?</h2>
-            <div class="modal-actions">
-                <form method="POST" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-confirm">Confirmar</button>
-                </form>
-                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-            </div>
-        </div>
-    </div>
 
     <script>
-        const modal = document.getElementById('logout-modal');
-        function openModal() { modal.style.display = 'flex'; }
-        function closeModal() { modal.style.display = 'none'; }
-        window.onclick = function(event) {
-            if (event.target == modal) closeModal();
+        let currentDate = new Date();
+        function renderCalendar(date) {
+            const month = date.getMonth();
+            const year = date.getFullYear();
+            const monthYear = document.getElementById("calendar-month-year");
+            const months = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+            monthYear.textContent = `${months[month]}, ${year}`;
+
+            const calendarGrid = document.querySelector(".calendar-grid");
+            calendarGrid.innerHTML = `
+                <div class="day-header">DO</div>
+                <div class="day-header">LU</div>
+                <div class="day-header">MA</div>
+                <div class="day-header">MI</div>
+                <div class="day-header">JU</div>
+                <div class="day-header">VI</div>
+                <div class="day-header">SA</div>
+            `;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+            const prevLastDate = new Date(year, month, 0).getDate();
+
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const dayCell = document.createElement("div");
+                dayCell.classList.add("day-cell", "prev-month");
+                dayCell.textContent = prevLastDate - i;
+                calendarGrid.appendChild(dayCell);
+            }
+
+            let today = new Date();
+            let formatter = new Intl.DateTimeFormat("es-CO", {
+                timeZone: "America/Bogota",
+                day: "numeric", month: "numeric", year: "numeric"
+            });
+            let parts = formatter.formatToParts(today);
+            let todayDay = parseInt(parts.find(p => p.type === "day").value);
+            let todayMonth = parseInt(parts.find(p => p.type === "month").value) - 1;
+            let todayYear = parseInt(parts.find(p => p.type === "year").value);
+
+            for (let i = 1; i <= lastDate; i++) {
+                const dayCell = document.createElement("div");
+                dayCell.classList.add("day-cell");
+                dayCell.textContent = i;
+                if (year === todayYear && month === todayMonth && i === todayDay) {
+                    dayCell.classList.add("current-day");
+                }
+                calendarGrid.appendChild(dayCell);
+            }
         }
-
-        // Funcionalidad del calendario
-        document.querySelector('.prev-btn').addEventListener('click', function() {
-            // Lógica para mes anterior
-            console.log('Mes anterior');
-        });
-
-        document.querySelector('.next-btn').addEventListener('click', function() {
-            // Lógica para mes siguiente
-            console.log('Mes siguiente');
-        });
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            renderCalendar(currentDate);
+        }
+        renderCalendar(currentDate);
     </script>
-</body>
-</html>
+{% endblock %}

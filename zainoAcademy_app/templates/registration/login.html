@@ -24,14 +24,14 @@
                     {% csrf_token %}
                     
                     <div class="form-group">
-                        <label for="correo"><b>Usuario</b></label>
-                        <input type="email" name="correo" id="correo" required class="form-control" placeholder="Tu usuario">
+                        <label for="correo"><b>Usuario</b></label><br>
+                        <input type="email" name="correo" id="correo" required class="form-control" placeholder="Tu usuario"><br><br>
                     </div>
 
                     <div class="form-group">
-                        <label for="contraseña"><b>Contraseña</b></label>
-                        <input type="password" name="contraseña" id="contraseña" required class="form-control" placeholder="•••••••">
-                        <small><a href="#"><b>¿Olvidaste tu contraseña?</b></a></small>
+                        <label for="contraseña"><b>Contraseña</b></label><br>
+                        <input type="password" name="contraseña" id="contraseña" required class="form-control" placeholder="•••••••"><br><br>
+                        <small><a href="{% url 'reset_password' %}"><b>¿Olvidaste tu contraseña?</b></a></small>
                     </div>
 
                     <button type="submit" class="btn-login"><b>Ingresar</b></button> 

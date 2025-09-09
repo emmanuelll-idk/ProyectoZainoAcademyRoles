@@ -49,6 +49,7 @@ urlpatterns = [
     path('estudiantes/editar_perfil/', views.editar_perfil_estudiantes, name='editar_perfil_estudiantes'),
     path('perfil/', views.ver_perfil_estudiantes, name='ver_perfil_estudiantes'),
     path('eliminar-archivo/', views.eliminar_archivo, name='eliminar_archivo'),
+    path('cambiar_contraseña/', views.reset_password, name='reset_password'),
 
 
     #Profesores
@@ -60,12 +61,30 @@ urlpatterns = [
     path("profesores/asistencia/cursos/<int:periodo_id>/", views.asistencia_profesores_cursos, name="asistencia_profesores_cursos_periodo"),
     path('profesores/asistencia/consultar/<int:bol_id>/', views.asistencia_profesores_consultar, name='asistencia_profesores_consultar'),
     path('profesores/asistencia/añadir/<int:bol_id>/', views.asistencia_profesores_añadir, name='asistencia_profesores_añadir'),
-    path('profesores/actividades/calificaciones/',views.actividad_profesores_calificaciones, name="actividad_profesores_calificaciones"),
+    path("profesores/actividades/guardar/<int:bol_id>/", views.guardar_calificaciones, name="guardar_calificaciones"),
+    path('profesores/actividades/cursos/<int:periodo_id>/',views.actividad_profesores_consultar_cursos,name='actividad_profesores_consultar_cursos'),
+    path('profesores/actividades/calificaciones/<int:act_id>/', views.actividad_profesores_calificaciones, name='actividad_profesores_calificaciones'),
+    path('profesores/actividades/calificaciones/curso/<int:bol_id>/', views.actividades_por_curso_materia, name='actividades_por_curso_materia'),
     path('profesores/materialApoyo/subir/<int:bol_id>/', views.materialApoyo_subir, name='materialApoyo_subir'),
     path('profesores/materialApoyo/consultar/<int:bol_id>/', views.materialApoyo_consultar, name='materialApoyo_consultar'),
+    path("profesores/materialApoyo/editar/<int:Mate_id>/", views.materialApoyo_editar, name="materialApoyo_editar"),
+    path('profesores/materialApoyo/eliminar/<int:Mate_id>/', views.materialApoyo_eliminar, name='materialApoyo_eliminar'),
+    path('profesores/materialApoyo/confirmar-eliminar/<int:id>/', views.materialApoyo_confirmar_eliminar, name='materialApoyo_confirmar_eliminar'),
     path('profesores/reportes/', views.reportes_profesores, name='reportes_profesores'),
-    path('profesores/reportes/descargar/', views.reportes_profesores_descargar, name='reportes_profesores_descargar'),
+    path('profesores/reportes/descargar/<int:periodo_id>/', views.reportes_profesores_descargar, name='reportes_profesores_descargar'),
+    path('profesores/reportes/asistencias/pdf/<int:periodo_id>/', views.generar_reporte_asistencias_pdf, name='reporte_asistencias_pdf'),
+    path('profesores/reportes/rendimiento/pdf/<int:periodo_id>/', views.generar_reporte_rendimiento_pdf, name='reporte_rendimiento_pdf'),
     path('profesores/notificaciones/', views.notificaciones_profesores, name='notificaciones_profesores'),
+    path('profesores/actividades/editar/<int:act_id>/', views.actividad_profesores_editar, name='actividad_profesores_editar'),
+    path('profesores/actividades/eliminar/<int:act_id>/', views.actividad_profesores_eliminar, name='actividad_profesores_eliminar'),
+    path('materialApoyo/consultar/<int:bol_id>/', views.materialApoyo_consultar, name='materialApoyo_consultar'),
+    path('materialApoyo/editar/<int:Mate_id>/', views.materialApoyo_editar, name='materialApoyo_editar'),
+    path('materialApoyo/eliminar/<int:Mate_id>/', views.materialApoyo_eliminar, name='materialApoyo_eliminar'),
+    path('materialApoyo/confirmar_eliminar/<int:Mate_id>/', views.materialApoyo_confirmar_eliminar, name='materialApoyo_confirmar_eliminar'),
+    path('profesores/actividades/calificar/<int:curso_id>/', views.lista_actividades_calificar, name='lista_actividades_calificar'),
+    path('profesores/editar_perfil/', views.editar_perfil_profesores, name='editar_perfil_profesores'),
+    path('profesores/actualizar_perfil/', views.actualizar_perfil_profesores, name='actualizar_perfil_profesores'),
+    path('profesores/dashboard_profesores/', views.dashboard_profesores_calendar, name="dashboard_profesores"),
 
 
     #Directivos

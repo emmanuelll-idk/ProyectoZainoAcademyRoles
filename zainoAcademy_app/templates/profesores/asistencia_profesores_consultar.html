@@ -1,84 +1,55 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Consultar Asistencia</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/profesores/asistencia_profesores_consultar.css' %}">
-  <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,600,700&display=swap" rel="stylesheet" />
-</head>
-<body>
-  <!-- ===== SIDEBAR ===== -->
-  <aside class="sidebar">
-      <div class="logo">
-          <img src="{% static 'images/profesores/Favicon.png' %}" alt="Logo Libro"/>
-          <img src="{% static 'images/profesores/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
-      </div>
-      <nav>
-          <ul class="nav-list">
-              <li><a href="{% url 'dashboard_profesores' %}" class="nav-item active">
-                  <img src="{% static 'images/profesores/inicio.png' %}" class="nav-icon" alt="Inicio">
-                  Inicio
-              </a></li>
+{% extends "profesores/base.html" %}
+{% load static %}
 
-              <li><a href="{% url 'actividad_profesores_consultar' %}" class="nav-item">
-                  <img src="{% static 'images/profesores/actividades.png' %}" class="nav-icon" alt="Actividades"> 
-                  Actividades - Material de apoyo
-              </a></li>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profesores/asistencia_profesores_consultar.css' %}">
+{% endblock %}
 
-              <li><a href="{% url 'asistencia_profesores_cursos' %}" class="nav-item">
-                  <img src="{% static 'images/profesores/asistencia.png' %}" class="nav-icon" alt="Asistencia"> 
-                  Asistencia
-              </a></li>
-
-              <li><a href="{% url 'reportes_profesores' %}" class="nav-item">
-                  <img src="{% static 'images/profesores/reportes.png' %}" class="nav-icon" alt="Reportes"> 
-                  Reportes
-              </a></li>
-          </ul>
-      </nav>
-      <div class="logout-container">
-          <form method="POST" action="{% url 'login' %}">
-              {% csrf_token %}
-              <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
-          </form>
-      </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main-content">
+{% block mockUp %}
     <header class="header">
       <h1 class="page-title">Asistencia - {{ boletin.Cur.Cur_nombre }} / {{ boletin.Mtr.Mtr_nombre }}</h1>
     </header>
 
-    <table class="asistencia-table">
-      <thead>
-        <tr>
-          <th>Estudiante</th>
-          <th>Estado</th>
-          <th>Fecha</th>
-          <th>Comentario</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for a in asistencias %}
-          <tr>
-            <td>{{ a.Estudiante.Est_nombre }}</td>
-            <td><span class="estado {{ a.Ast_estado|lower }}">{{ a.Ast_estado }}</span></td>
-            <td>{{ a.Ast_fecha }}</td>
-            <td>{{ a.Ast_comentario }}</td>
-          </tr>
-        {% empty %}
-          <tr><td colspan="4">No hay asistencias registradas aún.</td></tr>
+    <!-- Tabla con scroll horizontal -->
+    <div class="asistencia-table-wrapper">
+  <table class="asistencia-table">
+    <thead>
+      <tr>
+        <th>Nº</th>
+        <th>Estudiante</th>
+        {% for fecha in fechas %}
+          <th>{{ fecha|date:"d/m/Y" }}</th>
         {% endfor %}
-      </tbody>
-    </table>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in tabla_asistencias %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ fila.estudiante }}</td>
+        {% for datos in fila.fechas %}
+          <td>
+            {% if datos %}
+              {{ datos.estado }}
+            {% else %}
+              —
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="{{ fechas|length|add:2 }}">No hay asistencias registradas.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 
     <div class="acciones">
       <a href="{% url 'asistencia_profesores_consultar' boletin.Bol_id %}" class="volver-btn">Volver</a>
       <a href="{% url 'asistencia_profesores_añadir' boletin.Bol_id %}" class="añadir-btn">Añadir asistencia</a>
     </div>
   </main>
-</body>
-</html>
+{% endblock %}

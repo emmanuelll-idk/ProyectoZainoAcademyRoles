@@ -1,0 +1,27 @@
+{% extends "profesores/base.html" %}
+{% load static %}
+{% block page_title %}Material de apoyo{% endblock %}
+{% block mockUp %}
+
+<link rel="stylesheet" href="{% static 'css/profesores/materialApoyo_confirmar_eliminar.css' %}">
+
+{% if messages %}
+<div class="message-container">
+    {% for message in messages %}
+    <div class="floating-alert">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="confirm-delete-container">
+    <h2>¿Estás seguro de que deseas eliminar el material de apoyo<br>
+        <strong>{{ material.Mate_titulo }}</strong>?
+    </h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">Sí, eliminar</button>
+        <a href="{% url 'materialApoyo_consultar' material.Bol.Bol_id %}" class="btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+{% endblock %}

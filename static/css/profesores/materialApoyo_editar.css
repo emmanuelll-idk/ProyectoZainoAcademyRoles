@@ -1,0 +1,371 @@
+/* ====== ESTILOS PRINCIPALES ====== */
+body {
+    margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+    background-color: #f7f7f7;
+}
+
+/* ====== SIDEBAR ====== */
+.sidebar {
+    width: 240px;
+    background-color: #4A4063;
+    padding: 1.5rem 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    color: #fff;
+    z-index: 100;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.logo img {
+    max-width: 180px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    filter: brightness(0) invert(1);
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-list li {
+    margin-bottom: 0.3rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    gap: 0.7rem;
+}
+
+.nav-item.active {
+    background-color: #fff;
+    color: #4A4063;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active:hover {
+    background-color: #fff;
+    color: #4A4063;
+}
+
+.nav-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.logout-container {
+    position: absolute;
+    bottom: 2rem;
+    left: 1rem;
+    right: 1rem;
+}
+
+.logout-btn {
+    background-color: #1E91D6;
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.logout-btn:hover {
+    background-color: #6A5B8C;
+}
+
+.main-content {
+    margin-left: 290px;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.page-title {
+    color: #3B2D56;
+}
+
+.notification-icon {
+    width: 22px;
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.content {
+    flex: 1;
+    padding: 1rem 1rem;
+}
+
+
+.section-title {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #43355C;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* ====== ESTILOS PARA FECHA DE CREACIÓN ====== */
+.fecha-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.fecha-readonly {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+    border: 1px solid #e9ecef !important;
+    cursor: not-allowed;
+    font-weight: 600;
+}
+
+.fecha-help {
+    color: #6c757d;
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 3px;
+}
+
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.volver-btn {
+    background: #43355C;
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.crear-btn {
+    background: #43355C;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.crear-btn:hover {
+    background: #2d1f42;
+}
+
+/* ====== ESTILOS ESPECÍFICOS PARA EDICIÓN ====== */
+
+/* Información del archivo actual */
+.archivo-actual {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    border-left: 3px solid #6b73ff;
+}
+
+.archivo-actual p {
+    margin: 0 0 5px 0;
+    font-weight: 500;
+}
+
+.archivo-actual small {
+    color: #666;
+    font-style: italic;
+}
+
+.archivo-actual a {
+    color: #6b73ff;
+    text-decoration: none;
+}
+
+.archivo-actual a:hover {
+    text-decoration: underline;
+}
+
+/* ====== MODAL STYLES ====== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+.modal-content p {
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.cancel-btn, .delete-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.cancel-btn:hover {
+    background-color: #d0d0d0;
+}
+
+.delete-btn {
+    background-color: #ff4757;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #ff3742;
+}
+
+/* Popup */
+.popup {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup.hidden {
+    display: none;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    width: 300px;
+}
+
+.popup-content button {
+    background: #43355C;
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+@media (max-width: 640px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .header-right {
+        gap: 0.5rem;
+    }
+
+    .user-name {
+        display: none;
+    }
+}

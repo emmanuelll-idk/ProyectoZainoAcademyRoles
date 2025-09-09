@@ -1,197 +1,225 @@
-/* ====== ESTILOS PRINCIPALES ====== */
-body {
-    margin: 0;
-    font-family: 'Comfortaa', sans-serif;
-    background-color: #f7f7f7;
-}
-
-/* ====== SIDEBAR ====== */
-.sidebar {
-    width: 240px;
-    background-color: #4A4063;
-    padding: 1.5rem 1rem;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    color: #fff;
-    z-index: 100;
-}
-
-.logo {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.logo img {
-    max-width: 180px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    filter: brightness(0) invert(1);
-}
-
-.nav-list {
-    list-style: none;
-    padding: 0;
-}
-
-.nav-list li {
-    margin-bottom: 0.3rem;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    padding: 0.8rem;
-    border-radius: 10px;
-    text-decoration: none;
-    color: #fff;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    gap: 0.7rem;
-}
-
-.nav-item.active {
-    background-color: #fff;
-    color: #4A4063;
-}
-
-.nav-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.nav-item.active:hover {
-    background-color: #fff;
-    color: #4A4063;
-}
-
-.nav-icon {
-    width: 16px;
-    height: 16px;
-}
-
-.logout-container {
-    position: absolute;
-    bottom: 2rem;
-    left: 1rem;
-    right: 1rem;
-}
-
-.logout-btn {
-    background-color: #1E91D6;
-    color: #fff;
-    border: none;
-    padding: 1rem;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 100%;
-    font-family: "Comfortaa", sans-serif;
-}
-
-.logout-btn:hover {
-    background-color: #6A5B8C;
-}
-
-
+/* ====== MAIN ====== */
 .main-content {
-    margin-left: 290px;
+    margin-left: 240px;
     padding: 20px;
     min-height: 100vh;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
 .page-title {
-    color: #3B2D56;
+    font-size: 24px;
+    color: #3d2f5b;
+}
+
+/* ====== BOTONES DE OPCIONES ====== */
+.material-opciones {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+.btn-opcion {
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-family: 'Comfortaa', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.btn-opcion.crear {
+    background-color: #4A4063;
+    color: white;
+}
+
+.btn-opcion.crear:hover {
+    background-color: #3a3354;
+}
+
+.btn-opcion.crear.active {
+    background-color: #4A4063;
+    box-shadow: 0 0 10px rgba(74, 64, 99, 0.5);
+}
+
+.btn-opcion.consultar {
+    background-color: #e6e6e6;
+    color: #666;
+}
+
+.btn-opcion.consultar:hover {
+    background-color: #1E91D6;
+    color: white;
+}
+
+.btn-opcion.consultar.active {
+    background-color: #1E91D6;
+    color: white;
+    box-shadow: 0 0 10px rgba(30, 145, 214, 0.5);
+}
+
+/* ====== SECCIONES ====== */
+.section-content {
+    margin-top: 20px;
 }
 
 .section-title {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-    color: #43355C;
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #3d2f5b;
 }
 
+.oculto {
+    display: none;
+}
+
+/* ====== FORMULARIO ====== */
 .form-group {
     margin-bottom: 15px;
 }
 
-.form-group label {
+label {
     display: block;
     font-weight: 600;
     margin-bottom: 5px;
+    color: #333;
 }
 
-.form-group input,
-.form-group textarea {
+input[type="text"],
+input[type="file"],
+textarea {
     width: 100%;
     padding: 8px;
-    border: 1px solid #bbb;
+    border: 1px solid #aaa;
     border-radius: 6px;
+    font-family: inherit;
+    box-sizing: border-box;
     font-size: 14px;
 }
 
 .form-actions {
-    margin-top: 20px;
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 }
 
-.user-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-}
-
-.volver-btn {
+.volver-btn,
+.crear-btn {
     background: #43355C;
-    color: #fff;
-    padding: 10px 25px;
+    color: white;
+    border: none;
+    padding: 10px 20px;
     border-radius: 8px;
+    cursor: pointer;
     text-decoration: none;
-    font-weight: 600;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 500;
 }
 
-.submit-btn {
-    background: #3B2D56;
-    color: #fff;
-    border: none;
-    padding: 10px 25px;
+.volver-btn:hover,
+.crear-btn:hover {
+    background: #2a1f41;
+}
+
+/* ====== LISTA DE MATERIALES ====== */
+.material-lista {
+    margin-top: 20px;
+}
+
+.material-item {
+    background: white;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-/* Popup */
-.popup {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
+    padding: 20px;
+    margin-bottom: 15px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
-.popup.hidden {
-    display: none;
+.material-info h3 {
+    margin: 0 0 10px 0;
+    color: #3d2f5b;
 }
 
-.popup-content {
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
+.material-info p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.material-acciones {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-descargar {
+    background-color: #1E91D6;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.btn-descargar:hover {
+    background-color: #156fa7;
+}
+
+.sin-material {
     text-align: center;
-    width: 300px;
+    color: #666;
+    font-style: italic;
+    margin-top: 40px;
 }
 
-.popup-content button {
-    background: #43355C;
-    color: #fff;
-    padding: 10px 25px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    margin-top: 15px;
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 200px;
+    }
+
+    .header {
+        padding: 1rem;
+    }
+
+    .content {
+        padding: 2rem 1rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .header-right {
+        gap: 0.5rem;
+    }
+
+    .user-name {
+        display: none;
+    }
 }

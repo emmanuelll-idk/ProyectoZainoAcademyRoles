@@ -1,0 +1,88 @@
+/* Main */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 130px;
+}
+
+/* Tabla actividades */
+.activities-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-family: 'Comfortaa', sans-serif;
+}
+
+.activities-table th, 
+.activities-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    color: #4a4063;
+    vertical-align: middle;
+}
+
+.activities-table th {
+    background: #eee;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.activities-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.activities-table tr:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+/* Contador de entregas */
+.entregas-contador {
+    font-weight: 600;
+    color: #4a4063;
+}
+
+/* Botón Calificar */
+.btn.calificar {
+    background: #4A4063;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn.calificar:hover {
+    background: #3e2d58;
+    transform: scale(1.05);
+}
+
+/* Mensaje cuando no hay actividades */
+.no-activities {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Contenedor de acciones */
+.acciones {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Botón volver (igual estilo que materiales) */
+.volver-btn {
+    background: #3e2d58;
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+.volver-btn:hover {
+    background: #2b1f38;
+}
