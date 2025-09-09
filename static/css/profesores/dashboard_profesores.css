@@ -1,7 +1,11 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
 }
 
 .dashboard-page {
@@ -16,11 +20,12 @@
     width: 240px;
     background-color: #4A4063;
     padding: 1.5rem 1rem;
+    color: #fff;
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    color: #fff;
+    overflow-y: auto;
     z-index: 100;
 }
 
@@ -123,6 +128,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    position: relative; 
 }
 
 .header-icon {
@@ -335,42 +341,59 @@
     gap: 2rem;
 }
 
-/* ===== CALENDAR ===== */
-.calendar-widget {
-    background: #fff;
-    border-radius: 20px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+/* -------------------- CALENDARIO -------------------- */
+
+/* Sección general del calendario */
+.calendar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 }
 
-.calendar-header {
+/* Encabezado del mes y flechas (afuera del cuadro) */
+.calendar-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    padding: 0 4px;
 }
 
-.calendar-header h4 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #4A4063;
+.calendar-top h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Flechas de navegación */
+.calendar-nav {
+    display: flex;
+    gap: 0.5rem;
 }
 
 .nav-btn {
-    background: none;
+    background: #ecf0f1;
     border: none;
     font-size: 1.2rem;
-    color: #4A4063;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 5px 10px;
     border-radius: 8px;
-    transition: all 0.3s ease;
+    transition: background 0.3s ease;
 }
 
 .nav-btn:hover {
-    background: #F0F0F0;
+    background: #dcdde1;
 }
 
+/* Caja blanca del calendario (solo para los días) */
+.calendar-widget {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Grid del calendario */
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -378,34 +401,37 @@
     text-align: center;
 }
 
+/* Encabezado de días (LU, MA, etc.) */
 .day-header {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #666;
-    padding: 0.5rem;
+    font-weight: bold;
+    color: #7f8c8d;
+    font-size: 0.9rem;
 }
 
+/* Celda de cada día */
 .day-cell {
-    padding: 0.8rem 0.5rem;
+    padding: 10px 0;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    color: #4A4063;
+    font-size: 0.95rem;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
+/* Hover sobre los días */
 .day-cell:hover {
-    background: #E3F2FD;
+    background: #f1f2f6;
 }
 
+/* Día actual */
 .current-day {
-    background: #1E91D6;
-    color: #fff;
-    font-weight: 700;
+    background: #3498db;
+    color: white;
+    font-weight: bold;
 }
 
-.current-day:hover {
-    background: #1976BB;
+/* Días del mes anterior o siguiente (grisados) */
+.prev-month {
+    color: #bdc3c7;
 }
 
 /* ===== STUDENT PROFILE ===== */
@@ -583,26 +609,54 @@
 @media (max-width: 1200px) {
     .dashboard-content {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
     
     .right-column {
-        order: -1;
+        flex-direction: row;
+        position: static;
     }
+
+    .calendar-widget,
+    .student-profile {
+        flex: 5;
+    }
+}
+
+
+/* ===== LINKS DE ACTIVIDADES ===== */
+.activity-link {
+    text-decoration: none;
+    color: #4A4063;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.activity-link:hover {
+    color: #1E91D6;
+    text-decoration: none;
+    transform: translateX(3px); 
 }
 
 @media (max-width: 768px) {
     .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
+        width: 80px;
+        padding: 1rem 0.5rem;
+    }
+    
+    .sidebar .logo img {
+        max-width: 60px;
+    }
+    
+    .nav-item span:not(.nav-icon) {
+        display: none;
     }
     
     .main-content {
-        margin-left: 0;
-    }
-    
-    .dashboard-content {
+        margin-left: 80px;
+        width: calc(100% - 80px);
         padding: 1rem;
-        gap: 1rem;
     }
     
     .greeting-card {
@@ -611,22 +665,128 @@
         gap: 1rem;
     }
     
-    .greeting-illustration img {
-        width: 80px;
-        height: 80px;
+    .greeting-text h2 {
+        font-size: 1.5rem;
+    }
+    
+    .right-column {
+        flex-direction: column;
+        position: static;
     }
     
     .table-header,
     .table-row {
-        font-size: 0.8rem;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
     }
     
-    .calendar-grid {
-        gap: 0.2rem;
+    .col-header {
+        display: none;
     }
     
-    .day-cell {
-        padding: 0.5rem 0.3rem;
-        font-size: 0.8rem;
+    .table-row {
+        background: #f8f9ff;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
     }
+}
+
+
+/* ===== HAMBURGER & DROPDOWN ===== */
+
+.hamburger {
+    display: none;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4a4063;
+}
+
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 70px; /* debajo del header */
+    right: 0.5rem;
+    width: 350px; /* casi todo el ancho en móviles */
+    background: rgba(255, 255, 255, 0.95); /* ligeramente transparente */
+    backdrop-filter: blur(10px); /* efecto glass */
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s ease;
+    z-index: 200;
+    flex-wrap: nowrap;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-family: "Comfortaa", sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background-color: rgba(30, 145, 214, 0.1); /* azul suave al pasar */
+    color: #1e91d6;
+}
+
+.dropdown-menu.show {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 1024px) {
+    .hamburger {
+        display: block;
+        font-size: 2rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #4a4063;
+        transition: transform 0.2s ease;
+    }
+
+    .hamburger:hover {
+        transform: scale(1.1);
+    }
+
+    .sidebar {
+        display: none; 
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+.dropdown-menu .dropdown-logout-btn {
+    background-color: #1e91d6 !important;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dropdown-menu .dropdown-logout-btn:hover {
+    background-color: #6A5B8C !important;
+    transform: scale(1.02);
 }

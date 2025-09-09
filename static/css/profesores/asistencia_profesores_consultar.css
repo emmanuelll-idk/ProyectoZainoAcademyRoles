@@ -32,7 +32,6 @@ body {
     filter: brightness(0) invert(1);
 }
 
-
 .nav-list {
     list-style: none;
     padding: 0;
@@ -108,29 +107,45 @@ body {
   margin-bottom: 20px;
 }
 
-/* Tabla asistencia */
+/* ===== TABLA ASISTENCIA ===== */
+.asistencia-table-wrapper {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
 .asistencia-table {
-  width: 100%;
   border-collapse: collapse;
+  width: 100%;
+  background: white;
 }
 
 .asistencia-table th,
 .asistencia-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  font-size: 14px;
   text-align: center;
+  vertical-align: middle;
 }
 
 .asistencia-table th {
   background: #eee;
+  font-weight: 600;
 }
 
-/* Estados */
+.asistencia-table td:nth-child(2) {
+  text-align: left;
+}
+
+/* Estados como chips */
 .estado {
-  padding: 4px 8px;
-  border-radius: 5px;
-  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
   color: white;
+  display: inline-block;
+  min-width: 80px;
 }
 
 .presente {
@@ -146,7 +161,11 @@ body {
   color: black;
 }
 
-/* Acciones */
+.parcial {
+  background: #6c757d;
+}
+
+/* Botones */
 .acciones {
   margin-top: 25px;
   display: flex;
@@ -163,4 +182,23 @@ body {
 
 .añadir-btn {
   background: #1dc6e6;
+}
+
+@media (max-width: 640px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .header-right {
+        gap: 0.5rem;
+    }
+
+    .user-name {
+        display: none;
+    }
 }

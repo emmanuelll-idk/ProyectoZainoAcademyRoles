@@ -1,0 +1,19 @@
+{% extends "profesores/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profesores/materialApoyo_consultar.css' %}">
+{% endblock %}
+
+{% block mockUp %}
+<div class="confirm-delete-container">
+    <h2>¿Estás seguro de que deseas eliminar el material de apoyo<br>
+        <strong>{{ material.Mate_titulo }}</strong>?
+    </h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">Sí, eliminar</button>
+        <a href="{% url 'materialApoyo_consultar' material.Bol.id %}" class="btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

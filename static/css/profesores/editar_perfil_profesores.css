@@ -1,0 +1,277 @@
+/* Main */
+.main-content {
+  padding: 20px;
+  margin-left: 240px; /* ancho de la barra lateral */
+}
+
+.page-title {
+  margin-bottom: 20px;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #4a4063;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 1500px;
+    gap: 3rem;
+}
+
+.left-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    justify-content: flex-start;  /* ✅ esto sube el formulario */
+    padding-top: 4rem;
+}
+
+/* Columna de perfil a la derecha */
+.right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem;
+}
+
+.profile-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    border: 4px solid #1e91d6;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    color: #4a4063;
+}
+
+.profile-role {
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 1.5rem;
+}
+
+.save-btn {
+    display: inline-block;
+    padding: 0.9rem 2rem;
+    border: none;
+    border-radius: 15px;
+    background-color: #4a4063;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.save-btn:hover {
+    background-color: #352c4d;
+    transform: scale(1.05);
+}
+
+
+/* Etiquetas */
+.form-column label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #4a4063;
+}
+
+/* Campos de entrada */
+.form-column input {
+    padding: 0.8rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.form-column input:focus {
+    border-color: #1e91d6;
+}
+
+.form-column input:hover {
+    box-shadow: 0 0 5px rgba(30, 145, 214, 0.2);
+}
+
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 80px;
+        padding: 1rem 0.5rem;
+    }
+    
+    .sidebar .logo img {
+        max-width: 60px;
+    }
+    
+    .nav-item span:not(.nav-icon) {
+        display: none;
+    }
+    
+    .main-content {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+        padding: 1rem;
+    }
+    
+    .greeting-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .greeting-text h2 {
+        font-size: 1.5rem;
+    }
+    
+    .right-column {
+        flex-direction: column;
+        position: static;
+    }
+    
+    .table-header,
+    .table-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .col-header {
+        display: none;
+    }
+    
+    .table-row {
+        background: #f8f9ff;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+
+/* ===== HAMBURGER & DROPDOWN ===== */
+
+.hamburger {
+    display: none;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4a4063;
+}
+
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 70px; /* debajo del header */
+    right: 0.5rem;
+    width: 350px; /* casi todo el ancho en móviles */
+    background: rgba(255, 255, 255, 0.95); /* ligeramente transparente */
+    backdrop-filter: blur(10px); /* efecto glass */
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s ease;
+    z-index: 200;
+    flex-wrap: nowrap;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-family: "Comfortaa", sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background-color: rgba(30, 145, 214, 0.1); /* azul suave al pasar */
+    color: #1e91d6;
+}
+
+.dropdown-menu.show {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 1024px) {
+    .hamburger {
+        display: block;
+        font-size: 2rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #4a4063;
+        transition: transform 0.2s ease;
+    }
+
+    .hamburger:hover {
+        transform: scale(1.1);
+    }
+
+    .sidebar {
+        display: none; 
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+.dropdown-menu .dropdown-logout-btn {
+    background-color: #1e91d6 !important;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dropdown-menu .dropdown-logout-btn:hover {
+    background-color: #6A5B8C !important;
+    transform: scale(1.02);
+}

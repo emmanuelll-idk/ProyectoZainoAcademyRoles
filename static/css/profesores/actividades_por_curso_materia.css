@@ -1,0 +1,89 @@
+.content {
+    padding: 20px;
+}
+
+.section-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #3c2a4d;
+}
+
+.calificaciones-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.calificaciones-table th, 
+.calificaciones-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.calificaciones-table th {
+    background-color: #f4f2f8;
+    font-weight: bold;
+}
+
+.entrega-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: left;
+}
+
+.no-entrega {
+    color: #a94442;
+    font-style: italic;
+}
+
+.calificacion-input {
+    width: 80px;
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.comentario-input {
+    width: 100%;
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.acciones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-volver, .btn-guardar {
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-volver {
+    background-color: #fff;
+    border: 2px solid #5e4b8b;
+    color: #5e4b8b;
+}
+
+.btn-volver:hover {
+    background-color: #f4f2f8;
+}
+
+.btn-guardar {
+    background-color: #5e4b8b;
+    color: #fff;
+}
+
+.btn-guardar:hover {
+    background-color: #4a3570;
+}

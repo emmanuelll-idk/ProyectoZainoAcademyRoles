@@ -1,0 +1,48 @@
+{% extends "profesores/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profesores/actividad_profesores_editar.css' %}">
+{% endblock %}
+
+{% block mockUp %}
+    <main class="main-content">
+        <h1>Editar Actividad</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" name="Act_nombre" value="{{ actividad.Act_nombre }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Fecha límite:</label>
+                <input type="date" name="Act_fechaLimite" value="{{ actividad.Act_fechaLimite|date:'Y-m-d' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Descripción:</label>
+                <input type="text" name="Act_descripcion" value="{{ actividad.Act_descripcion }}">
+            </div>
+
+            <div class="form-group">
+                <label>Comentario:</label>
+                <textarea name="Act_comentario">{{ actividad.Act_comentario }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Archivo:</label>
+                {% if actividad.Act_Archivo_Profesor %}
+                    <p>Archivo actual: <a href="{{ actividad.Act_Archivo_Profesor.url }}" target="_blank">Ver</a></p>
+                {% endif %}
+                <input type="file" name="Act_Archivo_Profesor">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">Guardar cambios</button>
+                <a href="{% url 'actividad_profesores_crear_actividad' actividad.Bol.pk %}" class="volver-btn">Cancelar</a>
+            </div>
+        </form>
+    </main>
+{% endblock %}
