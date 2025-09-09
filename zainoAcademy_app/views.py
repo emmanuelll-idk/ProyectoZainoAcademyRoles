@@ -90,6 +90,33 @@ def get_usuario_from_session(request):
             return None
     return None
 
+
+def reset_password(request):
+    exito = False  
+
+    if request.method == "POST":
+        correo = request.POST.get("correo")
+        documento = request.POST.get("documento")
+        nueva_contraseña = request.POST.get("new_password")
+        confirmar_contraseña = request.POST.get("confirm_password")
+
+        try:
+            usuario = Usuario.objects.get(correo=correo, documento=documento)
+        except Usuario.DoesNotExist:
+            messages.error(request, "Correo o documento incorrecto.")
+            return redirect("reset_password")
+
+        if nueva_contraseña != confirmar_contraseña:
+            messages.error(request, "Las contraseñas no coinciden.")
+            return redirect("reset_password")
+
+        usuario.Us_contraseña = nueva_contraseña
+        usuario.save()
+        exito = True  
+
+    return render(request, "registration/reset_password.html", {"exito": exito})
+
+
 @csrf_exempt
 def actualizar_perfil_acudientes(request):
     if request.method == 'POST':

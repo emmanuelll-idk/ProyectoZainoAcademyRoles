@@ -49,6 +49,7 @@ urlpatterns = [
     path('estudiantes/editar_perfil/', views.editar_perfil_estudiantes, name='editar_perfil_estudiantes'),
     path('perfil/', views.ver_perfil_estudiantes, name='ver_perfil_estudiantes'),
     path('eliminar-archivo/', views.eliminar_archivo, name='eliminar_archivo'),
+    path('cambiar_contraseña/', views.reset_password, name='reset_password'),
 
     # Acudientes
     path('acudientes/actividades/', views.actividades_acudientes, name='actividades_acudientes'),

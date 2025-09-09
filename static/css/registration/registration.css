@@ -69,6 +69,27 @@ body.login-page {
     color: #000;
 }
 
+.form-group input {
+    width: 100%;
+    height: 25px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px; 
+    padding-right: 25px; 
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background: transparent;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+
+
 .form-control {
     width: 100%;
     padding: 10px 12px;
@@ -103,6 +124,37 @@ body.login-page {
 .form-group small a:hover {
     color: #777;
 }
+
+.volver{
+    text-decoration: none;
+    color: #0082c9;
+}
+
+.password-wrapper {
+    position: relative;
+    display: block;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 25px; /* espacio para el puntico */
+    box-sizing: border-box;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-weight: bold;
+    color: #0082c9;
+    user-select: none;
+}
+.toggle-password:hover {
+    color: #005f80;
+}
+
 
 .btn-login {
     background-color: #4b3f58;
@@ -144,6 +196,8 @@ body.login-page {
     height: auto;
 }
 
+
+
 @media (max-width: 768px) {
     .login-wrapper {
         flex-direction: column;
@@ -164,11 +218,15 @@ body.login-page {
 
     .login-card {
         max-width: 100%;
+        width: 90%;      /* ajusta ancho al 90% de la pantalla */
+        padding: 1.5rem; /* reduce padding en móviles */
+        margin: 1rem;    /* deja espacio con los bordes */
+        box-sizing: border-box;
     }
 
     .login-logo {
         position: relative;
-        margin: 0 50px 20px auto;
+        margin: 0 auto 20px auto;
         text-align: center;
         display: block;
     }
