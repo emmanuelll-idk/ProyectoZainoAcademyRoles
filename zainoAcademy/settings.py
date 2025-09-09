@@ -142,3 +142,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+
+# Configuración de Email - Asegúrate de que esté al final de settings.py
+
+# Backend de email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Configuración del servidor SMTP de Gmail
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False  # No usar SSL cuando usas TLS
+
+# Credenciales
+EMAIL_HOST_USER = 'santyalfg@gmail.com'
+EMAIL_HOST_PASSWORD = 'oavk fluh cumf zpgt'
+
+# Email del administrador que recibirá los mensajes
+ADMIN_EMAIL = 'santyalfg@gmail.com'
+
+# Configuraciones adicionales
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+
+# Timeout para conexiones de email (opcional)
+EMAIL_TIMEOUT = 30
+
+# Para debugging - puedes activarlo temporalmente
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Descomenta para probar en consola
