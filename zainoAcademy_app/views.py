@@ -531,78 +531,55 @@ def actividad_profesores_calificaciones(request, act_id):
 
     actividad = get_object_or_404(Actividad, Act_id=act_id)
 
-    # Obtener todos los estudiantes del curso
-    estudiantes_curso = Estudiantes.objects.filter(
+    try:
+        profesor = Profesores.objects.get(Us=usuario)
+    except Profesores.DoesNotExist:
+        messages.error(request, "No tienes permisos de profesor.")
+        return redirect('dashboard_profesores')
+
+    # Traemos entregas y sus archivos
+    entregas = Actividad_Entrega.objects.filter(Act=actividad).select_related("Est")
+    for entrega in entregas:
+        entrega.archivos_lista = Actividad_EntregaArchivo.objects.filter(entrega=entrega)
+
+    # Guardar notas
+    if request.method == "POST":
+        for entrega in entregas:
+            calificacion = request.POST.get(f"calificacion_{entrega.id}")
+            if calificacion:
+                entrega.Act_calificacion = float(calificacion)
+                entrega.save()
+        messages.success(request, "Calificaciones guardadas correctamente.")
+        return redirect(
+            "actividad_profesores_consultar_cursos",
+            periodo_id=actividad.Bol.Per.Per_id  # 👈 Ahora se obtiene desde Boletín → Periodo
+        )
+
+    estudiantes = Estudiantes.objects.filter(
         estudiante_curso__Cur=actividad.Bol.Cur
     ).distinct()
 
-    entregas = []
-    for estudiante in estudiantes_curso:
-        try:
-            entrega = Actividad_Entrega.objects.get(
-                Est=estudiante,
-                Act=actividad
-            )
-        except Actividad_Entrega.DoesNotExist:
-            # Si no existe, la creamos en BD con estado inicial
-            if timezone.now().date() > actividad.Act_fechaLimite:
-                estado = "no_entregada"
-            else:
-                estado = "pendiente"
-
-            estado_obj = Estado_Actividad.objects.get(Esta_Actividad_Estado=estado)
-            entrega = Actividad_Entrega.objects.create(
-                Est=estudiante,
-                Act=actividad,
-                Esta_Actividad=estado_obj
-            )
-
-        # Determinar estado (y actualizar en BD si cambió)
-        if entrega.Act_Archivo_Estudiante and entrega.Act_Archivo_Estudiante.name:
-            if entrega.Act_fecha_entrega <= actividad.Act_fechaLimite:
-                estado = "entregada"
-            else:
-                estado = "retrasada"
-        else:
-            if timezone.now().date() > actividad.Act_fechaLimite:
-                estado = "no_entregada"
-            else:
-                estado = "pendiente"
-
-        estado_obj = Estado_Actividad.objects.get(Esta_Actividad_Estado=estado)
-        if entrega.Esta_Actividad != estado_obj:  # solo guardar si cambió
-            entrega.Esta_Actividad = estado_obj
-            entrega.save(update_fields=["Esta_Actividad"])
-
-        entregas.append(entrega)
-
-    # Procesar formulario si es POST
-    if request.method == "POST":
-        calificaciones_guardadas = 0
-
-        for entrega in entregas:
-            calificacion_key = f"calificacion_{entrega.id}"
-
-            if calificacion_key in request.POST:
-                calificacion = request.POST.get(calificacion_key)
-                if calificacion and calificacion.strip():
-                    entrega.Act_calificacion = float(calificacion)
-                    entrega.save(update_fields=["Act_calificacion"])
-                    calificaciones_guardadas += 1
-
-        if calificaciones_guardadas > 0:
-            messages.success(
-                request,
-                f"Se guardaron {calificaciones_guardadas} calificaciones correctamente."
-            )
-
-        return redirect("actividad_profesores_calificaciones", act_id=act_id)
-
-    return render(request, "profesores/actividad_profesores_calificaciones.html", {
-        "usuario": usuario,
+    context = {
         "actividad": actividad,
         "entregas": entregas,
-    })
+        "usuario": usuario,
+        "estudiantes": estudiantes,
+        "curso": actividad.Bol.Cur,
+        "materia": actividad.Bol.Mtr,
+        "periodo_id": actividad.Bol.Per.Per_id,  # 👈 Igual que en el redirect
+    }
+    return render(request, "profesores/actividades_por_curso_materia.html", context)
+
+
+
+
+
+
+
+
+
+
+
 
 
 def actividades_por_curso_materia(request, bol_id):
@@ -636,39 +613,40 @@ def actividades_por_curso_materia(request, bol_id):
         "periodo_id": boletin.Per_id,
     })
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Boletin, Actividad_EntregaArchivo
+
 def guardar_calificaciones(request, bol_id):
-    """
-    Guarda todas las calificaciones de las actividades de un curso/materia.
-    """
     if request.method == "POST":
-        boletin = get_object_or_404(Boletin, Bol_id=bol_id)
+        bol = get_object_or_404(Boletin, Bol_id=bol_id)
 
-        for key, value in request.POST.items():
-            if key.startswith("nota_"):
-                _, est_id, act_id = key.split("_")  
+        # obtenemos todas las entregas de ese boletín
+        entregas_archivos = Actividad_EntregaArchivo.objects.filter(
+            entrega__Act__Bol=bol
+        ).select_related("entrega")
 
+        for archivo_entrega in entregas_archivos:
+            entrega = archivo_entrega.entrega
+            # el input tiene el formato: calificacion_<id de la entrega>
+            calificacion_key = f"calificacion_{entrega.id}"
+            calificacion_valor = request.POST.get(calificacion_key)
+
+            if calificacion_valor:
                 try:
-                    estudiante = Estudiantes.objects.get(Est_id=est_id)
-                    actividad = Actividad.objects.get(Act_id=act_id)
-
-                    entrega, created = Actividad_Entrega.objects.get_or_create(
-                        Est=estudiante,
-                        Act=actividad,
-                        defaults={"Bol": boletin}
-                    )
-
-                    entrega.Ent_calificacion = value
+                    calificacion_valor = float(calificacion_valor)
+                    # guardamos la nota en el objeto entrega (no en el archivo)
+                    entrega.Act_calificacion = calificacion_valor
                     entrega.save()
+                except ValueError:
+                    continue  # si no es número, lo ignoramos
 
-                except (Estudiantes.DoesNotExist, Actividad.DoesNotExist) as e:
-                    print(f"Error: {e}")
-                    continue
-
-        messages.success(request, "Calificaciones guardadas correctamente.")
-        return redirect("actividades_por_curso_materia", bol_id=boletin.Bol_id)
+        messages.success(request, "✅ Calificaciones guardadas correctamente.")
+        return redirect("actividad_profesores_consultar_cursos", periodo_id=bol.Per.Per_id)
 
     messages.error(request, "Método no permitido.")
-    return redirect("actividades_por_curso_materia", bol_id=bol_id)
+    return redirect("dashboard_profesores")
+
 
 def actividad_profesores_consultar_cursos(request, periodo_id):
     usuario = get_usuario_from_session(request)
@@ -958,9 +936,10 @@ def lista_actividades_calificar(request, curso_id):
             estudiante_curso__Cur=curso
         ).distinct().count()
         
-        total_entregas = Actividad_Entrega.objects.filter(
-            Act=actividad
-        ).exclude(Act_Archivo_Estudiante__isnull=True).exclude(Act_Archivo_Estudiante='').count()
+        # Conteo de entregas basado en Actividad_EntregaArchivo
+        total_entregas = Actividad_EntregaArchivo.objects.filter(
+            entrega__Act=actividad
+        ).values('entrega').distinct().count()
         
         actividad.total_estudiantes = total_estudiantes
         actividad.total_entregas = total_entregas
@@ -972,6 +951,8 @@ def lista_actividades_calificar(request, curso_id):
         'periodo_id': periodo_id,
     }
     return render(request, 'profesores/lista_actividades_calificar.html', context)
+
+
 
 
 
