@@ -204,9 +204,7 @@ def dashboard_acudientes(request):
     usuario = get_usuario_from_session(request)
     return render(request, 'acudientes/dashboard_acudientes.html', {'usuario': usuario})
 
-def actividades_acudientes(request):
-    usuario = get_usuario_from_session(request)
-    return render(request, 'acudientes/actividades_acudientes.html', {'usuario': usuario})
+
 
 def asistencia_acudientes(request):
     usuario = get_usuario_from_session(request)
@@ -2067,16 +2065,8 @@ def actividades_acudientes(request):
         return redirect('login')
     
     try:
-        # Obtener el acudiente basado en el usuario de la sesión
         acudiente = Acudiente.objects.get(Usuario_Us=usuario)
-        
-        # Obtener todos los estudiantes a cargo de este acudiente
-        # Nota: Según tu modelo, un acudiente tiene UN estudiante (ForeignKey)
-        # Si quieres que sea muchos estudiantes, deberías cambiar el modelo
-        estudiantes_a_cargo = [acudiente.Estudiantes_Est]
-        
-        # Si quisieras múltiples estudiantes, usarías:
-        # estudiantes_a_cargo = Acudiente.objects.filter(Usuario_Us=usuario).select_related('Estudiantes_Est')
+        estudiantes_a_cargo = acudiente.Estudiantes_Est.all()  # 🔹 CORREGIDO
         
         context = {
             'usuario': usuario,
@@ -2086,12 +2076,12 @@ def actividades_acudientes(request):
         return render(request, 'acudientes/actividades_acudientes.html', context)
         
     except Acudiente.DoesNotExist:
-        # Si no existe el acudiente, mostrar página sin estudiantes
         context = {
             'usuario': usuario,
             'estudiantes_a_cargo': [],
         }
         return render(request, 'acudientes/actividades_acudientes.html', context)
+
 
 def asistencia_acudientes(request):
     usuario = get_usuario_from_session(request)
