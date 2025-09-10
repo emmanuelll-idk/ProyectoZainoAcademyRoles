@@ -196,7 +196,7 @@ def login_view(request):
             elif tipo_id == 1:  # profesor
                 return redirect('dashboard_profesores')
             elif tipo_id == 3:  # directivo
-                return redirect('dashboard_directivos')
+                return redirect('dashboard_directivo')
             elif tipo_id == 4:  # acudiente
                 return redirect('dashboard_acudientes')
             else:

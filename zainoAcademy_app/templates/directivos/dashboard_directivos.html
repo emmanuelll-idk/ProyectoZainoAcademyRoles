@@ -1,4 +1,15 @@
+<!-- 
+Nombre del archivo: editar_curso.html 
+Descripción: Este archivo es un fomrulario de editra los cursos ya creados y de la lista de los estudiantes disponibles y ya guardados previamente
+Autor: David Santiago Alfonso Guzman
+Fecha de creación: 2025-04-18 
+Última modificación: 2025-09-05
+-->
+
+
+
 <!DOCTYPE html>
+
 {% load static %}
 <html lang="es">
 <head>
@@ -11,40 +22,53 @@
 <body>
 <div class="dashboard-container">
     <!-- Sidebar -->
-    <aside class="sidebar">
-    <div class="logo">
-        <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
-        <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
-    </div>
-    <nav>
-        <ul class="nav-list">
-        <li><a href="{% url 'dashboard_directivo' %}" class="nav-item">
-            <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
-        </a></li>
-        <li><a href="{% url 'crear_usuario' %}" class="nav-item">
-            <img src="{% static 'images/directivos/LogoUsuario.png' %}" class="nav-icon" alt="Nuevo Usuario"> Nuevo Usuario
-        </a></li>
-        <li><a href="{% url 'crear_matricula' %}" class="nav-item">
-            <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Matricula"> Matricula
-        </a></li>
-        <li><a href="{% url 'crear_curso' %}" class="nav-item">
-            <img src="{% static 'images/directivos/LogoCurso.png' %}" class="nav-icon" alt="Curso"> Curso
-        </a></li>
-        <li><a href="{% url 'crear_materia' %}" class="nav-item">
-            <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Materia"> Materia
-        </a></li>
-        <li><a href="{% url 'periodo_directivos' %}" class="nav-item">
-            <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Asignacion"> Asignacion
-        </a></li>
-        </ul>
-    </nav>
-    <div class="logout-container">
-        <form method="POST" action="{% url 'login' %}">
-        {% csrf_token %}
-        <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
-        </form>
-    </div>
-    </aside>
+        <aside class="sidebar">
+            <div class="logo">
+            <a href="{% url 'dashboard_directivo' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+                    </a>
+                <a href="{% url 'dashboard_directivo' %}" class="nav-item">
+                    <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
+                    </a>
+    
+            </div>
+
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="{% url 'dashboard_directivo' %}" class="nav-item">
+                        <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
+                    </a></li>
+
+                    <li><a href="{% url 'crear_usuario' %}" class="nav-item">
+                        <img src="{% static 'images/directivos/LogoUsuario.png' %}" class="nav-icon" alt="Nuevo Usuario"> Nuevo Usuario
+                    </a></li>
+
+                    <li><a href="{% url 'crear_matricula' %}" class="nav-item">
+                        <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Matricula"> Matricula
+                    </a></li>
+
+                    <li><a href="{% url 'crear_curso' %}" class="nav-item">
+                        <img src="{% static 'images/directivos/LogoCurso.png' %}" class="nav-icon" alt="Curso"> Curso
+                    </a></li>
+                    
+                    <li><a href="{% url 'crear_materia' %}" class="nav-item">
+                        <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Materia"> Materia
+                    </a></li>
+                    
+                    <li><a href="{% url 'periodo_directivos' %}" class="nav-item">
+                        <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Asignacion"> Asignacion
+                    </a></li>
+                </ul>
+            </nav>
+            
+            <!-- Botón de cerrar sesión -->
+            <div class="logout-container">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <button type="button" class="logout-btn" onclick="openModal()">Cerrar sesión</button>
+                </form>
+            </div>
+        </aside>
 
     <!-- Contenido del Dashboard -->
     <main class="main-content">
@@ -57,7 +81,7 @@
                 
                 <!-- Avatar / Perfil -->
                     <a href="{% url 'ver_perfil_directivos' %}">
-                  <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                    <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
                 </a>
             </div>
 
