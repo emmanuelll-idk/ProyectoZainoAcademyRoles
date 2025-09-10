@@ -329,6 +329,7 @@ html, body {
 }
 
 /* Contenedor del botón de descarga */
+/* Contenedor del botón de descarga */
 .descargar-container {
     position: fixed;
     bottom: 2rem;
@@ -336,7 +337,9 @@ html, body {
     z-index: 50;
 }
 
-.descargar-btn {
+/* Estilo base (deshabilitado) */
+.descargar-btn,
+.btn-pdf {
     display: inline-block;
     background: #cccccc;
     color: #666666;
@@ -356,26 +359,26 @@ html, body {
 }
 
 /* 🔹 Estado activo */
-.descargar-btn.enabled {
-    background: #4a4063 !important;
+.descargar-btn.enabled,
+.btn-pdf.enabled {
+    background: #4A4063;
     color: #fff !important;
     cursor: pointer !important;
-    box-shadow: 0 3px 12px rgba(74, 64, 99, 0.3) !important;
     opacity: 1;
 }
 
 /* 🔹 Hover cuando está activo */
-.descargar-btn.enabled:hover {
-    background: #352c4d !important;
+.descargar-btn.enabled:hover,
+.btn-pdf.enabled:hover {
+    background: #4A4063;
     transform: translateY(-2px);
-    box-shadow: 0 5px 16px rgba(74, 64, 99, 0.4) !important;
 }
 
 /* 🔹 Click (active) */
-.descargar-btn.enabled:active {
+.descargar-btn.enabled:active,
+.btn-pdf.enabled:active {
     transform: translateY(0);
 }
-
 /* Responsive */
 @media (max-width: 768px) {
     .periodos-container {
@@ -395,12 +398,18 @@ html, body {
     }
 
     .descargar-container {
-        bottom: 1rem;
-        right: 1rem;
+        position: static; /* ya no fijo abajo a la derecha */
+        margin: 2rem auto;
+        text-align: center;
     }
 
-    .descargar-btn {
-        padding: 0.8rem 2rem;
+    .descargar-btn,
+    .btn-pdf {
+        width: 100%;
+        max-width: 300px;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 12px;
     }
 }
 

@@ -356,12 +356,6 @@ def dashboard_acudientes(request):
     return render(request, 'acudientes/dashboard_acudientes.html', {'usuario': usuario})
 
 
-def asistencia_acudientes(request):
-    usuario = get_usuario_from_session(request)
-    return render(request, 'acudientes/asistencia_acudientes.html', {'usuario': usuario})
-
-
-
 
 # Vistas estudiantes:
 
@@ -2204,31 +2198,18 @@ def asistencia_acudientes(request):
     usuario = get_usuario_from_session(request)
     if not usuario:
         return redirect('login')
-    
+
+    # Obtener el acudiente con sus estudiantes
     try:
-        # Obtener el acudiente basado en el usuario de la sesión
         acudiente = Acudiente.objects.get(Usuario_Us=usuario)
-        
-        # Obtener todos los estudiantes a cargo de este acudiente
-        estudiantes_a_cargo = [acudiente.Estudiantes_Est]
-        
-        # Si quisieras múltiples estudiantes, usarías:
-        # estudiantes_a_cargo = Acudiente.objects.filter(Usuario_Us=usuario).select_related('Estudiantes_Est')
-        
-        context = {
-            'usuario': usuario,
-            'estudiantes_a_cargo': estudiantes_a_cargo,
-        }
-        
-        return render(request, 'acudientes/asistencia_acudientes.html', context)
-        
+        estudiantes_a_cargo = acudiente.Estudiantes_Est.all()
     except Acudiente.DoesNotExist:
-        # Si no existe el acudiente, mostrar página sin estudiantes
-        context = {
-            'usuario': usuario,
-            'estudiantes_a_cargo': [],
-        }
-        return render(request, 'acudientes/asistencia_acudientes.html', context)
+        estudiantes_a_cargo = []
+
+    return render(request, 'acudientes/asistencia_acudientes.html', {
+        'usuario': usuario,
+        'estudiantes_a_cargo': estudiantes_a_cargo
+    })
 
 def notificaciones_acudientes(request):
     usuario = get_usuario_from_session(request)
@@ -2299,91 +2280,78 @@ def asistencia_list_acudientes(request):
     if not usuario:
         return redirect('login')
 
-    estudiante = None
-    periodos = []
-
     try:
-        # Obtener el acudiente asociado al usuario
         acudiente = Acudiente.objects.get(Usuario_Us=usuario)
-
-        # Tomar el estudiante a cargo (siempre 1 según tu modelo)
-        estudiante = acudiente.Estudiantes_Est  
-
-        if estudiante:
-            # Guardamos en sesión por si se necesita luego
-            request.session["student_id"] = estudiante.Est_id
-
-            # Buscar periodos a los que pertenece este estudiante
-            periodos = Periodo.objects.filter(
-                boletin__Cur__estudiante_curso__Est=estudiante
-            ).distinct()
-
+        estudiantes = acudiente.Estudiantes_Est.all()
     except Acudiente.DoesNotExist:
-        pass
+        estudiantes = []
 
-    return render(request, "acudientes/asistencia_list_acudientes.html", {
-        "usuario": usuario,
-        "estudiante": estudiante,
-        "periodos": periodos
+    periodos = Periodo.objects.all()  # 👈 para listar
+    return render(request, 'acudientes/asistencia_list_acudientes.html', {
+        'usuario': usuario,
+        'estudiantes': estudiantes,
+        'periodos': periodos,
     })
 
-def asistencia_pdf_acudientes(request):
+def generar_reporte_asistencia_acudientes_pdf(request, periodo_id):
     usuario = get_usuario_from_session(request)
-    periodo_id = request.POST.get("periodo_id")
-    estudiante_id = request.session.get("student_id")
-
-    if not (periodo_id and estudiante_id):
-        return HttpResponse("Faltan datos", status=400)
+    if not usuario:
+        return redirect('login')
 
     try:
-        estudiante = Estudiantes.objects.get(Est_id=estudiante_id)
-        periodo = Periodo.objects.get(Per_id=periodo_id)
-    except (Estudiantes.DoesNotExist, Periodo.DoesNotExist):
-        return HttpResponse("Datos no encontrados", status=404)
+        acudiente = Acudiente.objects.get(Usuario_Us=usuario)
+        estudiantes = acudiente.Estudiantes_Est.all()
+    except Acudiente.DoesNotExist:
+        return HttpResponse("No se encontró información de acudiente", status=400)
 
-    # Consultar asistencias directamente sin necesidad de est_curso específico
+    periodo = get_object_or_404(Periodo, Per_id=periodo_id)
+
+    # Buscar cursos de los estudiantes
+    cursos = Estudiante_Curso.objects.filter(Est__in=estudiantes).select_related("Cur")
+
     asistencias = Asistencia.objects.filter(
-        Est_Cur__Est=estudiante,
-        Est_Cur__Cur__boletin__Per=periodo
-    ).select_related("Esta_Asistencia", "Est_Cur").order_by("Ast_fecha")
+        Est_Cur__in=cursos
+    ).select_related("Est_Cur__Est__Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
+
+    if not asistencias.exists():
+        messages.error(request, f"No hay datos de asistencias para el periodo '{periodo.Per_nombre}'.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
     elements = []
     styles = getSampleStyleSheet()
 
-    # ====== Encabezado ======
-    elements.append(Paragraph(f"Asistencia - {periodo.Per_nombre}", styles["Title"]))
-    elements.append(Spacer(1, 12))
-    elements.append(Paragraph(f"<b>Estudiante:</b> {estudiante.Usuario_us.Us_nombre}", styles["Normal"]))
+    elements.append(Paragraph("Reporte de Asistencias - Acudiente", styles["Title"]))
+    elements.append(Paragraph(f"Acudiente: {usuario.Us_nombre}", styles["Normal"]))
+    elements.append(Paragraph(f"Período: {periodo.Per_nombre}", styles["Heading2"]))
     elements.append(Spacer(1, 20))
 
-    # ====== Tabla ======
-    data = [["Fecha", "Estado"]]  # cabecera
-    if asistencias.exists():
-        for a in asistencias:
-            data.append([a.Ast_fecha.strftime("%Y-%m-%d"), a.Esta_Asistencia.Esta_Asistencia_Estado])
-    else:
-        data.append(["Sin registros", "-"])
+    data = [["Estudiante", "Fecha", "Estado"]]
+    for asistencia in asistencias:
+        data.append([
+            asistencia.Est_Cur.Est.Usuario_us.Us_nombre,
+            asistencia.Ast_fecha.strftime("%d/%m/%Y"),
+            asistencia.Esta_Asistencia.Esta_Asistencia_Estado
+        ])
 
-    table = Table(data, colWidths=[200, 200])
-
+    table = Table(data, colWidths=[200, 100, 100])
     table.setStyle(TableStyle([
-        ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#1e91d6")),
-        ("TEXTCOLOR", (0,0), (-1,0), colors.whitesmoke),
-        ("ALIGN", (0,0), (-1,-1), "CENTER"),
-        ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
-        ("FONTSIZE", (0,0), (-1,0), 12),
-        ("BOTTOMPADDING", (0,0), (-1,0), 10),
-        ("GRID", (0,0), (-1,-1), 1, colors.black),
-        ("BACKGROUND", (0,1), (-1,-1), colors.HexColor("#f9f9f9")),
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#1e91d6")),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('GRID', (0,0), (-1,-1), 1, colors.black),
     ]))
-
     elements.append(table)
 
     doc.build(elements)
-
     buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename=f"Asistencia_{estudiante.Usuario_us.Us_nombre}.pdf")
+
+    response = FileResponse(
+        buffer,
+        as_attachment=True,
+        filename=f"Asistencia_{usuario.Us_nombre}_{periodo.Per_nombre}.pdf"
+    )
+    return response
 
 

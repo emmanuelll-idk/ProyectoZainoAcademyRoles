@@ -34,7 +34,7 @@ urlpatterns = [
     path('acudientes/dashboard_acudientes/', views.dashboard_acudientes_calendar, name="dashboard_acudientes"),
     path('acudientes/actividades_list/', views.actividades_list_acudientes, name='actividades_list_acudientes'),
     path('acudientes/asistencia_list/', views.asistencia_list_acudientes, name='asistencia_list_acudientes'),
-    path('asistencia/pdf/', views.asistencia_pdf_acudientes, name='asistencia_pdf_acudientes'),
+    path("acudientes/asistencia/reporte/<int:periodo_id>/", views.generar_reporte_asistencia_acudientes_pdf, name="reporte_asistencia_acudientes"),
 
     #Estudiantes
 
