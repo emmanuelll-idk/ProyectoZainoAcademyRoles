@@ -270,7 +270,7 @@ class Actividad(models.Model):
 class Actividad_Entrega(models.Model):
     Act_fecha_entrega = models.DateField(auto_now_add=True)
     Act_calificacion = models.FloatField(null=True, blank=True)
-    Act = models.ForeignKey('Actividad', on_delete=models.CASCADE)
+    Act = models.ForeignKey('Actividad', on_delete=models.CASCADE, related_name='entregas')
     Est = models.ForeignKey('Estudiantes', on_delete=models.CASCADE)
 
     class Meta:

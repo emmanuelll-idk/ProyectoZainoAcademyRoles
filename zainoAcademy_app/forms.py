@@ -253,3 +253,13 @@ class MateriaChoiceField(ModelChoiceField):
 class CursoChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.Cur_nombre
+    
+class MaterialApoyoForm(forms.ModelForm):
+    class Meta:
+        model = MaterialApoyo
+        fields = ['Mate_titulo', 'Mate_descripcion', 'Mate_archivo']
+        widgets = {
+            'Mate_titulo': forms.TextInput(attrs={'class': 'form-control'}),
+            'Mate_descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'Mate_archivo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }

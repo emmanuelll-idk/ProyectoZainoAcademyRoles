@@ -12,14 +12,14 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
-from django.http import HttpResponse, JsonResponse, FileResponse
+from django.http import HttpResponse, JsonResponse, FileResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Periodo, Usuario, TipoUsuario, Boletin, Materia, Estudiante_Curso, Estudiantes, Actividad, Actividad_Entrega, MaterialApoyo, Asistencia, Profesores, Estado_Actividad, Estado_Asistencia, Curso, Directivos, Matricula, Acudiente, Asistencia, Estudiantes, Actividad_EntregaArchivo
 from datetime import date
 import json, io
 import logging
-from .forms import  UsuarioForm, EstudiantesForm, DirectivosForm, AcudienteForm, MatriculaForm, CursoForm, MateriaForm, BoletinForm
+from .forms import  UsuarioForm, EstudiantesForm, DirectivosForm, AcudienteForm, MatriculaForm, CursoForm, MateriaForm, BoletinForm, MaterialApoyoForm
 
 # Para los reportes de estudiantes
 
@@ -634,10 +634,6 @@ def ver_perfil_estudiantes(request):
 
 # Vistas Profesores:
 
-from django.utils import timezone
-
-from django.utils import timezone
-
 def dashboard_profesores(request):
     usuario = get_usuario_from_session(request)
     if not usuario:
@@ -648,7 +644,7 @@ def dashboard_profesores(request):
 
     actividades_abiertas = (
         Actividad.objects
-        .filter(Bol__Pro=profesor, Act_fechaLimite__gte=hoy)  # Ojo: Bol__Pro (sin _id porque ya es FK)
+        .filter(Bol__Pro=profesor, Act_fechaLimite__gte=hoy) 
         .annotate(total_entregas=Count('entregas'))
         .order_by('Act_fechaLimite')
     )
@@ -657,11 +653,6 @@ def dashboard_profesores(request):
         'usuario': usuario,
         'actividades_abiertas': actividades_abiertas,
     })
-
-
-
-
-
 
 def actividad_profesores_calificaciones(request, act_id):
     usuario = get_usuario_from_session(request)
@@ -676,12 +667,10 @@ def actividad_profesores_calificaciones(request, act_id):
         messages.error(request, "No tienes permisos de profesor.")
         return redirect('dashboard_profesores')
 
-    # Traemos entregas y sus archivos
     entregas = Actividad_Entrega.objects.filter(Act=actividad).select_related("Est")
     for entrega in entregas:
         entrega.archivos_lista = Actividad_EntregaArchivo.objects.filter(entrega=entrega)
 
-    # Guardar notas
     if request.method == "POST":
         for entrega in entregas:
             calificacion = request.POST.get(f"calificacion_{entrega.id}")
@@ -691,7 +680,7 @@ def actividad_profesores_calificaciones(request, act_id):
         messages.success(request, "Calificaciones guardadas correctamente.")
         return redirect(
             "actividad_profesores_consultar_cursos",
-            periodo_id=actividad.Bol.Per.Per_id  # 👈 Ahora se obtiene desde Boletín → Periodo
+            periodo_id=actividad.Bol.Per.Per_id
         )
 
     estudiantes = Estudiantes.objects.filter(
@@ -705,21 +694,9 @@ def actividad_profesores_calificaciones(request, act_id):
         "estudiantes": estudiantes,
         "curso": actividad.Bol.Cur,
         "materia": actividad.Bol.Mtr,
-        "periodo_id": actividad.Bol.Per.Per_id,  # 👈 Igual que en el redirect
+        "periodo_id": actividad.Bol.Per.Per_id,
     }
     return render(request, "profesores/actividades_por_curso_materia.html", context)
-
-
-
-
-
-
-
-
-
-
-
-
 
 def actividades_por_curso_materia(request, bol_id):
     usuario = get_usuario_from_session(request)
@@ -752,9 +729,7 @@ def actividades_por_curso_materia(request, bol_id):
         "periodo_id": boletin.Per_id,
     })
 
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
-from .models import Boletin, Actividad_EntregaArchivo
+
 
 def guardar_calificaciones(request, bol_id):
     if request.method == "POST":
@@ -1178,7 +1153,6 @@ def materialApoyo_editar(request, Mate_id):
     }
     return render(request, 'profesores/materialApoyo_editar.html', context)
 
-
 def materialApoyo_eliminar(request, Mate_id):
     material = get_object_or_404(MaterialApoyo, Mate_id=Mate_id)
     bol_id = material.Bol.Bol_id
@@ -1191,7 +1165,6 @@ def materialApoyo_eliminar(request, Mate_id):
             messages.error(request, f'Error al eliminar el material: {str(e)}')
 
     return redirect('materialApoyo_consultar', bol_id=bol_id)
-
 
 def materialApoyo_confirmar_eliminar(request, Mate_id):
     material = get_object_or_404(MaterialApoyo, Mate_id=Mate_id)
@@ -1209,7 +1182,6 @@ def materialApoyo_confirmar_eliminar(request, Mate_id):
     }
 
     return render(request, 'profesores/materialApoyo_confirmar_eliminar.html', context)
-
 
 def notificaciones_profesores(request):
     usuario = get_usuario_from_session(request)
@@ -1246,7 +1218,6 @@ def generar_reporte_asistencias_pdf(request, periodo_id):
     if not profesor:
         return HttpResponse("No se encontró información del profesor", status=400)
     
-    # Obtener el objeto Periodo y filtrar por él
     periodo = get_object_or_404(Periodo, Per_id=periodo_id)
 
     boletines = Boletin.objects.filter(
@@ -1254,13 +1225,10 @@ def generar_reporte_asistencias_pdf(request, periodo_id):
         Per=periodo
     ).select_related('Per', 'Cur', 'Mtr')
 
-    # Validación principal: si no hay boletines (y por lo tanto datos) para este periodo
     if not boletines.exists():
         messages.error(request, f"No hay datos de asistencias para el periodo '{periodo.Per_nombre}'.")
-        # Redirigir a la página anterior (donde se seleccionó el periodo)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-    # Si hay datos, procede a generar el PDF
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
     elements = []
