@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; background:#f9f9f9; padding:20px; }
+        .card { background:#fff; border-radius:8px; padding:20px; box-shadow:0 2px 6px rgba(0,0,0,.1); max-width:600px; margin:auto; }
+        h2 { color:#2d6cdf; display:flex; align-items:center; }
+        h2 img { height:30px; margin-right:10px; }
+        p { line-height:1.5; }
+    </style>
+    </head>
+    <body>
+    <div class="card">
+        <h2>Nuevo mensaje de contacto</h2>
+        <img src="{% static 'images/staticPage/LogoNormal-removebg-preview.png' %}" alt=""> 
+        <p><b>Nombre:</b> {{ nombre }}</p>
+        <p><b>Correo:</b> {{ email }}</p>
+        <p><b>Mensaje:</b></p>
+        <blockquote>{{ mensaje }}</blockquote>
+        <hr>
+        <p style="font-size:12px; color:#666;">Este mensaje fue enviado desde el formulario de contacto de ZainoAcademy.</p>
+    </div>
+</body>
+</html>

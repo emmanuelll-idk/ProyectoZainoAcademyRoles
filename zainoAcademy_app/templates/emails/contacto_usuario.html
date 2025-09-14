@@ -1,0 +1,32 @@
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; background:#f4f6f9; padding:20px; }
+        .card { background:#fff; border-radius:12px; padding:25px; box-shadow:0 4px 8px rgba(0,0,0,.1); }
+        .header { background:#2d6cdf; color:white; padding:15px; border-radius:12px 12px 0 0; }
+        .content { padding:20px; line-height:1.6; }
+        .btn { display:inline-block; padding:12px 20px; background:#2d6cdf; color:white; text-decoration:none; border-radius:8px; font-weight:bold; }
+        .footer { font-size:12px; text-align:center; margin-top:20px; color:#666; }
+    </style>
+    </head>
+    <body>
+    <div class="card">
+        <div class="header">
+        <h2>📚 ZainoAcademy</h2>
+        </div>
+        <div class="content">
+        <p>Hola <b>{{ nombre }}</b>,</p>
+        <p>Gracias por escribirnos 🙌. Hemos recibido tu mensaje y pronto nos pondremos en contacto contigo.</p>
+        <blockquote>"{{ mensaje }}"</blockquote>
+        <p style="text-align:center;">
+            <a href="https://zainoacademy.com" class="btn">Visitar ZainoAcademy</a>
+        </p>
+        </div>
+        <div class="footer">
+        © 2025 ZainoAcademy - Todos los derechos reservados
+        </div>
+    </div>
+    </body>
+    </html>

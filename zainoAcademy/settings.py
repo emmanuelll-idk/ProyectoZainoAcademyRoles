@@ -155,11 +155,11 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False  # No usar SSL cuando usas TLS
 
 # Credenciales
-EMAIL_HOST_USER = 'santyalfg@gmail.com'
-EMAIL_HOST_PASSWORD = 'oavk fluh cumf zpgt'
+EMAIL_HOST_USER = 'zainoacademy@gmail.com'
+EMAIL_HOST_PASSWORD = 'yxix izjy iqyb wqjc'
 
 # Email del administrador que recibirá los mensajes
-ADMIN_EMAIL = 'santyalfg@gmail.com'
+ADMIN_EMAIL = 'zainoacademy@gmail.com'
 
 # Configuraciones adicionales
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
