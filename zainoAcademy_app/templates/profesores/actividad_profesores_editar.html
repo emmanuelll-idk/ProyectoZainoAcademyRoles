@@ -27,11 +27,6 @@
             </div>
 
             <div class="form-group">
-                <label>Comentario:</label>
-                <textarea name="Act_comentario">{{ actividad.Act_comentario }}</textarea>
-            </div>
-
-            <div class="form-group">
                 <label>Archivo:</label>
                 {% if actividad.Act_Archivo_Profesor %}
                     <p>Archivo actual: <a href="{{ actividad.Act_Archivo_Profesor.url }}" target="_blank">Ver</a></p>

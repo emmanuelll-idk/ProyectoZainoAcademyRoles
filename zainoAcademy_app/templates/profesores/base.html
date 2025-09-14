@@ -57,7 +57,7 @@
                 <span class="user-name">{{ usuario.Us_nombre }}</span>
                 
                 <!-- Avatar / Perfil -->
-                <a href="{% url 'editar_perfil_profesores' %}">
+                <a href="{% url 'ver_perfil_profesores' %}">
                     <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
                 </a>
 
@@ -75,6 +75,12 @@
                 </div>
             </div>
         </header>
+
+            {% block mockUp %}
+
+            {% endblock %}
+
+        </main>
 
         <div id="logout-modal" class="modal" style="display: none;">
         <div class="modal-content">
@@ -104,8 +110,3 @@
         menu.classList.toggle("show");
     }
     </script>
-
-            {% block mockUp %}
-
-            {% endblock %}
-        </main>

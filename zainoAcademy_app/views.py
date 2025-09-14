@@ -648,6 +648,10 @@ def dashboard_profesores(request):
         'actividades_abiertas': actividades_abiertas,
     })
 
+def ver_perfil_profesores(request):
+    usuario = get_usuario_from_session(request)
+    return render(request, 'profesores/ver_perfil_profesores.html', {'usuario': usuario})
+
 def actividad_profesores_calificaciones(request, act_id):
     usuario = get_usuario_from_session(request)
     if not usuario:

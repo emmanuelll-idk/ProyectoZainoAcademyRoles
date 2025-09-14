@@ -13,13 +13,14 @@ html, body {
     background-color: #F5F6FA;
     color: #4A4063;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* ===== SIDEBAR ===== */
 .sidebar {
-    width: 240px;
+    width: 260px;
     background-color: #4A4063;
-    padding: 1.5rem 1rem;
+    padding: 2rem 1.2rem;
     color: #fff;
     position: fixed;
     top: 0;
@@ -55,57 +56,62 @@ html, body {
 .nav-item {
     display: flex;
     align-items: center;
-    padding: 0.8rem;
-    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 15px;
+    transition: all 0.3s ease;
     text-decoration: none;
     color: #fff;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    gap: 0.7rem;
+    margin-bottom: 0.8rem;
 }
 
+.nav-item:hover,
 .nav-item.active {
-    background-color: #fff;
-    color: #4A4063;
+    background-color: #ffffff;
+    color: #000000;
+    transform: translateX(5px);
 }
 
-.nav-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+.nav-item img.nav-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 12px;
+    filter: brightness(0) invert(1);
+    transition: filter 0.3s ease;
 }
 
-.nav-item.active:hover {
-    background-color: #fff;
-    color: #4A4063;
-}
-
-.nav-icon {
-    width: 16px;
-    height: 16px;
+.nav-item:hover img.nav-icon,
+.nav-item.active img.nav-icon {
+    filter: invert();
 }
 
 .logout-container {
     position: absolute;
-    bottom: 2rem;
-    left: 1rem;
-    right: 1rem;
+    bottom: 1.5rem;
+    left: 1.2rem;
+    right: 1.2rem;
+    text-align: center;
 }
 
 .logout-btn {
+    display: inline-block;
+    width: 85%;
     background-color: #1E91D6;
     color: #fff;
-    border: none;
-    padding: 1rem;
+    padding: 0.9rem 1.2rem;
     border-radius: 12px;
     font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 100%;
     font-family: "Comfortaa", sans-serif;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .logout-btn:hover {
-    background-color: #6A5B8C;
+    background-color: #352c4d;
+    transform: scale(1.05);
 }
 
 /* ===== MAIN CONTENT ===== */

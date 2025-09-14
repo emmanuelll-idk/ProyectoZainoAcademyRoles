@@ -54,6 +54,7 @@ urlpatterns = [
 
     #Profesores
     path('profesores/actividades/crear/<int:bol_id>/', views.actividad_profesores_crear_actividad, name='actividad_profesores_crear_actividad'),
+    path('profesores/perfil/', views.ver_perfil_profesores, name='ver_perfil_profesores'),
     path('profesores/actividades/lista/', views.actividad_profesores_lista, name='actividad_profesores_lista'),
     path('profesores/actividades/consultar/', views.actividad_profesores_consultar, name='actividad_profesores_consultar'),
     path('profesores/actividades/cursos/<int:periodo_id>/', views.actividad_profesores_consultar_cursos, name='actividad_profesores_consultar_cursos'),
