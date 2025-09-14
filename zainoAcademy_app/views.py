@@ -8,7 +8,8 @@
 
 
 #Importaciones de libreias y otros archivos
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
@@ -56,115 +57,41 @@ logger = logging.getLogger(__name__)
 
 def contacto(request):
     if request.method == 'POST':
-        try:
-            # Obtener datos del formulario
-            nombre = request.POST.get('nombre', '').strip()
-            email = request.POST.get('email', '').strip()
-            mensaje = request.POST.get('mensaje', '').strip()
-            
-            print(f"DEBUG - Datos recibidos: nombre={nombre}, email={email}, mensaje={mensaje}")
-            
-            # Validaciones básicas
-            if not all([nombre, email, mensaje]):
-                return JsonResponse({
-                    'success': False, 
-                    'error': 'Todos los campos son obligatorios'
-                })
-            
-            # Debug de configuración de email
-            print(f"DEBUG - EMAIL_HOST_USER: {settings.EMAIL_HOST_USER}")
-            print(f"DEBUG - EMAIL_HOST: {settings.EMAIL_HOST}")
-            print(f"DEBUG - EMAIL_PORT: {settings.EMAIL_PORT}")
-            print(f"DEBUG - EMAIL_USE_TLS: {settings.EMAIL_USE_TLS}")
-            
-            # Enviar email al administrador
-            admin_subject = f'Nuevo mensaje de contacto de {nombre}'
-            admin_message = f'''
-Has recibido un nuevo mensaje de contacto:
+        nombre = request.POST.get('nombre', '').strip()
+        email = request.POST.get('email', '').strip()
+        mensaje = request.POST.get('mensaje', '').strip()
 
-Nombre: {nombre}
-Email: {email}
-Mensaje: {mensaje}
+        if not all([nombre, email, mensaje]):
+            return JsonResponse({'success': False, 'error': 'Todos los campos son obligatorios'})
 
----
-Este mensaje fue enviado desde el formulario de contacto de ZainoAcademy.
-            '''
-            
-            print("DEBUG - Intentando enviar email al administrador...")
-            
-            send_mail(
-                subject=admin_subject,
-                message=admin_message,
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[settings.ADMIN_EMAIL],
-                fail_silently=False,
-            )
-            
-            print("DEBUG - Email al administrador enviado exitosamente")
-            
-            # Enviar email de confirmación al usuario
-            user_subject = 'Hemos recibido tu mensaje - ZainoAcademy'
-            user_message = f'''
-Hola {nombre},
+        # ---------- 1. Correo para administrador ----------
+        subject_admin = f"📩 Nuevo mensaje de contacto - {nombre}"
+        text_admin = f"Nombre: {nombre}\nCorreo: {email}\nMensaje: {mensaje}"
+        html_admin = render_to_string("emails/contacto_admin.html", {
+            "nombre": nombre,
+            "email": email,
+            "mensaje": mensaje,
+        })
 
-Hemos recibido tu mensaje y te contactaremos pronto.
+        msg_admin = EmailMultiAlternatives(subject_admin, text_admin, settings.EMAIL_HOST_USER, [settings.ADMIN_EMAIL])
+        msg_admin.attach_alternative(html_admin, "text/html")
+        msg_admin.send()
 
-Tu mensaje:
-"{mensaje}"
+        # ---------- 2. Correo de confirmación para el usuario ----------
+        subject_user = "✅ Hemos recibido tu mensaje - ZainoAcademy"
+        text_user = f"Hola {nombre}, hemos recibido tu mensaje y te responderemos pronto."
+        html_user = render_to_string("emails/contacto_usuario.html", {
+            "nombre": nombre,
+            "mensaje": mensaje,
+        })
 
-Gracias por contactarnos.
+        msg_user = EmailMultiAlternatives(subject_user, text_user, settings.EMAIL_HOST_USER, [email])
+        msg_user.attach_alternative(html_user, "text/html")
+        msg_user.send()
 
-Saludos,
-Equipo ZainoAcademy
-            '''
-            
-            print("DEBUG - Intentando enviar email de confirmación al usuario...")
-            
-            send_mail(
-                subject=user_subject,
-                message=user_message,
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[email],
-                fail_silently=False,
-            )
-            
-            print("DEBUG - Email de confirmación enviado exitosamente")
-            
-            return JsonResponse({
-                'success': True, 
-                'message': 'Mensaje enviado correctamente. Te contactaremos pronto.'
-            })
-            
-        except Exception as e:
-            # Log detallado del error
-            error_msg = str(e)
-            print(f"ERROR DETALLADO: {error_msg}")
-            logger.error(f"Error enviando email: {error_msg}")
-            
-            # Diferentes tipos de errores comunes
-            if "authentication" in error_msg.lower():
-                return JsonResponse({
-                    'success': False, 
-                    'error': 'Error de autenticación con el servidor de correo'
-                })
-            elif "connection" in error_msg.lower():
-                return JsonResponse({
-                    'success': False, 
-                    'error': 'No se pudo conectar al servidor de correo'
-                })
-            elif "timeout" in error_msg.lower():
-                return JsonResponse({
-                    'success': False, 
-                    'error': 'Tiempo de espera agotado. Inténtalo de nuevo.'
-                })
-            else:
-                return JsonResponse({
-                    'success': False, 
-                    'error': f'Error técnico: {error_msg}'
-                })
-    
+        return JsonResponse({'success': True, 'message': 'Mensaje enviado correctamente. Te contactaremos pronto.'})
+
     return render(request, "staticPage/contacto.html")
-
 def precios(request):
     return render (request, "staticPage/precio.html")
 
