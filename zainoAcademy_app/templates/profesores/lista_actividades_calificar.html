@@ -5,11 +5,13 @@
 <link rel="stylesheet" href="{% static 'css/profesores/lista_actividades_calificar.css' %}">
 {% endblock %}
 
+{% block page_title %}Actividades para Calificar{% endblock %}
+
 {% block mockUp %}
 <main class="main-content">
     <!-- CONTENT -->
     <div class="content">
-        <h2 class="section-title">Actividades para Calificar - {{ curso.Cur_nombre }}</h2>
+        <h2 class="section-title">{{ curso.Cur_nombre }}</h2> <br>
 
         {% if actividades %}
             <table class="activities-table">

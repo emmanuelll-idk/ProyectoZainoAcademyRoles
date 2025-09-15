@@ -12,8 +12,16 @@
 }
 
 .page-title {
-    font-size: 22px;
+    font-size: 35px;
     font-weight: bold;
+    margin-left: -20px;
+}
+
+.page-subtitle {
+    font-size: 24px;
+    color: #4a4063;
+    margin-top: 20px;
+    margin-left: 25px;
 }
 
 .notification-icon {
@@ -38,6 +46,7 @@
     border-collapse: collapse;
     margin-top: 20px;
     overflow: hidden;
+    margin-left: 30px;
 }
 
 .asistencia-table th, .asistencia-table td {
@@ -128,7 +137,9 @@
     cursor: pointer;
     transition: background 0.3s;
     font-weight: 600;
+    margin-left: 30px;
 }
+
 
 .volver-btn:hover, .guardar-btn:hover {
     background: #1E91D6;

@@ -5,6 +5,13 @@
     margin-left: 130px;
 }
 
+.page-title {
+    font-size: 35px;
+    font-weight: 700;
+    margin: 0;
+    margin-left: 100px;
+}
+
 .header {
     display: flex;
     justify-content: space-between;

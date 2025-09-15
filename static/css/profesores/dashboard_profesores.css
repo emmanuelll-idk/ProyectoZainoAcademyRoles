@@ -30,6 +30,15 @@ html, body {
     z-index: 100;
 }
 
+.header-container {
+    display: flex;
+    justify-content: space-between; /* título a la izquierda, íconos a la derecha */
+    align-items: center;
+
+    width: 98.5%;
+    margin-top: 10px;
+}
+
 .logo {
     text-align: center;
     margin-bottom: 3rem;

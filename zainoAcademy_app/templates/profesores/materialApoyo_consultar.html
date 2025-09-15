@@ -5,12 +5,13 @@
 <link rel="stylesheet" href="{% static 'css/profesores/materialApoyo_consultar.css' %}">
 {% endblock %}
 
+{% block page_title %}Materiales de Apoyo Subidos{% endblock %}
+
 {% block mockUp %}
 
     <!-- MAIN -->
     <main class="main-content">
         <header class="header">
-            <h1>Material de apoyo</h1>
             <span>Total: {{ materiales|length }} material{{ materiales|length|pluralize }}</span>
         </header>
 

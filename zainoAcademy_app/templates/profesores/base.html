@@ -52,13 +52,15 @@
     
     <main class="main-content">
         <header class="page-header">
+            <div class="header-container">
+                <h1 class="page-title">{% block page_title %}{% endblock %}</h1>
             <div class="header-icons">
                 <!-- Nombre -->
                 <span class="user-name">{{ usuario.Us_nombre }}</span>
                 
                 <!-- Avatar / Perfil -->
                 <a href="{% url 'ver_perfil_profesores' %}">
-                    <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                    <img src="{% static 'images/profesores/avatarMujer.png' %}" class="user-avatar" alt="Perfil">
                 </a>
 
                 <button class="hamburger" onclick="toggleMenu()">☰</button>

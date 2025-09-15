@@ -105,7 +105,13 @@ body {
 
 .page-title {
   margin-bottom: 20px;
+  margin-left: -40px;
 }
+
+.page-subtitle {
+  margin-top: 20px;
+  margin-bottom: 20px;
+} 
 
 /* ===== TABLA ASISTENCIA ===== */
 .asistencia-table-wrapper {

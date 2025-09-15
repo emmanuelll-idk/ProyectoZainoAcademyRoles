@@ -5,9 +5,11 @@
 <link rel="stylesheet" href="{% static 'css/profesores/asistencia_profesores_consultar.css' %}">
 {% endblock %}
 
+{% block page_title %}Asistencia{% endblock %}
+
 {% block mockUp %}
     <header class="header">
-      <h1 class="page-title">Asistencia - {{ boletin.Cur.Cur_nombre }} / {{ boletin.Mtr.Mtr_nombre }}</h1>
+      <h1 class="page-subtitle">{{ boletin.Cur.Cur_nombre }} / {{ boletin.Mtr.Mtr_nombre }}</h1>
     </header>
 
     <!-- Tabla con scroll horizontal -->

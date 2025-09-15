@@ -1,71 +1,145 @@
-/* ===== CONTENT AREA ===== */
-.content {
-    flex: 1;
-    padding: 3rem 2rem;
+.contenedor-actividad {
+  padding: 20px 40px;
+  font-family: "Comfortaa", sans-serif;
+  min-height: calc(50vh - 50px);
+  display: flex;
+  flex-direction: column;
 }
 
-.section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #4A4063;
-    margin-bottom: 2rem;
+.titulo {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #000000;
 }
 
-/* ===== Botones de periodos ===== */
-.btn-group {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.2rem;
-    margin-top: 2rem;
+.subtitulo {
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 0px;
+  margin-bottom: 8px;
+  color: #000000;
 }
 
-.btn {
-    background: #4A4063;
-    color: white;
-    text-decoration: none;
-    padding: 1.2rem 2rem;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 1rem;
-    text-align: center;
-    transition: all 0.3s ease;
-    font-family: "Comfortaa", sans-serif;
-    box-shadow: 0 4px 10px rgba(74, 64, 99, 0.15);
+.linea {
+  border: 1.5px solid #4a4063;
+  margin: 15px 0 30px 0;
 }
 
-.btn:hover {
-    background: #5A4B7C;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(74, 64, 99, 0.25);
+/* 🔹 Contenedor de periodos (tarjetas) */
+.periodos-container {
+  display: flex;
+  flex-wrap: wrap;           /* ya estaba, mantiene varias filas */
+  justify-content: space-around;  /* separa las tarjetas uniformemente */
+  gap: 25px;
+  align-items: stretch;      /* que todas las tarjetas tengan la misma altura */
+  margin-bottom: auto;
 }
 
-.btn:active {
-    background: #372c56;
-    transform: translateY(0);
+
+/* 🔹 Tarjeta de periodo */
+.periodo-card {
+  position: relative;
+  min-width: 220px;
+  max-width: 300px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #4a4063;
+  border: 2px solid #e8e9f0;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 4px 15px rgba(30, 145, 214, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 1024px) {
-    .btn-group {
-        grid-template-columns: repeat(2, 1fr);
-    }
+
+
+.periodo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 145, 214, 0.15);
+  border-color: #1e91d6;
 }
 
-@media (max-width: 640px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
+.periodo-card.selected {
+  border-color: #1e91d6;
+  box-shadow: 0 6px 20px rgba(30, 145, 214, 0.25);
+}
 
-    .main-content {
-        margin-left: 0;
-    }
+.periodo-card.selected::before {
+  content: "✓";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #1e91d6;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: bold;
+}
 
-    .header-right {
-        gap: 0.5rem;
-    }
+/* 🔹 Enlace dentro de la tarjeta */
+.periodo-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
 
-    .user-name {
-        display: none;
-    }
+.periodo-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+/* 🔹 Botón continuar */
+.contenedor-continuar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 40px;
+}
+
+.btn-continuar {
+  background: #cccccc;
+  color: #666666;
+  padding: 14px 45px;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: not-allowed;
+  transition: all 0.3s ease;
+  font-family: "Comfortaa", sans-serif;
+  box-shadow: 0 3px 12px rgba(204, 204, 204, 0.3);
+  opacity: 0.6;
+}
+
+/* Estado activo */
+.btn-continuar.enabled {
+  background: #4a4063;
+  color: #fff;
+  cursor: pointer;
+  opacity: 1;
+  box-shadow: 0 3px 12px rgba(74, 64, 99, 0.3);
+}
+
+.btn-continuar.enabled:hover {
+  background: #352c4d;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 16px rgba(74, 64, 99, 0.4);
+}
+
+.btn-continuar.enabled:active {
+  transform: translateY(0);
 }

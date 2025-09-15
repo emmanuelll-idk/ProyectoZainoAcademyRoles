@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="{% static 'css/profesores/actividad_profesores_crear_actividad.css' %}">
 {% endblock %}
 
+{% block page_title %}Crear Actividad{% endblock %}
+
 {% block mockUp %}
         {% if messages %}
         <div class="messages">
@@ -23,7 +25,6 @@
             </div>
 
             <div id="crear-section" class="section-content">
-                <h2 class="section-title">Crear actividad:</h2>
 
                 <form id="actividadForm" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}

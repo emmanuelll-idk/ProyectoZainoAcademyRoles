@@ -5,6 +5,13 @@
     margin-left: 130px;
 }
 
+.page-title {
+    font-size: 40px;
+    font-weight: 700;
+    margin: 0;
+    margin-left: 100px; /* fuerza que quede a la izquierda y se separe de los íconos */
+}
+
 /* Tabla actividades */
 .activities-table {
     width: 100%;

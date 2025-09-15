@@ -5,10 +5,9 @@
 <link rel="stylesheet" href="{% static 'css/profesores/asistencia_profesores_cursos.css' %}">
 {% endblock %}
 
+{% block page_title %}Lista de Cursos{% endblock %}
+
 {% block mockUp %}
-    <header class="header">
-      <h1 class="page-title">Lista de cursos:</h1>
-    </header>
 
     <div class="cursos-grid">
       {% if boletines %}

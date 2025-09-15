@@ -5,10 +5,12 @@
 <link rel="stylesheet" href="{% static 'css/profesores/actividad_profesores_consultar_curso.css' %}">
 {% endblock %}
 
+{% block page_title %}Cursos y periodos:{% endblock %}
+
 {% block mockUp %}
 <!-- CONTENT -->
         <div class="content">
-            <h2 class="section-title">Consultar cursos periodo</h2>
+            <h2 class="section-title">Consultar tus cursos por periodo</h2>
             
             <div class="curso-selector">
                 {% for bol in boletines %}
