@@ -24,11 +24,7 @@ class Usuario(models.Model):
     Us_contraseña = models.CharField(max_length=30)
     fecha_registro = models.DateField(auto_now_add=True)
     documento = models.CharField(max_length=30)
-    
-    # CAMBIO AQUÍ - Reemplazar esta línea:
-    # genero = models.CharField(max_length=30)
-    
-    # POR ESTA:
+    #GENERO
     GENERO_CHOICES = [
         ('masculino', 'Masculino'),
         ('femenino', 'Femenino'),
@@ -40,8 +36,8 @@ class Usuario(models.Model):
         choices=GENERO_CHOICES,
         blank=False
     )
-    
-    correo = models.EmailField(unique=True)
+    correo = models.EmailField(unique=True, null=True, blank=True)
+    foto_perfil_usuario = models.ImageField(upload_to='fotos_perfil/', null=True, blank=True)
     TipoUsuario = models.ForeignKey(TipoUsuario, on_delete=models.CASCADE) 
 
     class Meta:
@@ -256,7 +252,6 @@ class Actividad(models.Model):
     Act_nombre = models.CharField(max_length=30)
     Act_descripcion = models.TextField()
     Act_fechaLimite = models.DateField()
-    Act_comentario = models.CharField(max_length=100)
     Act_Archivo_Profesor = models.FileField(upload_to='archivos/profesores/', null=True, blank=True)
     Esta_Actividad = models.ForeignKey(Estado_Actividad, on_delete=models.CASCADE)
     Bol = models.ForeignKey(Boletin, on_delete=models.CASCADE)
@@ -264,12 +259,13 @@ class Actividad(models.Model):
     class Meta:
         db_table = 'actividad'
 
-    def __str__(self):
+    def _str_(self):
         return self.Act_nombre
 
 class Actividad_Entrega(models.Model):
     Act_fecha_entrega = models.DateField(auto_now_add=True)
     Act_calificacion = models.FloatField(null=True, blank=True)
+    Act_comentario = models.CharField(max_length=100)
     Act = models.ForeignKey('Actividad', on_delete=models.CASCADE, related_name='entregas')
     Est = models.ForeignKey('Estudiantes', on_delete=models.CASCADE)
 
@@ -277,7 +273,7 @@ class Actividad_Entrega(models.Model):
         db_table = 'actividad_entrega'
         unique_together = ('Act', 'Est')
 
-    def __str__(self):
+    def _str_(self):
         return f"{self.Act} - {self.Est}"
 
 

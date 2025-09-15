@@ -46,6 +46,11 @@ class UsuarioForm(forms.ModelForm):
             'correo': 'Correo electrónico',
         }
 
+    def __init__(self, *args, **kwargs):    
+        super().__init__(*args, **kwargs)
+        #NO ELIMINAR hace que correo NO sea requerido por defecto
+        self.fields['correo'].required = False
+
 class EstudiantesForm(forms.ModelForm):
     class Meta:
         model = Estudiantes
