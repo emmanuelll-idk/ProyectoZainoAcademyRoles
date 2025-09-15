@@ -86,17 +86,28 @@ class AcudienteForm(forms.ModelForm):
         }
 
 class DirectivosForm(forms.ModelForm):
+    CARGO_CHOICES = [
+        ("director", "Director(a)"),
+        ("coordinador", "Coordinador(a)"),
+        ("secretario", "Secretario(a)"),
+    ]
+
+    Dir_cargo = forms.ChoiceField(
+        choices=CARGO_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Directivos
-        exclude = ['Dir_id', 'Us']  # ✅ EXCLUIR TAMBIÉN EL CAMPO Us
+        exclude = ['Dir_id', 'Us']
         widgets = {
-            'Dir_cargo': forms.TextInput(attrs={'class': 'form-control'}),
-            'Dir_telefono': forms.TextInput(attrs={'class': 'form-control'})
+            'Dir_telefono': forms.TextInput(attrs={'class': 'form-control'}),
         }
         labels = {
             'Dir_cargo': 'Cargo de Directivo',
-            'Dir_telefono': 'Teléfono de Directivo'
+            'Dir_telefono': 'Teléfono de Directivo',
         }
+
 
 class ProfesoresForm(forms.ModelForm):
     class Meta:
