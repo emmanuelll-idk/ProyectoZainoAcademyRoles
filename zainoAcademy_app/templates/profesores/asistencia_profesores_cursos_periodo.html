@@ -1,0 +1,29 @@
+{% extends "profesores/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profesores/asistencia_profesores_cursos_periodo.css' %}">
+{% endblock %}
+
+{% block page_title %}Lista de Cursos{% endblock %}
+
+{% block mockUp %}
+
+<div class="cursos-grid">
+    <h2 class="subtitulo">Cursos del Periodo {{ periodo.Per_nombre }}</h2>
+    <hr class="linea">
+
+    {% if boletines %}
+        {% for boletin in boletines %}
+            <div class="curso-card">
+                <p>{{ boletin.Cur.Cur_nombre }} - {{ boletin.Mtr.Mtr_nombre }}</p>
+                <a href="{% url 'asistencia_profesores_consultar' boletin.Bol_id %}" class="consultar-btn">
+                    Consultar asistencia
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No tienes cursos asignados en este periodo.</p>
+    {% endif %}
+</div>
+{% endblock %}

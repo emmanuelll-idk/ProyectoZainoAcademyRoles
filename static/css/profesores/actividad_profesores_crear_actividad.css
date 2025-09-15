@@ -17,6 +17,17 @@
     color: #3d2f5b;
 }
 
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.form-row .form-group {
+    flex: 0 0 600px;
+    margin-left: 50px;
+}
+
 /* Botones de opciones */
 .actividades-opciones {
     display: flex;
@@ -79,7 +90,7 @@
 
 /* Formulario */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 label {
@@ -98,6 +109,7 @@ input[type="file"] {
     border-radius: 6px;
     font-family: inherit;
     box-sizing: border-box;
+    max-width: 900px;
 }
 
 .form-actions {
@@ -210,6 +222,25 @@ input[type="file"] {
     border-radius: 50%;
     border: 3px solid rgba(255, 255, 255, 0.3);
 }
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end; /* a la derecha */
+    align-items: center;
+    gap: 12px; /* separación */
+    color: #4A4063;
+}
+
+.icon-btn-pencil, .icon-btn {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 22px; /* tamaño uniforme */
+}
+
+
 
 @media (max-width: 768px) {
     .sidebar {
