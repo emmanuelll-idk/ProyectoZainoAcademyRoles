@@ -3,8 +3,8 @@
 # Descripción: Este archivo realiza las vistas entre la base y los templates
 # Autor: Gabriela Muñoz Acero
 # Fecha de creación: 2025-02-02 
-# # Última modificación: 2025-09-08
-#NOTAS: Se realizco migracion de los archivos y vistas por acudinetes
+# # Última modificación: 2025-09-15
+#NOTAS: Se realizo cambio entre loggin no usar campo correo si no campo documento 
 
 
 #Importaciones de libreias y otros archivos
@@ -104,11 +104,11 @@ def redirect_to_login(request):
 def login_view(request):
     mensaje = ''
     if request.method == 'POST':
-        correo = request.POST.get('correo', '').strip()
+        documento = request.POST.get('documento', '').strip()
         contraseña = request.POST.get('contraseña', '').strip()
 
         try:
-            usuario = Usuario.objects.get(correo=correo, Us_contraseña=contraseña)
+            usuario = Usuario.objects.get(documento=documento, Us_contraseña=contraseña)
             
             # Guardamos el usuario en sesión
             request.session['usuario_id'] = usuario.Us_id
@@ -130,7 +130,7 @@ def login_view(request):
                 mensaje = 'Tipo de usuario no válido'
 
         except Usuario.DoesNotExist:
-            mensaje = 'Correo o contraseña incorrectos'
+            mensaje = 'Documento o contraseña incorrectos'
 
     return render(request, 'registration/login.html', {'mensaje': mensaje})
 

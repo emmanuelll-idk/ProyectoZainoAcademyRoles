@@ -3,7 +3,8 @@
 # Descripción: Este archivo realiza los formularios para depues usarlos en los templates necesesarios
 # Autor: Emmanuel Lopez 
 # Fecha de creación: 2025-02-18 
-# # Última modificación: 2025-09-05 
+# # Última modificación: 2025-09-15 
+#Notas: Se cambio el forms de usuario para visibilidad al momento de crear un usuario
 
 
 from django import forms
@@ -22,18 +23,27 @@ class TipoUsuarioForm(forms.ModelForm):
         fields = '__all__'
 
 class UsuarioForm(forms.ModelForm):
+    tiene_correo = forms.ChoiceField(
+        choices=[('no', 'No'), ('si', 'Sí')],
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'tieneCorreoSelect'}),
+        label='¿El usuario tiene correo?',
+        required=True
+    )
+
     class Meta:
         model = Usuario
-        fields = '__all__'
+        fields = ['Us_nombre', 'Us_contraseña', 'documento', 'genero', 'TipoUsuario', 'tiene_correo', 'correo']
         widgets = {
             'fecha_registro': forms.DateInput(attrs={'type': 'date'}),
-            'genero': forms.Select(attrs={'class': 'form-control'})  # AÑADIR ESTA LÍNEA
+            'genero': forms.Select(attrs={'class': 'form-control'}),
+            'correo': forms.EmailInput(attrs={'class': 'form-control', 'id': 'correoInput'}),
         }
         labels = {
             'Us_nombre': 'Nombre Completo de Usuario',
             'Us_contraseña': 'Contraseña de Usuario',
             'TipoUsuario': 'Tipo de Usuario',
-            'genero': 'Género'  # AÑADIR ESTA LÍNEA
+            'genero': 'Género',
+            'correo': 'Correo electrónico',
         }
 
 class EstudiantesForm(forms.ModelForm):

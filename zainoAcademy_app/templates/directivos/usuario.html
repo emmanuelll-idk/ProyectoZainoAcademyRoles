@@ -3,7 +3,7 @@ Nombre del archivo: usuario.html
 Descripción: Este archivo es el template de la lista de los usuarios ya creados previamente
 Autor: David Santiago Alfonso Guzman
 Fecha de creación: 2025-04-18
-Última modificación: 2025-09-07
+Última modificación: 2025-09-15
 -->
 
 {% extends 'base_directivos.html' %}
@@ -12,34 +12,101 @@ Fecha de creación: 2025-04-18
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/directivos/usuarioStyles.css' %}">
 
+{% if messages %}
+<div class="message-container">
+    {% for message in messages %}
+    <div class="floating-alert">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
 
-    {% if messages %}
-    <div class="message-container">
-        {% for message in messages %}
-        <div class="floating-alert">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <div class="action-buttons">
+<div class="action-buttons">
     <a href="{% url 'crear_usuario' %}" class="btn btn-primary">Crear</a>
     <a href="{% url 'lista_usuarios' %}" class="btn btn-secondary">Consultar</a>
-    </div>
+</div>
 
-    <form method="post" class="form-layout">
+<form method="post" class="form-layout">
     {% csrf_token %}
 
-    {% for field in usuario_form %}
-        <div class="form-group">
-        {{ field.label_tag }}
-        {{ field }}
-        {% if field.errors %}
-            <div style="color: red;">{{ field.errors }}</div>
+    <div class="form-group">
+        {{ usuario_form.Us_nombre.label_tag }}
+        {{ usuario_form.Us_nombre }}
+        {% if usuario_form.Us_nombre.errors %}
+        <div style="color: red;">{{ usuario_form.Us_nombre.errors }}</div>
         {% endif %}
-        </div>
-    {% endfor %}
+    </div>
+
+    <div class="form-group">
+        {{ usuario_form.Us_contraseña.label_tag }}
+        {{ usuario_form.Us_contraseña }}
+        {% if usuario_form.Us_contraseña.errors %}
+        <div style="color: red;">{{ usuario_form.Us_contraseña.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ usuario_form.documento.label_tag }}
+        {{ usuario_form.documento }}
+        {% if usuario_form.documento.errors %}
+        <div style="color: red;">{{ usuario_form.documento.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ usuario_form.genero.label_tag }}
+        {{ usuario_form.genero }}
+        {% if usuario_form.genero.errors %}
+        <div style="color: red;">{{ usuario_form.genero.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ usuario_form.TipoUsuario.label_tag }}
+        {{ usuario_form.TipoUsuario }}
+        {% if usuario_form.TipoUsuario.errors %}
+        <div style="color: red;">{{ usuario_form.TipoUsuario.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Campo Sí/No para correo -->
+    <div class="form-group">
+        {{ usuario_form.tiene_correo.label_tag }}
+        {{ usuario_form.tiene_correo }}
+        {% if usuario_form.tiene_correo.errors %}
+        <div style="color: red;">{{ usuario_form.tiene_correo.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Input correo (inicialmente oculto) -->
+    <div class="form-group" id="correoGroup" style="display: none;">
+        {{ usuario_form.correo.label_tag }}
+        {{ usuario_form.correo }}
+        {% if usuario_form.correo.errors %}
+        <div style="color: red;">{{ usuario_form.correo.errors }}</div>
+        {% endif %}
+    </div>
 
     <button type="submit" class="submit-button">Registrar Usuario</button>
-    </form>
+</form>
 
-    {% endblock %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const selectCorreo = document.getElementById('tieneCorreoSelect');
+    const correoGroup = document.getElementById('correoGroup');
+    const correoInput = document.getElementById('correoInput');
+
+    function toggleCorreo() {
+        if (selectCorreo.value === 'si') {
+            correoGroup.style.display = 'block';
+        } else {
+            correoGroup.style.display = 'none';
+            correoInput.value = ""; // limpiar si elige "No"
+        }
+    }
+
+    selectCorreo.addEventListener('change', toggleCorreo);
+    toggleCorreo(); // ejecutar al cargar la página
+});
+</script>
+
+{% endblock %}
