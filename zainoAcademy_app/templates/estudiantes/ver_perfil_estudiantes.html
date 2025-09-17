@@ -12,9 +12,13 @@
 <section class="view-profile">
     <div class="profile-container">
         <div class="left-column">
-            <div class="profile-pic">
+        <div class="profile-pic">
+            {% if usuario.foto_perfil_usuario %}
+                <img src="{{ usuario.foto_perfil_usuario.url }}" alt="Foto de perfil">
+            {% else %}
                 <img src="{% static 'images/acudientes/perfil.png' %}" alt="Foto de perfil">
-            </div>
+            {% endif %}
+        </div>
             <p class="profile-name">{{ usuario.Us_nombre }}</p>
             <p class="profile-role">Estudiante</p>
         </div>

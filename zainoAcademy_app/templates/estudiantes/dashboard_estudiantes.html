@@ -56,7 +56,11 @@
                 <div class="header-icons">
                     <span class="user-name">{{ usuario.Us_nombre }}</span>
                     <a href="{% url 'ver_perfil_estudiantes' %}">
-                        <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                        {% if usuario.foto_perfil_usuario %}
+                            <img src="{{ usuario.foto_perfil_usuario.url }}" class="user-avatar" alt="Perfil">
+                        {% else %}
+                            <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                        {% endif %}
                     </a>
 
                     <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -147,9 +151,14 @@
                 <!-- Perfil del Estudiante -->
                 <div class="student-profile">
                     <div class="student-avatar">
-                        <img src="{% static 'images/acudientes/perfil.png' %}" class="student-avatar"alt="Perfil">
-                    </div>
-                    <h4 class="student-name">{{ usuario.Us_nombre }}</h4>
+                    <a href="{% url 'ver_perfil_estudiantes' %}">
+                        {% if usuario.foto_perfil_usuario %}
+                            <img src="{{ usuario.foto_perfil_usuario.url }}" class="user-avatar" alt="Perfil">
+                        {% else %}
+                            <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                        {% endif %}
+                    </a>                    </div>
+                    <h4 class="student-name">{{ usuario.Us_nombre }}</h4> <br>
                     <p class="student-role">Estudiante</p>
                     
 

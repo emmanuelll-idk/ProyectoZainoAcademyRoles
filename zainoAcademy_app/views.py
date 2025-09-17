@@ -532,11 +532,18 @@ def editar_perfil_estudiantes(request):
         current_password = request.POST.get("current_password")
         
         if current_password != usuario.Us_contraseña:  
-            messages.error(request, "Contraseña actual incorrecta.")
+            messages.error(request, "Contraseña actual incorrecta o no ingresada.")
             return redirect("editar_perfil_estudiantes")
         
         usuario.Us_nombre = request.POST.get("username")
-        usuario.correo = request.POST.get("email")
+        usuario.documento = request.POST.get("documento")
+
+        if "foto_perfil_usuario" in request.FILES:
+            usuario.foto_perfil_usuario = request.FILES["foto_perfil_usuario"]
+
+        elif request.POST.get("eliminar_foto") == "true":
+            usuario.foto_perfil_usuario.delete(save=False)  
+            usuario.foto_perfil_usuario = None  
 
         new_password = request.POST.get("new_password")
         if new_password:
