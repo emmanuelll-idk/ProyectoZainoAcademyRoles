@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver perfil - Zaino Academy</title>
-    <link rel="stylesheet" href="{% static 'css/acudientes/ver_perfil_acudientes.css' %}">
+    <title>Actividades - Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/acudientes/actividades_materia_acudientes.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
     <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
@@ -22,7 +22,7 @@
                     <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
                 </a></li>
                 
-                <li><a href="{% url 'actividades_acudientes' %}" class="nav-item">
+                <li><a href="{% url 'actividades_acudientes' %}" class="nav-item active">
                     <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades
                 </a></li>
                 
@@ -41,19 +41,19 @@
 
     <main class="main-content">
         <header class="page-header">
-            <h1 class="page-title">Ver perfil</h1>
-    <div class="header-icons">
-            <!-- Notificaciones -->
-            
-            <!-- Nombre -->
-
-            <span class="user-name">{{ usuario.Us_nombre }}</span>
-            
-            <!-- Avatar / Perfil -->
-            <a href="{% url 'editar_perfil_acudientes' %}">
-                <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
-            </a>
-        </div>
+            <h1 class="page-title">Actividades</h1>
+            <div class="header-icons">
+                <!-- Notificaciones -->
+                
+                
+                <!-- Nombre -->
+                <span class="user-name">{{ usuario.Us_nombre }}</span>
+                
+                <!-- Avatar / Perfil -->
+                <a href="{% url 'editar_perfil_acudientes' %}">
+                    <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                </a>
+            </div>
 
         <button class="hamburger" onclick="toggleMenu()">☰</button>
                 
@@ -66,46 +66,52 @@
                         <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
                     </form>
             </div>
-            
-    </header>
+        </header>
+        <div class="divider-line"></div>
 
-        <section class="view-profile">
-            <div class="profile-container">
-                <div class="left-column">
-                    <div class="profile-pic">
-                        <img src="{% static 'images/acudientes/perfil.png' %}" alt="Foto de perfil">
-                    </div>
-                    <p class="profile-name">{{ usuario.Us_nombre }}</p>
-                    <p class="profile-role">Acudiente</p>
+<div class="materias-content">
+            <h2 class="section-title">Seleccione Materia:</h2>
+
+            {% if materias %}
+                <div class="materias-box">
+                    {% for m in materias %}
+                        <div class="materia-card" onclick="selectMateria('{{ m.Mtr_id }}')" data-materia-id="{{ m.Mtr_id }}">
+                            <h3 class="materia-nombre">{{ m.Mtr_nombre }}</h3>
+                        </div>
+                    {% endfor %}
                 </div>
 
-                <div class="right-column">
-                    <div class="profile-info">
-                        <p><strong>Nombre de usuario:</strong><br><br> {{ usuario.Us_nombre }}</p><br>
-                        <p><strong>E-mail:</strong><br><br> {{ usuario.correo }}</p>
-                    </div>
-
-                    <a href="{% url 'editar_perfil_acudientes' %}">
-                        <button class="edit-btn">Editar perfil</button>
-                    </a>
+                <div class="continuar-container">
+                    <form id="materia-form" method="POST" action="{% url 'actividades_list_acudientes' %}">
+                        {% csrf_token %}
+                        <input type="hidden" id="materia_id" name="materia_id">
+                        <input type="hidden" name="periodo_id" value="{{ periodo.Per_id }}">
+                        <input type="hidden" name="student_id" value="{{ estudiante.Est_id }}">
+                        <button type="submit" id="continuar-btn" class="continuar-btn" disabled>Continuar</button>
+                    </form>
                 </div>
-            </div>
-        </section>
-
-        <div id="logout-modal" class="modal">
-        <div class="modal-content">
-            <h2>¿Cerrar Sesión?</h2>
-            <div class="modal-actions">
-                <form method="POST" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-confirm">Confirmar</button>
-                </form>
-                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-            </div>
+            {% else %}
+                <p>No tienes materias asociadas en este periodo.</p>
+            {% endif %}
         </div>
-    </div>
+    </main>
 
     <script>
+        function selectMateria(materiaId) {
+            document.querySelectorAll('.materia-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const selectedCard = document.querySelector('[data-materia-id="' + materiaId + '"]');
+            if (selectedCard) selectedCard.classList.add('selected');
+            document.getElementById('materia_id').value = materiaId;
+
+            const continueBtn = document.getElementById('continuar-btn');
+            continueBtn.disabled = false;
+            continueBtn.classList.add('enabled');
+        }
+    </script>
+
+<script>
         const modal = document.getElementById('logout-modal');
         function openModal() { modal.style.display = 'flex'; }
         function closeModal() { modal.style.display = 'none'; }
@@ -114,11 +120,12 @@
         }
     </script>
 
-<script>
+    <script>
     function toggleMenu() {
         const menu = document.getElementById("dropdown-menu");
         menu.classList.toggle("show");
     }
     </script>
+
 </body>
 </html>

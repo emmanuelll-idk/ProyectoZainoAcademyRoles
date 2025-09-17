@@ -2188,22 +2188,97 @@ def ver_perfil_acudientes(request):
 
 def actividades_list_acudientes(request):
     usuario = get_usuario_from_session(request)
-    estudiante_id = request.POST.get('student_id')  # Obtiene el ID del estudiante desde el formulario
 
-    # Obtener el estudiante asociado al acudiente (solo si el estudiante existe)
+    estudiante_id = request.POST.get("student_id")
+    periodo_id = request.POST.get("periodo_id")
+    materia_id = request.POST.get("materia_id")
+
+    actividades = []
+    estudiante = None
+    periodo = None
+    materia = None
+
+    if estudiante_id and periodo_id and materia_id:
+        try:
+            estudiante = Estudiantes.objects.get(Est_id=estudiante_id)
+            periodo = Periodo.objects.get(Per_id=periodo_id)
+            materia = Materia.objects.get(Mtr_id=materia_id)
+
+            # Relación: Actividad_Entrega → Actividad → Boletin
+            actividades = (
+                Actividad_Entrega.objects.filter(
+                    Est=estudiante,
+                    Act__Bol__Per=periodo,
+                    Act__Bol__Mtr=materia
+                )
+                .select_related("Act", "Act__Bol", "Act__Esta_Actividad")
+            )
+
+        except (Estudiantes.DoesNotExist, Periodo.DoesNotExist, Materia.DoesNotExist):
+            actividades = []
+
+    return render(request, "acudientes/actividades_list_acudientes.html", {
+        "usuario": usuario,
+        "estudiante": estudiante,
+        "periodo": periodo,
+        "materia": materia,
+        "actividades": actividades,
+    })
+
+def actividades_periodo_acudientes(request):
+    usuario = get_usuario_from_session(request)
+    estudiante_id = request.POST.get('student_id')
+
+    periodos = []
+    estudiante = None
+
     if estudiante_id:
         try:
             estudiante = Estudiantes.objects.get(Est_id=estudiante_id)
-            # Usar solo 'Act' y 'Bol' en select_related
-            actividades = Actividad_Entrega.objects.filter(Est=estudiante).select_related('Act', 'Act__Bol', 'Act__Esta_Actividad')
-        except Estudiantes.DoesNotExist:
-            actividades = []
-    else:
-        actividades = []
 
-    return render(request, 'acudientes/actividades_list_acudientes.html', {
-        'usuario': usuario,
-        'actividades': actividades,
+            # Relación: Periodo ← Boletin ← Curso ← Estudiante_Curso ← Estudiantes
+            periodos = Periodo.objects.filter(
+                boletin__Cur__estudiante_curso__Est=estudiante
+            ).distinct()
+
+        except Estudiantes.DoesNotExist:
+            periodos = []
+
+    return render(request, "acudientes/actividades_periodo_acudientes.html", {
+        "usuario": usuario,
+        "estudiante": estudiante,
+        "periodos": periodos,
+    })
+
+def actividades_materia_acudientes(request):
+    usuario = get_usuario_from_session(request)
+
+    estudiante_id = request.POST.get("student_id")
+    periodo_id = request.POST.get("periodo_id")
+
+    materias = []
+    estudiante = None
+    periodo = None
+
+    if estudiante_id and periodo_id:
+        try:
+            estudiante = Estudiantes.objects.get(Est_id=estudiante_id)
+            periodo = Periodo.objects.get(Per_id=periodo_id)
+
+            # Relación: Materia ← Boletin ← Curso ← Estudiante_Curso ← Estudiantes
+            materias = Materia.objects.filter(
+                boletin__Cur__estudiante_curso__Est=estudiante,
+                boletin__Per=periodo
+            ).distinct()
+
+        except (Estudiantes.DoesNotExist, Periodo.DoesNotExist):
+            materias = []
+
+    return render(request, "acudientes/actividades_materia_acudientes.html", {
+        "usuario": usuario,
+        "estudiante": estudiante,
+        "periodo": periodo,
+        "materias": materias,
     })
 
 def asistencia_list_acudientes(request):

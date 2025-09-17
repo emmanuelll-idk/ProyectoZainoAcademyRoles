@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistencia - Zaino Academy</title>
-    <link rel="stylesheet" href="{% static 'css/acudientes/asistencia_list_acudientes.css' %}">
+    <title>Actividades - Zaino Academy</title>
+    <link rel="stylesheet" href="{% static 'css/acudientes/actividades_periodo_acudientes.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
     <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
@@ -22,11 +22,11 @@
                     <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
                 </a></li>
                 
-                <li><a href="{% url 'actividades_acudientes' %}" class="nav-item">
+                <li><a href="{% url 'actividades_acudientes' %}" class="nav-item active">
                     <img src="{% static 'images/acudientes/actividades.png' %}" class="nav-icon" alt="Actividades"> Actividades
                 </a></li>
                 
-                <li><a href="{% url 'asistencia_acudientes' %}" class="nav-item active">
+                <li><a href="{% url 'asistencia_acudientes' %}" class="nav-item">
                     <img src="{% static 'images/acudientes/asistencia.png' %}" class="nav-icon" alt="Asistencia"> Asistencia
                 </a></li>
             </ul>
@@ -41,33 +41,39 @@
 
     <main class="main-content">
         <header class="page-header">
-            <h1 class="page-title">Asistencia</h1>
+            <h1 class="page-title">Actividades</h1>
             <div class="header-icons">
+                <!-- Notificaciones -->
+                
+                
+                <!-- Nombre -->
                 <span class="user-name">{{ usuario.Us_nombre }}</span>
+                
+                <!-- Avatar / Perfil -->
                 <a href="{% url 'editar_perfil_acudientes' %}">
                     <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
                 </a>
             </div>
 
-            <button class="hamburger" onclick="toggleMenu()">☰</button>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
                 
             <div id="dropdown-menu" class="dropdown-menu">
-                <a href="{% url 'dashboard_acudientes' %}">Inicio</a>
-                <a href="{% url 'actividades_acudientes' %}">Actividades</a>
-                <a href="{% url 'asistencia_acudientes' %}">Asistencia</a>
-                <form method="POST" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
-                </form>
+                    <a href="{% url 'dashboard_acudientes' %}">Inicio</a>
+                    <a href="{% url 'actividades_acudientes' %}">Actividades</a>
+                    <a href="{% url 'asistencia_acudientes' %}">Asistencia</a>
+                    <form method="POST" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
+                    </form>
             </div>
         </header>
-        
         <div class="divider-line"></div>
 
-        <div class="asistencia-content">
-            <h2 class="section-title">Seleccione Periodo:</h2>
+        <div class="actividades-content">
+    <h2 class="section-title">Seleccione Periodo:</h2>
 
-            {% if periodos %}
+    <div class="periodos-container">
+        {% if periodos %}
                 <div class="periodos-container">
                     {% for periodo in periodos %}
                         <div class="periodo-card" onclick="selectPeriodo('{{ periodo.Per_id }}')" data-periodo-id="{{ periodo.Per_id }}">
@@ -75,40 +81,17 @@
                         </div>
                     {% endfor %}
                 </div>
-
-                <div class="descargar-container">
-                    <button id="descargar-btn" class="btn-pdf" disabled onclick="descargarReporte()">
-                        Descargar Asistencia
-                    </button>
-                </div>
-            {% else %}
-                <p>No hay periodos disponibles</p>
-            {% endif %}
-        </div>
-    </main>
-
-    <div id="logout-modal" class="modal">
-        <div class="modal-content">
-            <h2>¿Cerrar Sesión?</h2>
-            <div class="modal-actions">
-                <form method="POST" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-confirm">Confirmar</button>
-                </form>
-                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-            </div>
-        </div>
+        {% endif %}
+    
+    <div class="continuar-container">
+        <form id="continuar-form" method="POST" action="{% url 'actividades_materia_acudientes' %}">
+            {% csrf_token %}
+            <input type="hidden" id="periodo_id" name="periodo_id">
+            <input type="hidden" name="student_id" value="{{ estudiante.Est_id }}">
+            <button type="submit" id="continuar-btn" class="continuar-btn" disabled>Continuar</button>
+        </form>
     </div>
-
-    <script>
-        // Modal cerrar sesión
-        const modal = document.getElementById('logout-modal');
-        function openModal() { modal.style.display = 'flex'; }
-        function closeModal() { modal.style.display = 'none'; }
-        window.onclick = function(event) {
-            if (event.target == modal) { closeModal(); }
-        }
-    </script>
+</div>
 
     <script>
         let selectedPeriodoId = null;
@@ -134,17 +117,11 @@
             downloadBtn.classList.add('enabled');
         }
 
-        // Descargar reporte
-        function descargarReporte() {
-            if (selectedPeriodoId) {
-                const url = `/acudientes/asistencia/reporte/${selectedPeriodoId}/`;
-                window.location.href = url;
-            } else {
-                alert("Por favor selecciona un periodo antes de descargar el reporte.");
-            }
-        }
+            const continuarBtn = document.getElementById('continuar-btn');
+            continuarBtn.disabled = false;
+            continuarBtn.classList.add('enabled');
 
-        // Botón deshabilitado al inicio
+            // Botón deshabilitado al inicio
         document.addEventListener('DOMContentLoaded', function() {
             const downloadBtn = document.getElementById('descargar-btn');
             if (downloadBtn) {
@@ -153,10 +130,22 @@
             }
         });
 
-        function toggleMenu() {
-            const menu = document.getElementById("dropdown-menu");
-            menu.classList.toggle("show");
+    </script>
+
+    <script>
+        const modal = document.getElementById('logout-modal');
+        function openModal() { modal.style.display = 'flex'; }
+        function closeModal() { modal.style.display = 'none'; }
+        window.onclick = function(event) {
+            if (event.target == modal) { closeModal(); }
         }
+    </script>
+
+    <script>
+    function toggleMenu() {
+        const menu = document.getElementById("dropdown-menu");
+        menu.classList.toggle("show");
+    }
     </script>
 
 </body>

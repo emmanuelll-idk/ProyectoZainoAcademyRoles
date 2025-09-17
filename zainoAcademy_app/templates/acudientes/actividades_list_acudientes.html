@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/acudientes/actividades_list_acudientes.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
 </head>
 <body class="dashboard-page">
     <aside class="sidebar">
@@ -69,9 +70,13 @@
         </header>    
         <div class="divider-line"></div>   
 
-            {% if actividades %}
+            <section class="context-info">
+            <p><strong>Estudiante:</strong> {{ estudiante.Usuario_us.Us_nombre }}</p>
+            <p><strong>Periodo:</strong> {{ periodo.Per_nombre }}</p>
+            <p><strong>Materia:</strong> {{ materia.Mtr_nombre }}</p>
+        </section>
 
-<!-- Barra de Búsqueda para filtrar actividades -->
+        {% if actividades %}
             <input type="text" class="search-bar" placeholder="Buscar actividades" id="searchActivities"> 
           
             <table class="activities-table">
@@ -81,26 +86,24 @@
                         <th>Materia</th>
                         <th>Curso</th>
                         <th>Fecha Límite</th>
-                        <th>Estado</th> <!-- Nueva columna para Estado -->
+                        <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for actividad in actividades %}
                     <tr>
-                        <td>{{ actividad.Act.Act_nombre }}</td>
-                        <td>{{ actividad.Act.Bol.Mtr.Mtr_nombre }}</td> <!-- Materia -->
-                        <td>{{ actividad.Act.Bol.Cur.Cur_nombre }}</td> <!-- Curso -->
-                        <td>{{ actividad.Act.Act_fechaLimite }}</td>
-                        <td>
-                            {{ actividad.Act.Esta_Actividad.Esta_Actividad_Estado }}</td> <!-- Estado de la actividad -->
+                        <td>{{ actividad.Act_nombre }}</td>
+                        <td>{{ actividad.Bol.Mtr.Mtr_nombre }}</td>
+                        <td>{{ actividad.Bol.Cur.Cur_nombre }}</td>
+                        <td>{{ actividad.Act_fechaLimite }}</td>
+                        <td>{{ actividad.Esta_Actividad.Esta_Actividad_Estado }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            {% else %}
-                <p>No hay actividades disponibles para este estudiante.</p>
-            {% endif %}
-        </section>
+        {% else %}
+            <p>No hay actividades disponibles para este estudiante en esta materia.</p>
+        {% endif %}
     </main>
 
     <div id="logout-modal" class="modal">
@@ -125,20 +128,18 @@
         }
     </script>
 
-    <script>
-        // Script para la barra de búsqueda que filtra las actividades
+     <script>
         document.getElementById('searchActivities').addEventListener('input', function(event) {
             const query = event.target.value.toLowerCase();
             const rows = document.querySelectorAll('.activities-table tbody tr');
             
             rows.forEach(row => {
-                const nombre = row.querySelector('td:first-child').textContent.toLowerCase();
+                const nombre = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
                 const materia = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
                 const curso = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
                 const fechaLimite = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-                const estado = row.querySelector('td:nth-child(5)').textContent.toLowerCase(); // Estado
+                const estado = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
 
-                // Verifica si la búsqueda aparece en alguno de los campos de la fila
                 if (nombre.includes(query) || materia.includes(query) || curso.includes(query) || fechaLimite.includes(query) || estado.includes(query)) {
                     row.style.display = '';
                 } else {
