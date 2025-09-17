@@ -166,7 +166,16 @@ class Directivos(models.Model):
 
 class Matricula(models.Model):
     Mat_id = models.AutoField(primary_key=True) 
-    
+    TIPO_CHOICES = [
+        ('normal', 'Normal'),
+        ('repitente', 'Repitente'),
+        ('promovido', 'Promovido'),
+    ]
+    Mat_tipo = models.CharField(
+        max_length=20,
+        choices=TIPO_CHOICES,
+        default='normal'
+    )
     # CAMBIO: Nivel académico con opciones predefinidas
     NIVEL_ACADEMICO_CHOICES = [
         ('transicion', 'Transición'),

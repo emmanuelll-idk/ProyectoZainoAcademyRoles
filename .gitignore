@@ -1,0 +1,6 @@
+# Base de datos
+*.sqlite3
+
+# Archivos compilados de Python
+_pycache_/
+*.pyc

@@ -250,63 +250,38 @@
       backdrop-filter: blur(4px);
     }
 
-    .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      text-align: center;
-      font-family: "Comfortaa", sans-serif;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      max-width: 400px;
-      width: 90%;
-    }
+.modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
 
-    .modal-content p {
-      font-size: 1.1rem;
-      color: #4a4063;
-      margin-bottom: 2rem;
-      font-weight: 600;
-    }
-
-    .modal-content button {
-      margin: 0 0.5rem;
-      padding: 0.8rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: "Comfortaa", sans-serif;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .modal-content button:first-of-type {
-      background-color: #f8f9fa;
-      color: #4a4063;
-      border: 1px solid #dee2e6;
-    }
-
-    .modal-content button:first-of-type:hover {
-      background-color: #e9ecef;
-    }
-
-    .modal-content button:last-of-type {
-      background-color: #4a4063;
-      color: white;
-    }
-
-    .modal-content button:last-of-type:hover {
-      background-color: #352c4d;
-    }
+.modal-content h2 {
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    color: #4a4063;
+}
   </style>
 </head>
 
 <body class="dashboard-page">
     <aside class="sidebar">
         <div class="logo">
+<<<<<<< HEAD
             <a href="{% url 'dashboard_acudientes' %}">
                 <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
             </a>
             <a href="{% url 'dashboard_acudientes' %}">
+=======
+            <a href="{% url 'dashboard_directivo' %}">
+                <img src="{% static 'images/acudientes/Favicon.png' %}" alt="Logo Libro"/>
+            </a>
+            <a href="{% url 'dashboard_directivo' %}">
+>>>>>>> Santiago
                 <img src="{% static 'images/acudientes/LogoNormal-removebg-preview.png' %}" alt="Logo Zaino Academy" />
             </a>
           </div>

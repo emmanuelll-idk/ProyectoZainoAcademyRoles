@@ -45,6 +45,7 @@ Fecha de creación: 2025-04-18
         <th>Valor</th>
         <th>Fecha de pago</th>
         <th>Nivel</th>
+        <th>Comprobante</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -59,6 +60,13 @@ Fecha de creación: 2025-04-18
           <td>{{ mat.Mat_valor }}</td>
           <td>{{ mat.Mat_fecha_pago }}</td>
           <td>{{ mat.Mat_nivel }}</td>
+          <td>
+            {% if mat.Mat_comprobante %}
+              <a href="{{ mat.Mat_comprobante.url }}" download class="btn btn-link">Descargar</a>
+            {% else %}
+              <span class="text-muted">No adjunto</span>
+            {% endif %}
+          </td>
           <td class="actions-cell">
           <a href="{% url 'editar_matricula' mat.pk %}" class="icon-btn" title="Editar">
             <span class="material-icons-outlined">edit</span>

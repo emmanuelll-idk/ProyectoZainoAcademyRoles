@@ -30,7 +30,6 @@ Fecha de creación: 2025-04-18
 <table>
     <thead>
     <tr>
-        <th>ID</th>
         <th>Periodo</th>
         <th>Profesor</th>
         <th>Materia</th>
@@ -41,7 +40,6 @@ Fecha de creación: 2025-04-18
     <tbody>
     {% for b in boletines %}
     <tr>
-        <td>{{ b.Bol_id }}</td>
         <td>{{ b.Per.Per_nombre }}</td>
         <td>{{ b.Pro.Us.Us_nombre }}</td>
         <td>{{ b.Mtr.Mtr_nombre }}</td>
