@@ -1,5 +1,22 @@
+    .search-container {
+        margin: 2rem auto 1rem;
+        max-width: 600px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .search-box {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-family: "Comfortaa", sans-serif;
+        background-color: #ffffff;
+    }
+
     .table-container {
-        max-width: 800px;
+        max-width: 1200px;
         margin: 2rem auto;
         overflow-x: auto;
     }
@@ -13,16 +30,17 @@
     }
 
     th, td {
-        padding: 0.8rem;
+        padding: 1rem;
         border: 1px solid #6c757d;
         text-align: center;
         color: #4a4063;
-        font-size: 1rem;
+        vertical-align: middle;
     }
 
     th {
         background-color: #f8f9fa;
-        font-weight: bold;
+        font-weight: 700;
+        font-size: 1.1rem;
     }
 
     tr:nth-child(even) {
@@ -31,6 +49,7 @@
 
     tr:hover {
         background-color: #e9ecef;
+        transition: background-color 0.3s ease;
     }
 
     .no-activities {
@@ -43,16 +62,52 @@
     .actions-cell {
         display: flex;
         justify-content: center;
-        gap: 0.8rem;
+        align-items: center;
+        gap: 1rem;
     }
 
     .icon-btn {
         font-size: 1.2rem;
         color: #4a4063;
         text-decoration: none;
+        padding: 0.3rem;
         transition: transform 0.2s ease;
+        display: flex;
+        align-items: center;
     }
 
     .icon-btn:hover {
         transform: scale(1.2);
+    }
+
+    .icon-btn .material-icons-outlined {
+        font-size: 24px;
+    }
+
+    .divider {
+        width: 1px;
+        height: 24px;
+        background-color: #6c757d;
+    }
+
+    .floating-alert {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        background-color: #4a4063;
+        color: #fff;
+        padding: 0.7rem 1rem;
+        border-radius: 8px;
+        font-family: 'Comfortaa', sans-serif;
+        font-size: 0.95rem;
+        z-index: 9999;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        animation: fadeInOut 3s forwards;
+    }
+
+    @keyframes fadeInOut {
+        0% { opacity: 0; transform: translateY(-10px); }
+        10% { opacity: 1; transform: translateY(0); }
+        90% { opacity: 1; transform: translateY(0); }
+        100% { opacity: 0; transform: translateY(-10px); }
     }

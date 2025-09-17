@@ -132,6 +132,18 @@ class MatriculaForm(forms.ModelForm):
         ('consignacion', 'Consignación')
     ]
 
+    TIPO_CHOICES = [
+        ('normal', 'Normal'),
+        ('repitente', 'Repitente'),
+        ('promovido', 'Promovido'),
+    ]
+    
+    Mat_tipo = forms.ChoiceField(
+        choices=TIPO_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Tipo de matrícula'
+    )
+
     # Campo nivel académico
     Mat_nivel = forms.ChoiceField(
         choices=Matricula.NIVEL_ACADEMICO_CHOICES,
@@ -155,14 +167,13 @@ class MatriculaForm(forms.ModelForm):
         model = Matricula
         fields = [
             'Estudiantes_Est',
-            # REMOVIDO: 'Directivos_Dir' - se asignará automáticamente
-            # REMOVIDO: 'Mat_fecha' - se asignará automáticamente con fecha actual
             'Mat_nivel',
             'Mat_estado',
             'Mat_metodo_pago',
             'Mat_comprobante',
             'Mat_valor',
-            'Mat_fecha_pago'
+            'Mat_fecha_pago',
+            'Mat_tipo',  # NO BORRAR
         ]
         widgets = {
             'Estudiantes_Est': forms.Select(attrs={'class': 'form-control'}),

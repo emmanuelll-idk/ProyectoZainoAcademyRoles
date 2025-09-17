@@ -3,7 +3,7 @@ Nombre del archivo: matricula.html
 Descripción: Este archivo es el formulario de la creacion de matricula
 Autor: David Santiago Alfonso Guzman
 Fecha de creación: 2025-04-18
-Última modificación: 2025-08-27
+Última modificación: 2025-09-15
 -->
 
 {% extends 'base_directivos.html' %}
@@ -49,7 +49,13 @@ Fecha de creación: 2025-04-18
             {{ form.Estudiantes_Est.label_tag }}
             {{ form.Estudiantes_Est }}
         </div>
-        <!-- REMOVIDO: Campo de fecha de matrícula -->
+
+        <!-- Nuevo campo: Tipo de matrícula -->
+        <div class="form-group">
+            {{ form.Mat_tipo.label_tag }}
+            {{ form.Mat_tipo }}
+        </div>
+
         <div class="form-group">
             {{ form.Mat_estado.label_tag }}
             {{ form.Mat_estado }}
