@@ -565,7 +565,7 @@ def dashboard_profesores(request):
 
     actividades_abiertas = (
         Actividad.objects
-        .filter(Bol__Pro=profesor, Act_fechaLimite__gte=hoy) 
+        .filter(Bol_Pro=profesor, Act_fechaLimite_gte=hoy) 
         .annotate(total_entregas=Count('entregas'))
         .order_by('Act_fechaLimite')
     )
@@ -662,7 +662,7 @@ def guardar_calificaciones(request, bol_id):
 
         # obtenemos todas las entregas de ese boletín
         entregas_archivos = Actividad_EntregaArchivo.objects.filter(
-            entrega__Act__Bol=bol
+            entrega_Act_Bol=bol
         ).select_related("entrega")
 
         for archivo_entrega in entregas_archivos:
@@ -716,6 +716,8 @@ def actividad_profesores_consultar(request):
     })
 
 
+from datetime import date
+
 def actividad_profesores_crear_actividad(request, bol_id):
     usuario_id = request.session.get('usuario_id')
     if not usuario_id:
@@ -734,32 +736,38 @@ def actividad_profesores_crear_actividad(request, bol_id):
     
     if request.method == 'POST':
         try:
-            estado_pendiente = Estado_Actividad.objects.get(Esta_Actividad_Estado='Pendiente')
-            
-            
+            fecha_limite_str = request.POST.get('Act_fechaLimite')
+            fecha_limite = date.fromisoformat(fecha_limite_str)
+
+            if fecha_limite >= date.today():
+                estado = Estado_Actividad.objects.get(Esta_Actividad_Estado='Abierta')
+            else:
+                estado = Estado_Actividad.objects.get(Esta_Actividad_Estado='Cerrada')
+
             Actividad.objects.create(
                 Act_nombre=request.POST.get('Act_nombre'),
                 Act_descripcion=request.POST.get('Act_descripcion'),
-                Act_fechaLimite=request.POST.get('Act_fechaLimite'),
+                Act_fechaLimite=fecha_limite,
                 Act_comentario=request.POST.get('Act_comentario', ''),
                 Act_Archivo_Profesor=request.FILES.get('Act_Archivo_Profesor'),
                 Bol=boletin,
-                Esta_Actividad=estado_pendiente
+                Esta_Actividad=estado
             )
             
             messages.success(request, "Actividad creada exitosamente")
-            # 👇 cambio importante: redirigir al dashboard
-            return redirect('dashboard_profesores')
+            return redirect('actividad_profesores_crear_actividad', bol_id=bol_id)
         except Exception as e:
             messages.error(request, f"Error al crear actividad: {str(e)}")
     
     context = {
         'boletin': boletin,
         'actividades': actividades,
-        'usuario': usuario_custom
+        'usuario': usuario_custom,
+        'today': date.today()
     }
     
     return render(request, 'profesores/actividad_profesores_crear_actividad.html', context)
+
 
 
 def actividad_profesores_editar(request, act_id):
@@ -869,6 +877,25 @@ def asistencia_profesores_añadir(request, bol_id):
         'estados': estados
     })
 
+def asistencia_profesores_cursos_periodo(request, periodo_id):
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect("login")
+
+    periodo = get_object_or_404(Periodo, Per_id=periodo_id)
+    profesor = Profesores.objects.get(Us=usuario)  
+
+    boletines = Boletin.objects.filter(
+        Per=periodo,
+        Pro=profesor
+    ).select_related("Cur", "Mtr")
+
+    return render(request, "profesores/asistencia_profesores_cursos_periodo.html", {
+        "usuario": usuario,
+        "periodo": periodo,
+        "boletines": boletines
+    })
+
 def asistencia_profesores_consultar(request, bol_id):
     usuario = get_usuario_from_session(request)
     if not usuario:
@@ -881,7 +908,7 @@ def asistencia_profesores_consultar(request, bol_id):
 
     asistencias = Asistencia.objects.filter(
         Est_Cur__in=estudiantes_curso
-    ).select_related("Est_Cur__Est__Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
+    ).select_related("Est_Cur_Est_Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
 
     comentarios_session = request.session.get("comentarios", {})
 
@@ -1043,7 +1070,7 @@ def materialApoyo_subir(request, bol_id):
 def materialApoyo_consultar(request, bol_id):
     materiales = MaterialApoyo.objects.filter(Bol_id=bol_id)
     for m in materiales:
-        print(m.__dict__)
+        print(m._dict_)
     boletin = Boletin.objects.get(Bol_id=bol_id)
     periodo_id = boletin.Per_id
 
@@ -1169,7 +1196,7 @@ def generar_reporte_asistencias_pdf(request, periodo_id):
         estudiantes_curso = Estudiante_Curso.objects.filter(Cur=boletin.Cur).select_related("Est__Usuario_us")
         asistencias = Asistencia.objects.filter(
             Est_Cur__in=estudiantes_curso
-        ).select_related("Est_Cur__Est__Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
+        ).select_related("Est_Cur_Est_Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
         
         if asistencias.exists():
             data = [["Estudiante", "Fecha", "Estado"]]
@@ -1205,7 +1232,7 @@ def generar_reporte_asistencias_pdf(request, periodo_id):
     response = FileResponse(
         buffer, 
         as_attachment=True, 
-        filename=f"Reporte_Asistencias_{usuario.Us_nombre.replace(' ', '_')}_{periodo.Per_nombre.replace(' ', '_')}.pdf"
+        filename=f"Reporte_Asistencias_{usuario.Us_nombre.replace(' ', '')}{periodo.Per_nombre.replace(' ', '_')}.pdf"
     )
     return response
 
@@ -1226,7 +1253,7 @@ def generar_reporte_rendimiento_pdf(request, periodo_id):
     actividades = Actividad.objects.filter(
         Bol__Pro=profesor,
         Bol__Per=periodo
-    ).select_related('Bol__Per', 'Bol__Cur', 'Bol__Mtr').prefetch_related('entregas__Est__Usuario_us')
+    ).select_related('Bol_Per', 'BolCur', 'BolMtr').prefetch_related('entregasEst_Usuario_us')
 
     # Validación principal: si no hay actividades (y por lo tanto datos) para este periodo
     if not actividades.exists():
@@ -1298,7 +1325,7 @@ def generar_reporte_rendimiento_pdf(request, periodo_id):
     response = FileResponse(
         buffer, 
         as_attachment=True, 
-        filename=f"Reporte_Rendimiento_{usuario.Us_nombre.replace(' ', '_')}_{periodo.Per_nombre.replace(' ', '_')}.pdf"
+        filename=f"Reporte_Rendimiento_{usuario.Us_nombre.replace(' ', '')}{periodo.Per_nombre.replace(' ', '_')}.pdf"
     )
     return response
 
@@ -1351,7 +1378,6 @@ def dashboard_profesores_calendar(request):
         "usuario": usuario,
         "today": today
     })
-
 
 #DIRECTIVOS SANTIAGO 
 

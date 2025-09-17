@@ -58,8 +58,8 @@ urlpatterns = [
     path('profesores/actividades/lista/', views.actividad_profesores_lista, name='actividad_profesores_lista'),
     path('profesores/actividades/consultar/', views.actividad_profesores_consultar, name='actividad_profesores_consultar'),
     path('profesores/actividades/cursos/<int:periodo_id>/', views.actividad_profesores_consultar_cursos, name='actividad_profesores_consultar_cursos'),
-    path('profesores/asistencia/cursos/', views.asistencia_profesores_cursos, name='asistencia_profesores_cursos'),
-    path("profesores/asistencia/cursos/<int:periodo_id>/", views.asistencia_profesores_cursos, name="asistencia_profesores_cursos_periodo"),
+    path("profesores/asistencia/cursos/", views.asistencia_profesores_cursos, name="asistencia_profesores_cursos"),
+    path("profesores/asistencia/cursos/<int:periodo_id>/", views.asistencia_profesores_cursos_periodo, name="asistencia_profesores_cursos_periodo"),
     path('profesores/asistencia/consultar/<int:bol_id>/', views.asistencia_profesores_consultar, name='asistencia_profesores_consultar'),
     path('profesores/asistencia/añadir/<int:bol_id>/', views.asistencia_profesores_añadir, name='asistencia_profesores_añadir'),
     path("profesores/actividades/guardar/<int:bol_id>/", views.guardar_calificaciones, name="guardar_calificaciones"),
@@ -86,7 +86,6 @@ urlpatterns = [
     path('profesores/editar_perfil/', views.editar_perfil_profesores, name='editar_perfil_profesores'),
     path('profesores/actualizar_perfil/', views.actualizar_perfil_profesores, name='actualizar_perfil_profesores'),
     path('profesores/dashboard_profesores/', views.dashboard_profesores_calendar, name="dashboard_profesores"),
-
 
     #Directivos
     path('directivos/',views.dashboard_directivos, name='dashboard_directivo'),

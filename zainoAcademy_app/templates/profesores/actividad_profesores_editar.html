@@ -9,34 +9,40 @@
     <main class="main-content">
         <h1>Editar Actividad</h1>
 
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                <label>Nombre:</label>
-                <input type="text" name="Act_nombre" value="{{ actividad.Act_nombre }}" required>
-            </div>
 
-            <div class="form-group">
-                <label>Fecha límite:</label>
-                <input type="date" name="Act_fechaLimite" value="{{ actividad.Act_fechaLimite|date:'Y-m-d' }}" required>
-            </div>
+        <div id="crear-section" class="section-content">
+            <form id="actividadForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Primera fila -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" name="Act_nombre" value="{{ actividad.Act_nombre }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha">Fecha límite:</label>
+                        <input type="date" name="Act_fechaLimite" value="{{ actividad.Act_fechaLimite|date:'Y-m-d' }}" required>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label>Descripción:</label>
-                <input type="text" name="Act_descripcion" value="{{ actividad.Act_descripcion }}">
-            </div>
+                <!-- Segunda fila -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="descripcion">Descripción:</label>
+                        <p>Archivo actual: <a href="{{ actividad.Act_Archivo_Profesor.url }}" target="_blank">Ver</a></p>
+                    </div>
 
-            <div class="form-group">
-                <label>Archivo:</label>
-                {% if actividad.Act_Archivo_Profesor %}
-                    <p>Archivo actual: <a href="{{ actividad.Act_Archivo_Profesor.url }}" target="_blank">Ver</a></p>
-                {% endif %}
-                <input type="file" name="Act_Archivo_Profesor">
-            </div>
+                    <div class="form-group">
+                        <label for="archivo">Archivo:</label>
+                        <input type="file" id="archivo" name="Act_Archivo_Profesor">
+                    </div>
+                </div>
 
             <div class="form-actions">
-                <button type="submit" class="submit-btn">Guardar cambios</button>
                 <a href="{% url 'actividad_profesores_crear_actividad' actividad.Bol.pk %}" class="volver-btn">Cancelar</a>
+                <button type="submit" class="submit-btn">Guardar cambios</button>
             </div>
         </form>
     </main>

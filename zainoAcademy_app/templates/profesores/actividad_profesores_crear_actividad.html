@@ -8,26 +8,29 @@
 {% block page_title %}Crear Actividad{% endblock %}
 
 {% block mockUp %}
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <div class="content">
-            <div class="actividades-opciones">
-                <button onclick="mostrarCrear()" class="btn-opcion crear active" id="btn-crear">Crear</button>
-                <button onclick="mostrarConsultar()" class="btn-opcion consultar" id="btn-consultar">Consultar</button>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                {{ message }}
             </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-            <div id="crear-section" class="section-content">
+    <div class="content">
+        <div class="actividades-opciones">
+            <button onclick="mostrarCrear()" class="btn-opcion crear active" id="btn-crear">Crear</button>
+            <button onclick="mostrarConsultar()" class="btn-opcion consultar" id="btn-consultar">Consultar</button>
+        </div>
 
-                <form id="actividadForm" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
+        <!-- CREAR -->
+        <div id="crear-section" class="section-content">
+            <form id="actividadForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Primera fila -->
+                <div class="form-row">
                     <div class="form-group">
                         <label for="nombre">Nombre:</label>
                         <input type="text" id="nombre" name="Act_nombre" required>
@@ -37,7 +40,10 @@
                         <label for="fecha">Fecha límite:</label>
                         <input type="date" id="fecha" name="Act_fechaLimite" required>
                     </div>
+                </div>
 
+                <!-- Segunda fila -->
+                <div class="form-row">
                     <div class="form-group">
                         <label for="descripcion">Descripción:</label>
                         <input type="text" id="descripcion" name="Act_descripcion">
@@ -47,67 +53,77 @@
                         <label for="archivo">Archivo:</label>
                         <input type="file" id="archivo" name="Act_Archivo_Profesor">
                     </div>
-
-                    <div class="form-actions">
-                        <a href="{% url 'dashboard_profesores' %}" class="volver-btn">Volver</a>
-                        <button type="submit" class="submit-btn">Subir actividad</button>
-                    </div>
-                </form>
-            </div>
-
-            <div id="consultar-section" class="section-content" style="display: none;">
-                <h2 class="section-title">Actividades creadas:</h2>
-                
-                <div class="actividades-lista">
-                    {% if actividades %}
-                        {% for actividad in actividades %}
-                            <div class="actividad-item">
-                                <div class="actividad-info">
-                                    <h3>{{ actividad.Act_nombre }}</h3>
-                                    <p><strong>Fecha límite:</strong> {{ actividad.Act_fechaLimite|date:"d/m/Y" }}</p>
-                                    <p><strong>Descripción:</strong> {{ actividad.Act_descripcion }}</p>
-                                    {% if actividad.Act_Archivo_Profesor %}
-                                        <p><strong>Archivo:</strong> <a href="{{ actividad.Act_Archivo_Profesor.url }}" target="_blank">Ver archivo</a></p>
-                                    {% endif %}
-                                    <p><strong>Estado:</strong> 
-                                        <span class="estado-badge {{ actividad.Esta_Actividad.Esta_Actividad_Estado|lower }}">
-                                            {{ actividad.Esta_Actividad.Esta_Actividad_Estado }}
-                                        </span>
-                                    </p>
-                                </div>
-                                <div class="actividad-acciones">
-                                    <a href="{% url 'actividad_profesores_editar' actividad.Act_id %}" class="btn-editar">Editar</a>
-                                    <a href="{% url 'actividad_profesores_eliminar' actividad.Act_id %}" class="btn-eliminar" onclick="return confirm('¿Seguro que quieres eliminar esta actividad?');">Eliminar</a>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p class="sin-actividades">No has creado actividades aún.</p>
-                    {% endif %}
                 </div>
 
+                <!-- Botones -->
                 <div class="form-actions">
                     <a href="{% url 'dashboard_profesores' %}" class="volver-btn">Volver</a>
+                    <button type="submit" class="submit-btn">Subir actividad</button>
                 </div>
+            </form>
+        </div> <!-- 🔹 cierro crear-section aquí -->
+
+        <!-- CONSULTAR -->
+        <div id="consultar-section" class="section-content" style="display: none;">
+            <h2 class="section-title">Actividades creadas:</h2>
+            
+            <div class="actividades-lista">
+                {% if actividades %}
+                    {% for actividad in actividades %}
+                        <div class="actividad-item">
+                            <div class="actividad-info">
+                                <h3>{{ actividad.Act_nombre }}</h3>
+                                <p><strong>Fecha límite:</strong> {{ actividad.Act_fechaLimite|date:"d/m/Y" }}</p>
+                                <p><strong>Descripción:</strong> {{ actividad.Act_descripcion }}</p>
+                                {% if actividad.Act_Archivo_Profesor %}
+                                    <p><strong>Archivo:</strong> 
+                                        <a href="{{ actividad.Act_Archivo_Profesor.url }}" target="_blank">Ver archivo</a>
+                                    </p>
+                                {% endif %}
+                                <p><strong>Estado:</strong> 
+                                    <span class="estado-badge {{ actividad.Esta_Actividad.Esta_Actividad_Estado|lower }}">
+                                        {{ actividad.Esta_Actividad.Esta_Actividad_Estado }}
+                                    </span>
+                                </p>
+                            </div>
+
+                            <div class="action-buttons">
+                                <a href="{% url 'actividad_profesores_editar' actividad.Act_id %}" class="icon-btn-pencil">
+                                    <span class="material-icons-outlined">edit</span>
+                                </a>
+                                <a href="{% url 'actividad_profesores_eliminar' actividad.Act_id %}" class="icon-btn">
+                                    <span class="material-icons-outlined">delete</span>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="sin-actividades">No has creado actividades aún.</p>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'dashboard_profesores' %}" class="volver-btn">Volver</a>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <script>
-        function mostrarCrear() {
-            document.getElementById('crear-section').style.display = 'block';
-            document.getElementById('consultar-section').style.display = 'none';
-            
-            document.getElementById('btn-crear').classList.add('active');
-            document.getElementById('btn-consultar').classList.remove('active');
-        }
+<script>
+    function mostrarCrear() {
+        document.getElementById('crear-section').style.display = 'block';
+        document.getElementById('consultar-section').style.display = 'none';
+        
+        document.getElementById('btn-crear').classList.add('active');
+        document.getElementById('btn-consultar').classList.remove('active');
+    }
 
-        function mostrarConsultar() {
-            document.getElementById('crear-section').style.display = 'none';
-            document.getElementById('consultar-section').style.display = 'block';
-            
-            document.getElementById('btn-crear').classList.remove('active');
-            document.getElementById('btn-consultar').classList.add('active');
-        }
-    </script>
+    function mostrarConsultar() {
+        document.getElementById('crear-section').style.display = 'none';
+        document.getElementById('consultar-section').style.display = 'block';
+        
+        document.getElementById('btn-crear').classList.remove('active');
+        document.getElementById('btn-consultar').classList.add('active');
+    }
+</script>
 {% endblock %}
