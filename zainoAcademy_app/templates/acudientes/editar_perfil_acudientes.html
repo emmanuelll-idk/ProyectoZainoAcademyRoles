@@ -49,9 +49,14 @@
             <span class="user-name">{{ usuario.Us_nombre }}</span>
             
             <!-- Avatar / Perfil -->
-            <a href="{% url 'editar_perfil_acudientes' %}">
-                <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
-            </a>
+                <!-- Avatar / Perfil -->
+                    <a href="{% url 'ver_perfil_acudientes' %}">
+                        {% if usuario.foto_perfil_usuario %}
+                            <img src="{{ usuario.foto_perfil_usuario.url }}" class="user-avatar" alt="Perfil">
+                        {% else %}
+                            <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                        {% endif %}
+                    </a>
         </div>
 
         <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -68,74 +73,69 @@
             
     </header>
 
-        <section class="edit-profile">
-            <div class="profile-form">
-                <div class="left-column">
-                {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                        <div class="message {{ message.tags }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
+<section class="edit-profile">
+    <div class="profile-form">
+        <div class="left-column">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
                 </div>
-                {% endif %}
-                <form method="POST">
-                    {% csrf_token %}
-                    <label for="username">Nombre de usuario</label><br><br>
-                    <input type="text" id="username" name="username" value="{{ usuario.Us_nombre }}" required><br><br>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
 
-                    <label for="email">E-mail</label><br><br>
-                    <input type="email" id="email" name="email" value="{{ usuario.correo }}" required><br><br>
+            <label for="username">Nombre de usuario</label><br><br>
+            <input type="text" id="username" name="username" value="{{ usuario.Us_nombre }}" required><br><br>
 
-                    <label for="current_password">Contraseña actual</label><br><br>
-                    <div class="password-wrapper">
-                        <input type="password" id="current_password" name="current_password" required>
-                        <span class="toggle-password" onclick="togglePassword('current_password')">(•)</span>
-                    </div><br><br>
+            <label for="documento">Documento</label><br><br>
+            <input type="text" id="documento" name="documento" value="{{ usuario.documento }}" required><br><br>
 
-                    <label for="new_password">Nueva contraseña (opcional)</label><br><br>
-                    <div class="password-wrapper">
-                        <input type="password" id="new_password" name="new_password">
-                        <span class="toggle-password" onclick="togglePassword('new_password')">(•)</span>
-                    </div><br><br>
 
-                    <button type="submit" class="save-btn">Guardar</button>
-                </form>
+            <label for="current_password">Contraseña actual</label><br><br>
+            <div class="password-wrapper">
+                <input type="password" id="current_password" name="current_password" required>
+                <span class="toggle-password" onclick="togglePassword('current_password')">(•)</span>
+            </div><br><br>
 
-                </div>
+            <label for="new_password">Nueva contraseña (opcional)</label><br><br>
+            <div class="password-wrapper">
+                <input type="password" id="new_password" name="new_password">
+                <span class="toggle-password" onclick="togglePassword('new_password')">(•)</span>
+            </div><br><br>
 
-                <div class="right-column">
-                    <div class="profile-pic">
-                        <img src="{% static 'images/acudientes/perfil.png' %}" alt="Foto de perfil">
-                    </div>
-                    <p class="profile-name">{{ usuario.Us_nombre }}</p>
-                    <p class="profile-role">Acudiente</p>
-                </div>
+            <label for="foto_perfil_usuario">Foto de perfil (opcional)</label><br><br>
+            <input type="file" id="foto_perfil_usuario" name="foto_perfil_usuario" accept="image/*"><br><br><br>
+
+            <div class="info-text">
+            {% if usuario.foto_perfil_usuario %}
+                <label for="eliminar_foto">Eliminar foto actual</label>
+                <input type="checkbox" id="eliminar_foto" name="eliminar_foto" value="true">
+            {% endif %}
             </div>
-        </section>
 
-        <div id="logout-modal" class="modal">
-        <div class="modal-content">
-            <h2>¿Cerrar Sesión?</h2>
-            <div class="modal-actions">
-                <form method="POST" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-confirm">Confirmar</button>
-                </form>
-                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-            </div>
+            <button type="submit" class="save-btn">Guardar</button>
+        </form>
+
+
+        </div>
+
+        <div class="right-column">
+        <div class="profile-pic">
+            {% if usuario.foto_perfil_usuario %}
+                <img src="{{ usuario.foto_perfil_usuario.url }}" alt="Foto de perfil">
+            {% else %}
+                <img src="{% static 'images/acudientes/perfil.png' %}" alt="Foto de perfil">
+            {% endif %}
+        </div>
+            <p class="profile-name">{{ usuario.Us_nombre }}</p>
+            <p class="profile-role">Profesor/a</p>
         </div>
     </div>
-
-    <script>
-        const modal = document.getElementById('logout-modal');
-        function openModal() { modal.style.display = 'flex'; }
-        function closeModal() { modal.style.display = 'none'; }
-        window.onclick = function(event) {
-            if (event.target == modal) { closeModal(); }
-        }
-    </script>
+</section>
 
 <script>
 function togglePassword(id) {
@@ -147,6 +147,7 @@ function togglePassword(id) {
     }
 }
 </script>
+
 
 <script>
     function toggleMenu() {

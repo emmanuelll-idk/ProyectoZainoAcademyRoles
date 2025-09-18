@@ -81,8 +81,12 @@ Fecha de creación: 2025-04-18
                 
                 <!-- Avatar / Perfil -->
                     <a href="{% url 'ver_perfil_directivos' %}">
-                    <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
-                </a>
+                        {% if usuario.foto_perfil_usuario %}
+                            <img src="{{ usuario.foto_perfil_usuario.url }}" class="user-avatar" alt="Perfil">
+                        {% else %}
+                            <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                        {% endif %}
+                    </a>
             </div>
 
             <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -190,8 +194,14 @@ Fecha de creación: 2025-04-18
 
                 <!-- Perfil del Estudiante -->
                 <div class="acudient-profile">
-                    <div class="acudient-avatar">
-                        <img src="{% static 'images/acudientes/perfil.png' %}" alt="Perfil" class="avatar-img">
+                    <div class="student-avatar">
+                            <a href="{% url 'ver_perfil_directivos' %}">
+                        {% if usuario.foto_perfil_usuario %}
+                            <img src="{{ usuario.foto_perfil_usuario.url }}" class="user-avatar" alt="Perfil">
+                        {% else %}
+                            <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                        {% endif %}
+                    </a>
                     </div>
                     <h4 class="acudient-name">{{ usuario.Us_nombre }}</h4>
                     <p class="acudient-role">Directivo</p>

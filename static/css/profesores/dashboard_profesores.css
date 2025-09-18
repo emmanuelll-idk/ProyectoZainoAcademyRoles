@@ -462,21 +462,25 @@ html, body {
 
 
 .student-avatar {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 0.8rem;
+    margin-bottom: 30px;
 }
 
 .student-avatar img {
     width: 80px;
     height: 80px;
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .student-name {

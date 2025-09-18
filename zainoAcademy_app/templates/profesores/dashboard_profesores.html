@@ -84,7 +84,13 @@
                 <!-- Perfil del Profesor -->
                 <div class="student-profile">
                     <div class="student-avatar">
-                        <img src="{% static 'images/profesores/avatarMujer.png' %}" alt="Perfil">
+                        <a href="{% url 'ver_perfil_profesores' %}">
+                        {% if usuario.foto_perfil_usuario %}
+                            <img src="{{ usuario.foto_perfil_usuario.url }}" class="user-avatar" alt="Perfil">
+                        {% else %}
+                            <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                        {% endif %}
+                    </a>
                     </div>
                     <h4 class="student-name">{{ usuario.Us_nombre }}</h4>
                     <p class="student-role">Profesor</p>

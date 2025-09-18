@@ -154,6 +154,18 @@
 }
 
 
+#eliminar_foto{
+    cursor: pointer;
+    accent-color: #4a4063;
+    transition: accent-color 0.2s ease;
+    width: 20%;
+    margin-bottom: 50px;
+    height: 18px;
+}
+
+.info-text {
+    display: flex;
+}
 
 /* ====== RESPONSIVE ====== */
 @media (max-width: 1024px) {
