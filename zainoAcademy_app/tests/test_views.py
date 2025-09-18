@@ -3,9 +3,9 @@
 # Descripción: Este archivo realiza las pruebas unitarias de los modelos de la base de datos
 # Autor: David Santiago Alfonso Guzman
 # Fecha de creación: 2025-09-02 
-# # Última modificación: 2025-09-07
+# # Última modificación: 2025-09-17
 
-# NOTAS: Un solo error en un test de views usando dhasbaord y loggin corregir lo mas pronto
+# NOTAS: Se sigue teniendo el mismo error en en los test de dashoabrd directivos , matrriculas , periodos ademas de que al momento de realizar las vistas que necesitan loghearse no lo hace correctamente
 
 import pytest
 from django.urls import reverse
