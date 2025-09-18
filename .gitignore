@@ -1,7 +1,8 @@
 # Base de datos
 *.sqlite3
 
-# Archivos compilados de Python
+# Archivos compilados de Python}
+venv/
 __pycache__/
 *.pyc
 *.pyo
