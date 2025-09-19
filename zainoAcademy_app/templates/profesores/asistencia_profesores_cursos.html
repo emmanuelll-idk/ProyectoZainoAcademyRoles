@@ -3,6 +3,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/profesores/asistencia_profesores_cursos.css' %}">
+<link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
 {% endblock %}
 
 {% block page_title %}Lista de Cursos{% endblock %}
@@ -19,7 +20,7 @@
             <div class="periodos-container">
                 {% for periodo in periodos %}
                     <div class="periodo-card" onclick="selectPeriodo(this)" data-url="{% url 'asistencia_profesores_cursos_periodo' periodo.Per_id %}">
-                      <h3 class="periodo-name">{{ periodo.Per_nombre }}</h3>
+                        <h3 class="periodo-name">{{ periodo.Per_nombre }}</h3>
                 </div>
             {% endfor %}
         </div>

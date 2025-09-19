@@ -550,6 +550,7 @@ html, body {
     font-weight: 700;
 }
 
+/* ========== MODAL ========== */
 .modal {
     display: none;
     position: fixed;
@@ -587,34 +588,35 @@ html, body {
     gap: 1rem;
 }
 
-.btn-confirm {
-    background-color: #4a4063;
-    color: white;
-    padding: 0.8rem 1.5rem;
+.btn-confirm, .btn-cancel {
+    padding: 0.8rem 2rem;
     border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-confirm:hover {
-    background-color: #352c4d;
-}
-
-.btn-cancel {
-    background-color: transparent;
-    padding: 0.8rem 1.5rem;
-    border-radius: 10px;
+    border-radius: 25px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.btn-confirm {
+    background: #4A4063;
+    color: #fff;
+}
+
+.btn-confirm:hover {
+    background: #4A4063;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    background: #E0E6ED;
+    color: #4A4063;
 }
 
 .btn-cancel:hover {
-    background-color: #f1f1f1;
+    background: #D0D6DD;
+    transform: translateY(-2px);
 }
-
 .activity-name a {
     text-decoration: none;
     color: inherit; 

@@ -3,6 +3,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/profesores/actividades_por_curso_materia.css' %}">
+<link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
 {% endblock %}
 
 {% block page_title %}Añadir Calificación{% endblock %}
@@ -48,9 +49,9 @@
                     <td>{{ actividad.Act_fechaLimite|date:"d/m/Y" }}</td>
                     <td>
                         <input type="number" step="0.1" name="calificacion_{{ entrega.id }}"
-                               value="{{ entrega.Act_calificacion|default:'' }}"
-                               placeholder="Calificación" min="0" max="10"
-                               class="calificacion-input">
+                                value="{{ entrega.Act_calificacion|default:'' }}"
+                                placeholder="Calificación" min="0" max="10"
+                                class="calificacion-input">
                     </td>
                 </tr>
                 {% empty %}
