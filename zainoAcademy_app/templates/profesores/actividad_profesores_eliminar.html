@@ -1,0 +1,19 @@
+{% extends "profesores/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profesores/actividad_profesores_eliminar.css' %}">
+{% endblock %}
+
+{% block mockUp %}
+<div class="confirm-delete-container">
+    <h2>¿Estás seguro de que deseas eliminar la actividad<br>
+        <strong>{{ actividad.Act_nombre }}</strong>?
+    </h2>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">Sí, eliminar</button>
+        <a href="{% url 'actividad_profesores_crear_actividad' actividad.Bol_id %}" class="btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

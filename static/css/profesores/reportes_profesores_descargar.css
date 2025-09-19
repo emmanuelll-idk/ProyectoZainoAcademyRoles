@@ -1,7 +1,10 @@
 /* ===== CONTENT ===== */
 .content {
-    flex: 1;
-    padding: 3rem 2rem;
+  padding: 20px 40px;
+  font-family: "Comfortaa", sans-serif;
+  min-height: calc(50vh - 50px);
+  display: flex;
+  flex-direction: column;
 }
 
 .section-title {

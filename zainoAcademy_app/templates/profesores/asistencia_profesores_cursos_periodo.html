@@ -22,8 +22,15 @@
                 </a>
             </div>
         {% endfor %}
+        
+        <div class="form-actions">
+            <a href="{% url 'asistencia_profesores_cursos' %}" class="volver-btn">Volver</a>
+        </div>
     {% else %}
         <p>No tienes cursos asignados en este periodo.</p>
+        <div class="form-actions">
+            <a href="{% url 'asistencia_profesores_cursos' %}" class="volver-btn">Volver</a>
+        </div>
     {% endif %}
 </div>
 {% endblock %}

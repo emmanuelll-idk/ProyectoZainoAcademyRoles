@@ -77,3 +77,15 @@
     background-color: #ddd;
     color: #000;
 }
+
+.volver-btn {
+    background: #3d2f5b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 500;
+}

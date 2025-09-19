@@ -572,7 +572,7 @@ def dashboard_profesores(request):
 
     actividades_abiertas = (
         Actividad.objects
-        .filter(Bol_Pro=profesor, Act_fechaLimite_gte=hoy) 
+        .filter(Bol__Pro=profesor, Act_fechaLimite__gte=hoy) 
         .annotate(total_entregas=Count('entregas'))
         .order_by('Act_fechaLimite')
     )
@@ -661,13 +661,10 @@ def actividades_por_curso_materia(request, bol_id):
         "periodo_id": boletin.Per_id,
     })
 
-
-
 def guardar_calificaciones(request, bol_id):
     if request.method == "POST":
         bol = get_object_or_404(Boletin, Bol_id=bol_id)
 
-        # obtenemos todas las entregas de ese boletín
         entregas_archivos = Actividad_EntregaArchivo.objects.filter(
             entrega_Act_Bol=bol
         ).select_related("entrega")
@@ -687,12 +684,11 @@ def guardar_calificaciones(request, bol_id):
                 except ValueError:
                     continue  # si no es número, lo ignoramos
 
-        messages.success(request, "✅ Calificaciones guardadas correctamente.")
+        messages.success(request, "Calificaciones guardadas correctamente.")
         return redirect("actividad_profesores_consultar_cursos", periodo_id=bol.Per.Per_id)
 
     messages.error(request, "Método no permitido.")
     return redirect("dashboard_profesores")
-
 
 def actividad_profesores_consultar_cursos(request, periodo_id):
     usuario = get_usuario_from_session(request)
@@ -709,7 +705,6 @@ def actividad_profesores_consultar_cursos(request, periodo_id):
         'periodo_id': periodo_id
     })
 
-
 def actividad_profesores_consultar(request):
     usuario = get_usuario_from_session(request)
     if not usuario:
@@ -721,9 +716,6 @@ def actividad_profesores_consultar(request):
         'usuario': usuario,
         'periodos': periodos
     })
-
-
-from datetime import date
 
 def actividad_profesores_crear_actividad(request, bol_id):
     usuario_id = request.session.get('usuario_id')
@@ -755,7 +747,6 @@ def actividad_profesores_crear_actividad(request, bol_id):
                 Act_nombre=request.POST.get('Act_nombre'),
                 Act_descripcion=request.POST.get('Act_descripcion'),
                 Act_fechaLimite=fecha_limite,
-                Act_comentario=request.POST.get('Act_comentario', ''),
                 Act_Archivo_Profesor=request.FILES.get('Act_Archivo_Profesor'),
                 Bol=boletin,
                 Esta_Actividad=estado
@@ -770,12 +761,11 @@ def actividad_profesores_crear_actividad(request, bol_id):
         'boletin': boletin,
         'actividades': actividades,
         'usuario': usuario_custom,
-        'today': date.today()
+        'today': date.today(),
+        'periodo_id': boletin.Per.Per_id,
     }
     
     return render(request, 'profesores/actividad_profesores_crear_actividad.html', context)
-
-
 
 def actividad_profesores_editar(request, act_id):
     usuario_id = request.session.get('usuario_id')
@@ -812,20 +802,25 @@ def actividad_profesores_eliminar(request, act_id):
     usuario_id = request.session.get('usuario_id')
     if not usuario_id:
         return redirect('login')
-    
+
     try:
         usuario_custom = Usuario.objects.get(pk=usuario_id)
         profesor = Profesores.objects.get(Us_id=usuario_custom.Us_id)
     except (Usuario.DoesNotExist, Profesores.DoesNotExist):
         messages.error(request, "No se encontró información del profesor")
         return redirect('dashboard_profesores')
-    
+
     actividad = get_object_or_404(Actividad, pk=act_id, Bol__Pro_id=profesor.Pro_id)
     bol_id = actividad.Bol.pk
-    actividad.delete()
-    messages.success(request, "Actividad eliminada exitosamente")
-    return redirect('actividad_profesores_crear_actividad', bol_id=bol_id)
 
+    if request.method == "POST":
+        actividad.delete()
+        messages.success(request, "Actividad eliminada exitosamente")
+        return redirect('actividad_profesores_crear_actividad', bol_id=bol_id)
+
+    return render(request, 'profesores/actividad_profesores_eliminar.html', {
+        'actividad': actividad
+    })
 
 def actividad_profesores_lista(request):
     usuario = get_usuario_from_session(request)
@@ -854,28 +849,34 @@ def asistencia_profesores_añadir(request, bol_id):
     estados = Estado_Asistencia.objects.all()
 
     if request.method == 'POST':
-        for ec in estudiantes_curso:
-            estado_nombre = request.POST.get(f'estado_{ec.Est.Est_id}')
-            comentario = request.POST.get(f'comentario_{ec.Est.Est_id}', "")
+        try:
+            for ec in estudiantes_curso:
+                estado_nombre = request.POST.get(f'estado_{ec.Est.Est_id}')
+                comentario = request.POST.get(f'comentario_{ec.Est.Est_id}', "")
 
-            if estado_nombre:
-                estado_obj, _ = Estado_Asistencia.objects.get_or_create(
-                    Esta_Asistencia_Estado=estado_nombre
-                )
+                if estado_nombre:
+                    estado_obj, _ = Estado_Asistencia.objects.get_or_create(
+                        Esta_Asistencia_Estado=estado_nombre
+                    )
 
-                asistencia = Asistencia.objects.create(
-                    Ast_fecha=date.today(),
-                    Est_Cur=ec,
-                    Esta_Asistencia=estado_obj
-                )
+                    asistencia = Asistencia.objects.create(
+                        Ast_fecha=date.today(),
+                        Est_Cur=ec,
+                        Esta_Asistencia=estado_obj
+                    )
 
-                if comentario.strip():
-                    if "comentarios" not in request.session:
-                        request.session["comentarios"] = {}
-                    request.session["comentarios"][str(asistencia.Ast_id)] = comentario
-                    request.session.modified = True
+                    if comentario.strip():
+                        if "comentarios" not in request.session:
+                            request.session["comentarios"] = {}
+                        request.session["comentarios"][str(asistencia.Ast_id)] = comentario
+                        request.session.modified = True
 
-        return redirect('asistencia_profesores_consultar', bol_id=boletin.Bol_id)
+            messages.success(request, "Asistencia guardada exitosamente")
+            return redirect('asistencia_profesores_consultar', bol_id=boletin.Bol_id)
+
+        except Exception as e:
+            messages.error(request, f"Error al guardar la asistencia: {str(e)}")
+            return redirect('asistencia_profesores_consultar', bol_id=boletin.Bol_id)
 
     return render(request, 'profesores/asistencia_profesores_añadir.html', {
         'usuario': usuario,
@@ -915,7 +916,7 @@ def asistencia_profesores_consultar(request, bol_id):
 
     asistencias = Asistencia.objects.filter(
         Est_Cur__in=estudiantes_curso
-    ).select_related("Est_Cur_Est_Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
+    ).select_related("Est_Cur__Est__Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
 
     comentarios_session = request.session.get("comentarios", {})
 
@@ -976,9 +977,9 @@ def asistencia_profesores_consultar(request, bol_id):
         "boletin": boletin,
         "tabla_asistencias": tabla_asistencias,
         "fechas": fechas,
-        "estados": estados
+        "estados": estados,
+        "periodo_id": boletin.Per.Per_id,
     })
-
 
 def lista_actividades_calificar(request, curso_id):
     usuario = get_usuario_from_session(request)
@@ -998,7 +999,6 @@ def lista_actividades_calificar(request, curso_id):
         Bol__Cur=curso
     ).order_by('-Act_fechaLimite')
     
-    # Obtener el periodo_id desde cualquier boletín del profesor y curso
     periodo_id = None
     boletin = Boletin.objects.filter(Pro=profesor, Cur=curso).first()
     if boletin:
@@ -1024,10 +1024,6 @@ def lista_actividades_calificar(request, curso_id):
         'periodo_id': periodo_id,
     }
     return render(request, 'profesores/lista_actividades_calificar.html', context)
-
-
-
-
 
 def asistencia_profesores_cursos(request, periodo_id=None):
     usuario = get_usuario_from_session(request)
@@ -1077,7 +1073,7 @@ def materialApoyo_subir(request, bol_id):
 def materialApoyo_consultar(request, bol_id):
     materiales = MaterialApoyo.objects.filter(Bol_id=bol_id)
     for m in materiales:
-        print(m._dict_)
+        print(m.__dict__)
     boletin = Boletin.objects.get(Bol_id=bol_id)
     periodo_id = boletin.Per_id
 
@@ -1203,7 +1199,7 @@ def generar_reporte_asistencias_pdf(request, periodo_id):
         estudiantes_curso = Estudiante_Curso.objects.filter(Cur=boletin.Cur).select_related("Est__Usuario_us")
         asistencias = Asistencia.objects.filter(
             Est_Cur__in=estudiantes_curso
-        ).select_related("Est_Cur_Est_Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
+        ).select_related("Est_Cur__Est__Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
         
         if asistencias.exists():
             data = [["Estudiante", "Fecha", "Estado"]]
@@ -1260,7 +1256,7 @@ def generar_reporte_rendimiento_pdf(request, periodo_id):
     actividades = Actividad.objects.filter(
         Bol__Pro=profesor,
         Bol__Per=periodo
-    ).select_related('Bol_Per', 'BolCur', 'BolMtr').prefetch_related('entregasEst_Usuario_us')
+    ).select_related('Bol__Per', 'Bol__Cur', 'Bol__Mtr').prefetch_related('entregas__Est__Usuario_us')
 
     # Validación principal: si no hay actividades (y por lo tanto datos) para este periodo
     if not actividades.exists():

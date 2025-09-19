@@ -8,6 +8,14 @@
 {% block page_title %}Añadir Asistencia{% endblock %}
 
 {% block mockUp %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="floating-alert {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <header class="header">
       <h1 class="page-subtitle">{{ boletin.Cur.Cur_nombre }} / {{ boletin.Mtr.Mtr_nombre }}</h1>
     </header>

@@ -171,6 +171,52 @@ body {
   background: #6c757d;
 }
 
+/* Alertas flotantes */
+.floating-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    z-index: 9999;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    animation: fadeInOut 4s ease forwards;
+}
+
+/* Éxito */
+.floating-alert.success,
+.floating-alert.alert-success {
+    background-color: #2196F3; /* Verde */
+}
+
+/* Error */
+.floating-alert.error,
+.floating-alert.alert-error {
+    background-color: #F44336; /* Rojo */
+}
+
+/* Advertencia */
+.floating-alert.warning,
+.floating-alert.alert-warning {
+    background-color: #FF9800; /* Naranja */
+}
+
+/* Información */
+.floating-alert.info,
+.floating-alert.alert-info {
+    background-color: #2196F3; /* Azul */
+}
+
+@keyframes fadeInOut {
+    0%   { opacity: 0; transform: translateY(-20px); }
+    10%  { opacity: 1; transform: translateY(0); }
+    90%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
+}
+
 /* Botones */
 .acciones {
   margin-top: 25px;

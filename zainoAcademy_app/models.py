@@ -268,7 +268,7 @@ class Actividad(models.Model):
     class Meta:
         db_table = 'actividad'
 
-    def _str_(self):
+    def __str__(self):
         return self.Act_nombre
 
 class Actividad_Entrega(models.Model):
@@ -282,7 +282,7 @@ class Actividad_Entrega(models.Model):
         db_table = 'actividad_entrega'
         unique_together = ('Act', 'Est')
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.Act} - {self.Est}"
 
 

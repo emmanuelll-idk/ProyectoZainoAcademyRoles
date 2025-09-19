@@ -1,5 +1,6 @@
 .content {
     padding: 20px;
+    margin-left: 35px;
 }
 
 .section-title {
@@ -68,16 +69,19 @@
     font-weight: bold;
     border: none;
     cursor: pointer;
+    font-family: Comfortaa, sans-serif;
 }
 
 .btn-volver {
-    background-color: #fff;
-    border: 2px solid #5e4b8b;
-    color: #5e4b8b;
-}
-
-.btn-volver:hover {
-    background-color: #f4f2f8;
+    background: #3d2f5b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 500;
 }
 
 .btn-guardar {
