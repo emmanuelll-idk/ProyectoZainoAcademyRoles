@@ -16,26 +16,34 @@
 </head>
 <body>
     <header>
-    <nav class="barra-navegacion">
-        <div class="logo">
-            <a href="{% url 'home' %}"><img src="{% static 'images/registration/LogoNormal-removebg-preview.png' %}" alt="LogoZaino"></a>
-        </div>
+        <nav class="barra-navegacion">
+            <div class="logo">
+                <a href="{% url 'home' %}"><img src="{% static 'images/registration/LogoNormal-removebg-preview.png' %}" alt="LogoZaino"></a>
+            </div>
 
-        <nav class="nav">
-            <ul>
-                <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
-                <li><a href="{% url 'contacto' %}">Contacto</a></li>
-                <li><a href="{% url 'precios' %}">Precios</a></li>
-            </ul>
+            <!-- Menú hamburguesa para móvil -->
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+
+            <nav class="nav" id="nav-menu">
+                <ul>
+                    <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+                    <li><a href="{% url 'contacto' %}">Contacto</a></li>
+                    <li><a href="{% url 'precios' %}">Precios</a></li>
+                </ul>
+            </nav>
+
+            <div class="butons">
+                <a class="botonIngresar" href="{% url 'login' %}">
+                    <img src="{% static 'images/staticPage/boton.png' %}" alt="boton">
+                </a>
+            </div>
         </nav>
-
-        <div class="butons">
-            <a class="botonIngresar" href="{% url 'login' %}">
-                <img src="{% static 'images/staticPage/boton.png' %}" alt="boton">
-            </a>
-        </div>
-    </nav>
-</header>
+    </header>
+    
     <section class="HOMEPAGE_1">
         <div class="container-home">
             <div class="flex_A">
@@ -44,7 +52,7 @@
                     <img src="{% static 'images/staticPage/der.png' %}" class="der">
                     <div class="home-title">
                         <h2>La Mejor<br>
-                        <samp>Plataforma</samp> De<br>
+                        <span>Plataforma</span> De<br>
                         Gestión<br>
                         Educativa</h2>
                     </div>
@@ -173,7 +181,15 @@
         </div>
     </footer>
 
+    <script>
+        // JavaScript para el menú hamburguesa
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
 
-    
+        mobileMenu.addEventListener('click', function() {
+            mobileMenu.classList.toggle('is-active');
+            navMenu.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
