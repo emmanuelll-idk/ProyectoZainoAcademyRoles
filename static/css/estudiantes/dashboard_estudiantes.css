@@ -1,3 +1,10 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Comfortaa", sans-serif;
+}
+
 /* Dashboard Acudiente Styles */
 
 * {
@@ -91,20 +98,21 @@ html, body {
 }
 
 .logout-btn {
-    background-color: #4a4063;;
+    background-color: #4a4063;
     color: #fff;
     border: none;
     padding: 1rem;
     border-radius: 12px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
     width: 100%;
     font-family: "Comfortaa", sans-serif;
 }
 
 .logout-btn:hover {
     background-color: #6A5B8C;
+    transform: scale(1.05);
 }
 
 /* ========== MAIN CONTENT ========== */
@@ -184,7 +192,7 @@ html, body {
 .greeting-card {
     background-color: #1e91d6;
     border-radius: 20px;
-    padding: 1.5rem;
+    padding: 2.5rem;
     color: white;
     display: flex;
     align-items: center;
@@ -195,16 +203,16 @@ html, body {
 }
 
 .greeting-text h2 {
-    font-size: 1.6rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 0.4rem;
+    margin-bottom: 1.3rem;
 }
 
 .greeting-text p {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     opacity: 0.9;
     line-height: 1.4;
-    margin-bottom: 0.8rem;
+    margin-bottom: 1.3rem;
     max-width: 400px;
 }
 
@@ -227,8 +235,8 @@ html, body {
 }
 
 .greeting-illustration {
-    width: 80px;
-    height: 80px;
+    width: auto;
+    height: 250px;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
@@ -679,12 +687,17 @@ html, body {
         flex-direction: column;
         text-align: center;
         gap: 1rem;
+        padding: 1rem;
     }
     
     .greeting-text h2 {
         font-size: 1.5rem;
     }
     
+    .greeting-text p {
+        font-size: 0.8rem;
+    }
+
     .right-column {
         flex-direction: column;
         position: static;
@@ -706,6 +719,32 @@ html, body {
         padding: 1rem;
         margin-bottom: 0.5rem;
     }
+
+    .greeting-illustration {
+    width: auto;
+    height: 150px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    }
+
+    .page-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: #000;
+    margin-right: auto; /* fuerza que quede a la izquierda y se separe de los íconos */
+    }
+
+    .user-name {
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: #4a4063;
+    }
+
 }
 
 
@@ -726,7 +765,7 @@ html, body {
     position: absolute;
     top: 70px; /* debajo del header */
     right: 0.5rem;
-    width: 350px; /* casi todo el ancho en móviles */
+    width: 280px; /* casi todo el ancho en móviles */
     background: rgba(255, 255, 255, 0.95); /* ligeramente transparente */
     backdrop-filter: blur(10px); /* efecto glass */
     border-radius: 12px;

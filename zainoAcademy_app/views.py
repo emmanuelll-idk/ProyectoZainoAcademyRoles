@@ -334,7 +334,10 @@ def actividades_estudiantes(request, Per_id, Mtr_id):
     estudiante = get_object_or_404(Estudiantes, Usuario_us=usuario)
     fecha_hoy = timezone.now().date()
 
-    actividades_con_calificacion = []
+    pendientes = []
+    entregadas = []
+    finalizadas = []
+
     for actividad in actividades_qs:
         entrega = Actividad_Entrega.objects.filter(Act=actividad, Est=estudiante).first()
         fecha_vencida = actividad.Act_fechaLimite < fecha_hoy
@@ -342,37 +345,40 @@ def actividades_estudiantes(request, Per_id, Mtr_id):
         if not entrega or not entrega.archivos.exists():
             if fecha_vencida:
                 estado = "Retrasado"
+                categoria = "finalizadas"
             else:
                 estado = "Sin entregar"
+                categoria = "pendientes"
         elif entrega.archivos.exists() and entrega.Act_calificacion is None:
             estado = "Entregado"
+            categoria = "entregadas"
         elif entrega.Act_calificacion is not None:
             estado = "Calificado"
+            categoria = "finalizadas"
 
-        actividades_con_calificacion.append({
+        actividad_data = {
             "actividad": actividad,
             "calificacion": entrega.Act_calificacion if entrega else None,
             "entrega": entrega,
             "estado": estado,
             "fecha_vencida": fecha_vencida
-        })
+        }
 
-    def ordenar(a):
-        if a["estado"] == "Sin entregar" and not a["fecha_vencida"]:
-            return 0
-        elif a["estado"] == "Entregado" and not a["fecha_vencida"]:
-            return 1
-        elif a["estado"] == "Calificado":
-            return 2
-        elif a["estado"] == "Retrasado":
-            return 3
+        if categoria == "pendientes":
+            pendientes.append(actividad_data)
+        elif categoria == "entregadas":
+            entregadas.append(actividad_data)
         else:
-            return 4
+            finalizadas.append(actividad_data)
 
-    actividades_con_calificacion.sort(key=ordenar)
+    pendientes.sort(key=lambda x: x["actividad"].Act_fechaLimite)
+    entregadas.sort(key=lambda x: x["actividad"].Act_fechaLimite)
+    finalizadas.sort(key=lambda x: x["actividad"].Act_fechaLimite)
 
     return render(request, 'estudiantes/actividad_estudiantes_consultar.html', {
-        "actividades": actividades_con_calificacion,
+        "pendientes": pendientes,
+        "entregadas": entregadas,
+        "finalizadas": finalizadas,
         "materia": materia,
         "periodo": periodo
     })
