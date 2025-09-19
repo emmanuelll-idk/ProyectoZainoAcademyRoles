@@ -542,51 +542,49 @@ html, body {
     text-align: center;
     max-width: 400px;
     width: 100%;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
-.modal h2 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
+.modal-content h2 {
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    color: #4a4063;
 }
 
-.modal p {
-    margin-bottom: 1.5rem;
-    font-size: 1rem;
-    color: #666;
-}
-
-.modal-buttons {
+.modal-actions {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     gap: 1rem;
+}
+.btn-confirm, .btn-cancel {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.btn-confirm {
+    background: #4A4063;
+    color: #fff;
+}
+
+.btn-confirm:hover {
+    background: #4A4063;
+    transform: translateY(-2px);
 }
 
 .btn-cancel {
-    background-color: #ccc;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.3s;
+    background: #E0E6ED;
+    color: #4A4063;
 }
 
-.btn-cancel:hover { background-color: #bbb; }
-
-.btn-confirm {
-    background-color: #1e91d6;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.3s;
+.btn-cancel:hover {
+    background: #D0D6DD;
+    transform: translateY(-2px);
 }
-
-.btn-confirm:hover { background-color: #1976bb; }
 
 /* ========== HAMBURGER & DROPDOWN ========== */
 .hamburger {
