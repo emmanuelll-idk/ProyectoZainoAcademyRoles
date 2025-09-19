@@ -5,86 +5,198 @@
 <link rel="stylesheet" href="{% static 'css/estudiantes/actividad_estudiantes_consultar.css' %}">
 {% endblock %}
 
-{% block page_title %}Actividades:{% endblock %}
+{% block page_title %}Actividades: {{ materia.Mtr_nombre }} - {{ periodo.Per_nombre }}{% endblock %}
 
 {% block mockUp %}
-<hr class="linea">
-<table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Estado</th>
-            <th>Fecha límite</th>
-            <th>Nota</th>
-            <th>Archivo profesor</th>
-            <th>Subir</th>
-        </tr>
-    </thead>
-<tbody>
-    {% for a in actividades %}
-<tr class="
-    {% if a.estado == 'Sin entregar' %}
-        sin-entregar
-    {% elif a.estado == 'Entregado' %}
-        entregado
-    {% elif a.estado == 'Calificado' %}
-        calificado
-    {% elif a.estado == 'Retrasado' %}
-        retrasado
-    {% endif %}
-">
-    <td data-label="Nombre">{{ a.actividad.Act_nombre }}</td>
-    <td data-label="Descripción">{{ a.actividad.Act_descripcion }}</td>
-    <td data-label="Estado" class="
-        {% if a.estado == 'Sin entregar' %}
-            estado-sin-entregar
-        {% elif a.estado == 'Entregado' %}
-            estado-entregado
-        {% elif a.estado == 'Calificado' %}
-            estado-calificado
-        {% elif a.estado == 'Retrasado' %}
-            estado-retrasado
-        {% endif %}
-    ">
-        {% if a.estado == 'Calificado' %}
-            Calificado <span class="chulito-verde">✔</span>
-        {% elif a.estado == 'Entregado' %}
-            Entregado
-        {% elif a.estado == 'Retrasado' %}
-            Retrasado
+<div class="actividades-container">
+    
+    <!-- Sección 1: Actividades Pendientes -->
+    <div class="seccion-actividades">
+        <div class="seccion-header pendientes-header">
+            <h3><i class="icon-clock"></i> Pendientes por Entregar</h3>
+            <span class="contador">{{ pendientes|length }}</span>
+        </div>
+        
+        {% if pendientes %}
+            <div class="actividades-grid">
+                {% for a in pendientes %}
+                    <div class="actividad-card sin-entregar">
+                        <div class="card-header">
+                            <h4 class="actividad-nombre">{{ a.actividad.Act_nombre }}</h4>
+                            <span class="estado-badge estado-sin-entregar">{{ a.estado }}</span>
+                        </div>
+                        
+                        <div class="card-body">
+                            <p class="actividad-descripcion">{{ a.actividad.Act_descripcion }}</p>
+                            
+                            <div class="actividad-info">
+                                <div class="info-item">
+                                    <strong>Fecha límite:</strong>
+                                    <span class="fecha-limite">{{ a.actividad.Act_fechaLimite }}</span>
+                                </div>
+                                
+                                {% if a.actividad.Act_Archivo_Profesor %}
+                                <div class="info-item">
+                                    <strong>Material del profesor:</strong>
+                                    <a href="{{ a.actividad.Act_Archivo_Profesor.url }}" target="_blank" class="link-archivo">
+                                        <i class="icon-download"></i> Ver archivo
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <a href="{% url 'subir_actividad_estudiante' periodo.Per_id materia.Mtr_id a.actividad.Act_id %}" 
+                               class="btn btn-primary">
+                                <i class="icon-upload"></i> Entregar Actividad
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
-            Sin entregar
+            <div class="empty-section">
+                <p><i class="icon-check"></i> ¡Genial! No tienes actividades pendientes por entregar.</p>
+            </div>
         {% endif %}
-    </td>
-    <td data-label="Fecha límite">{{ a.actividad.Act_fechaLimite }}</td>
-    <td data-label="Nota">
-        {% if a.calificacion %}
-            {{ a.calificacion }}
+    </div>
+
+    <!-- Sección 2: Actividades Entregadas -->
+    <div class="seccion-actividades">
+        <div class="seccion-header entregadas-header">
+            <h3><i class="icon-upload"></i> Entregadas - Pendientes de Calificación</h3>
+            <span class="contador">{{ entregadas|length }}</span>
+        </div>
+        
+        {% if entregadas %}
+            <div class="actividades-grid">
+                {% for a in entregadas %}
+                    <div class="actividad-card entregado">
+                        <div class="card-header">
+                            <h4 class="actividad-nombre">{{ a.actividad.Act_nombre }}</h4>
+                            <span class="estado-badge estado-entregado">{{ a.estado }}</span>
+                        </div>
+                        
+                        <div class="card-body">
+                            <p class="actividad-descripcion">{{ a.actividad.Act_descripcion }}</p>
+                            
+                            <div class="actividad-info">
+                                <div class="info-item">
+                                    <strong>Fecha límite:</strong>
+                                    <span class="fecha-limite">{{ a.actividad.Act_fechaLimite }}</span>
+                                </div>
+                                
+                                {% if a.entrega %}
+                                <div class="info-item">
+                                    <strong>Fecha de entrega:</strong>
+                                    <span class="fecha-entrega">{{ a.entrega.Act_fecha_entrega }}</span>
+                                </div>
+                                {% endif %}
+                                
+                                {% if a.actividad.Act_Archivo_Profesor %}
+                                <div class="info-item">
+                                    <strong>Material del profesor:</strong>
+                                    <a href="{{ a.actividad.Act_Archivo_Profesor.url }}" target="_blank" class="link-archivo">
+                                        <i class="icon-download"></i> Ver archivo
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <a href="{% url 'subir_actividad_estudiante' periodo.Per_id materia.Mtr_id a.actividad.Act_id %}" 
+                               class="btn btn-secondary">
+                                <i class="icon-eye"></i> Ver Entrega
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
-            N/E
+            <div class="empty-section">
+                <p><i class="icon-info"></i> No tienes actividades entregadas esperando calificación.</p>
+            </div>
         {% endif %}
-    </td>
-    <td data-label="Archivo profesor">
-        {% if a.actividad.Act_Archivo_Profesor %}
-            <a href="{{ a.actividad.Act_Archivo_Profesor.url }}" target="_blank">Ver archivo</a>
+    </div>
+
+    <!-- Sección 3: Actividades Finalizadas -->
+    <div class="seccion-actividades">
+        <div class="seccion-header finalizadas-header">
+            <h3><i class="icon-check-circle"></i> Calificadas y Retrasadas</h3>
+            <span class="contador">{{ finalizadas|length }}</span>
+        </div>
+        
+        {% if finalizadas %}
+            <div class="actividades-grid">
+                {% for a in finalizadas %}
+                    <div class="actividad-card {% if a.estado == 'Calificado' %}calificado{% else %}retrasado{% endif %}">
+                        <div class="card-header">
+                            <h4 class="actividad-nombre">{{ a.actividad.Act_nombre }}</h4>
+                            <span class="estado-badge 
+                                {% if a.estado == 'Calificado' %}
+                                    estado-calificado
+                                {% else %}
+                                    estado-retrasado
+                                {% endif %}
+                            ">
+                                {% if a.estado == 'Calificado' %}
+                                    Calificado <span class="chulito-verde">✔</span>
+                                {% else %}
+                                    {{ a.estado }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="card-body">
+                            <p class="actividad-descripcion">{{ a.actividad.Act_descripcion }}</p>
+                            
+                            <div class="actividad-info">
+                                <div class="info-item">
+                                    <strong>Fecha límite:</strong>
+                                    <span class="fecha-limite">{{ a.actividad.Act_fechaLimite }}</span>
+                                </div>
+                                
+                                {% if a.calificacion %}
+                                <div class="info-item nota-destacada">
+                                    <strong>Nota:</strong>
+                                    <span class="nota-valor">{{ a.calificacion }}</span>
+                                </div>
+                                {% endif %}
+                                
+                                {% if a.entrega %}
+                                <div class="info-item">
+                                    <strong>Fecha de entrega:</strong>
+                                    <span class="fecha-entrega">{{ a.entrega.Act_fecha_entrega }}</span>
+                                </div>
+                                {% endif %}
+                                
+                                {% if a.actividad.Act_Archivo_Profesor %}
+                                <div class="info-item">
+                                    <strong>Material del profesor:</strong>
+                                    <a href="{{ a.actividad.Act_Archivo_Profesor.url }}" target="_blank" class="link-archivo">
+                                        <i class="icon-download"></i> Ver archivo
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <a href="{% url 'subir_actividad_estudiante' periodo.Per_id materia.Mtr_id a.actividad.Act_id %}" 
+                               class="btn btn-outline">
+                                <i class="icon-eye"></i> Ver Detalles
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
-            No hay archivo.
+            <div class="empty-section">
+                <p><i class="icon-info"></i> No tienes actividades calificadas o retrasadas aún.</p>
+            </div>
         {% endif %}
-    </td> 
-    <td data-label="Subir">
-        <a href="{% url 'subir_actividad_estudiante' periodo.Per_id materia.Mtr_id a.actividad.Act_id %}">
-            Consultar
-        </a>
-    </td>
-</tr>
-    {% endfor %}
-</tbody>
-
-
-</table>
-
-
-
-
+    </div>
+</div>
 {% endblock %}

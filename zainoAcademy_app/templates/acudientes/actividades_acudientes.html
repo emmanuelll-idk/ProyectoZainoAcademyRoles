@@ -49,9 +49,13 @@
                 <span class="user-name">{{ usuario.Us_nombre }}</span>
                 
                 <!-- Avatar / Perfil -->
-                <a href="{% url 'editar_perfil_acudientes' %}">
-                    <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
-                </a>
+                    <a href="{% url 'ver_perfil_acudientes' %}">
+                        {% if usuario.foto_perfil_usuario %}
+                            <img src="{{ usuario.foto_perfil_usuario.url }}" class="user-avatar" alt="Perfil">
+                        {% else %}
+                            <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
+                        {% endif %}
+                    </a>
             </div>
 
         <button class="hamburger" onclick="toggleMenu()">☰</button>

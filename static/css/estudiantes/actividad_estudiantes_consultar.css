@@ -1,188 +1,463 @@
-/* ====== CONTENEDOR DE LA TABLA ====== */
-.table-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    overflow-x: auto; /* scroll horizontal */
-    overflow-y: auto; /* scroll vertical */
-    max-height: 80vh;  /* limita altura al 80% de la pantalla */
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    padding: 1rem;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Comfortaa", sans-serif;
 }
 
-
-/* ====== TABLA ====== */
-table {
-    width: 94%;
+/* Contenedor principal */
+.actividades-container {
+    max-width: 96%;
     margin: 0 auto;
-    border-collapse: collapse;
-    font-family: 'Comfortaa', sans-serif;
-    border: 1px solid #4A3F61; /* Morado oscuro */
-    color: #000; /* Texto negro */
+    padding: 20px;
 }
 
-/* ====== ENCABEZADOS ====== */
-th {
-    padding: 1.3rem 1rem;
-    background-color: #4A3F61; /* Morado oscuro */
-    color: #fff; /* Texto blanco */
-    font-weight: 700;
-    font-size: 1.1rem;
-    text-align: center;
-    border: 1px solid #4A3F61;
+/* Estilos para cada sección */
+.seccion-actividades {
+    margin-bottom: 40px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* ====== CELDAS ====== */
-td {
-    padding: 1.6rem;
-    border: 1px solid #4A3F61;
-    text-align: center;
-    color: #000; /* Texto negro */
-    vertical-align: middle;
-}
-
-/* ====== FILAS ====== */
-
-tr:hover {
-    background-color: #E0E0E0; /* Gris más oscuro al pasar el mouse */
-    transition: background-color 0.3s ease;
-}
-
-/* ====== CELDA DE ACCIONES (SUBIR / CONSULTAR) ====== */
-.actions-cell {
+/* Headers de las secciones */
+.seccion-header {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid;
 }
 
-/* BOTONES / LINKS DENTRO DE LA TABLA */
-td a {
-    background-color: #37A8E0;  /* Azul botones */
+.seccion-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contador {
+    background: #6c757d;
     color: white;
-    padding: 6px 12px;
-    border-radius: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
+}
+
+/* Colores específicos para cada sección */
+.pendientes-header {
+    border-bottom-color: #1e91d6;
+    color: #4a4063;
+}
+
+.pendientes-header .contador {
+    background: #1e91d6;
+    color: white;
+}
+
+.entregadas-header {
+    border-bottom-color: #a9ddd6;
+    color: #4a4063;
+}
+
+.entregadas-header .contador {
+    background: #a9ddd6;
+    color: #4a4063;
+}
+
+.finalizadas-header {
+    border-bottom-color: #4a4063;
+    color: #4a4063;
+}
+
+.finalizadas-header .contador {
+    background: #4a4063;
+    color: white;
+}
+
+/* Grid de actividades */
+.actividades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+/* Tarjetas de actividades */
+.actividad-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border-left: 5px solid;
+}
+
+.actividad-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Colores de borde para cada estado */
+.sin-entregar {
+    border-left-color: #1e91d6;
+}
+
+.entregado {
+    border-left-color: #a9ddd6;
+}
+
+.calificado {
+    border-left-color: #155724;
+}
+
+.retrasado {
+    border-left-color: #4a4063;
+}
+
+/* Header de cada tarjeta */
+.card-header {
+    padding: 20px 20px 15px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.actividad-nombre {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    line-height: 1.3;
+    flex: 1;
+}
+
+/* Badges de estado */
+.estado-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.estado-sin-entregar {
+    background: rgba(30, 145, 214, 0.15);
+    color: #1e91d6;
+    border: 1px solid #1e91d6;
+}
+
+.estado-entregado {
+    background: rgba(169, 221, 214, 0.3);
+    color: #4a4063;
+    border: 1px solid #a9ddd6;
+}
+
+.estado-calificado {
+    background: #c3e6cb;
+    color: #155724;
+    border: 1px solid #155724;
+}
+
+.estado-retrasado {
+    background: rgba(74, 64, 99, 0.15);
+    color: #4a4063;
+    border: 1px solid #4a4063;
+}
+
+.chulito-verde {
+    color: #155724;
+    font-weight: bold;
+}
+
+/* Body de cada tarjeta */
+.card-body {
+    padding: 20px;
+}
+
+.actividad-descripcion {
+    color: #6c757d;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.actividad-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.info-item strong {
+    color: #495057;
+    min-width: 120px;
+}
+
+.fecha-limite {
+    color: #4a4063;
+    font-weight: 600;
+}
+
+.fecha-entrega {
+    color: #1e91d6;
+    font-weight: 600;
+}
+
+.nota-destacada {
+    background: #c3e6cb;
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #155724;
+}
+
+.nota-valor {
+    color: #155724;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.link-archivo {
+    color: #1e91d6;
     text-decoration: none;
-    transition: 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s ease;
 }
 
-td a:hover {
-    background-color: #2d91c2;
-    transform: scale(1.05);
+.link-archivo:hover {
+    color: #4a4063;
+    text-decoration: underline;
 }
 
-/* TEXTO DE NO HAY ACTIVIDADES */
-.no-activities {
+/* Footer de cada tarjeta */
+.card-footer {
+    padding: 15px 20px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Botones */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: 2px solid;
+    cursor: pointer;
     text-align: center;
-    padding: 2rem;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: #1e91d6;
+    color: white;
+    border-color: #1e91d6;
+}
+
+.btn-primary:hover {
+    background: #4a4063;
+    border-color: #4a4063;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #a9ddd6;
+    color: #4a4063;
+    border-color: #a9ddd6;
+}
+
+.btn-secondary:hover {
+    background: #4a4063;
+    color: white;
+    border-color: #4a4063;
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background: transparent;
+    color: #4a4063;
+    border-color: #4a4063;
+}
+
+.btn-outline:hover {
+    background: #4a4063;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Secciones vacías */
+.empty-section {
+    text-align: center;
+    padding: 40px 20px;
     color: #6c757d;
     font-style: italic;
 }
 
+.empty-section p {
+    margin: 0;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
 
+/* Estilos adicionales para información de archivo del profesor */
+.archivo-profesor {
+    background: rgba(30, 145, 214, 0.08);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(30, 145, 214, 0.2);
+    margin: 10px 0;
+}
 
+.archivo-profesor-label {
+    font-size: 0.85rem;
+    color: #4a4063;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
 
-tr.sin-entregar:first-child {
-    border-top: 8px solid #4A3F61;
+.archivo-profesor .link-archivo {
+    background: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #1e91d6;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.archivo-profesor .link-archivo:hover {
+    background: #1e91d6;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Mejorar el contador de archivos si hay múltiples */
+.contador {
+    background: #4a4063;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    min-width: 24px;
+    text-align: center;
 }
 
 
-tr.sin-entregar:hover,
-tr.entregado:hover,
-tr.calificado:hover {
-    background-color: #CDE5F5; 
-    transition: background-color 0.3s ease;
-}
 
-
-td.estado-sin-entregar {
-    color: #E74C3C;          /* rojo intenso */
-    font-weight: 900;         /* muy gruesa */
-    font-size: 1.05rem;       /* un poco más grande que el texto normal */
-    background-color: #FDECEA; /* fondo rosado suave para destacar */
-    border-radius: 4px;       /* esquinas redondeadas */
-    padding: 0.5rem 0.8rem;   /* algo de espacio interno */
-    box-shadow: inset 0 0 3px rgba(231, 76, 60, 0.4); 
-}
-
-.chulito-verde {
-    color: #27AE60; 
-    font-weight: bold;
-}
-
-.linea {
-  border: 1.5px solid #4a4063;
-  margin: 15px 0 30px 0;
-  width: 94%;
-  margin-left: 3%;
-}
-
-
-
-.estado-retrasado {
-    color: #d9534f; /* rojo fuerte */
-    font-weight: bold;
-}
-
-
-
-
-
-/* ====== RESPONSIVE ====== */
+/* Responsive */
 @media (max-width: 768px) {
-    table {
-        width: 100%;
+    .actividades-container {
+        padding: 15px;
     }
-
-    thead {
-        display: none; /* Oculta encabezados */
+    
+    .seccion-actividades {
+        padding: 20px 15px;
+        margin-bottom: 30px;
     }
-
-    tr {
-        display: block;
-        margin-bottom: 1.5rem;
-        border: 1px solid #4A3F61;
-        border-radius: 8px;
-        padding: 1rem;
+    
+    .actividades-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
-
-    td {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.5rem 1rem;
-        border: none;
-        text-align: left;
-        width: 100%;
+    
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
     }
-
-    td[data-label="Descripción"] {
-        text-align: right;      /* Alinea el texto a la izquierda */
-        padding-left: 1rem;    /* Espacio desde el borde */
+    
+    .seccion-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
     }
-
-    td[data-label="Estado"] {
-        text-align: right;      /* Alinea el texto a la izquierda */
-        padding-left: 1rem;    /* Espacio desde el borde */
+    
+    .seccion-header h3 {
+        font-size: 1.3rem;
     }
-
-
-@media (max-width: 768px) {
-    td::before {
-        content: attr(data-label);
-        font-weight: 1000;   
-        color: #4A3F61;     
-        font-size: 1rem;        
-        margin-right: 0.5rem;
-        flex-shrink: 0;
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .info-item strong {
+        min-width: auto;
     }
 }
 
-    td a {
-        width: auto;
-        display: inline-block;
-        margin-top: 0.3rem;
+@media (max-width: 480px) {
+    .actividades-container {
+        padding: 10px;
     }
+    
+    .seccion-actividades {
+        padding: 15px 10px;
+    }
+    
+    .card-header, .card-body, .card-footer {
+        padding: 15px;
+    }
+    
+    .seccion-header h3 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Animaciones adicionales */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.actividad-card {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.actividad-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.actividad-card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.actividad-card:nth-child(4) {
+    animation-delay: 0.3s;
 }

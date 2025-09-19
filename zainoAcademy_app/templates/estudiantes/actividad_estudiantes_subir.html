@@ -46,6 +46,27 @@
             </p>
         </div>
 
+
+        <!-- Nueva sección para comentario del profesor -->
+        {% if entrega and entrega.Act_comentario %}
+        <div class="seccion seccion-comentario">
+            <p class="subtitulo">Comentario del Profesor</p>
+            <p class="texto comentario-profesor">{{ entrega.Act_comentario }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Sección para archivo del profesor si existe -->
+        {% if actividad.Act_Archivo_Profesor %}
+        <div class="seccion seccion-archivo-profesor">
+            <p class="subtitulo">Material del Profesor</p>
+            <div class="archivo-profesor-container">
+                <a href="{{ actividad.Act_Archivo_Profesor.url }}" target="_blank" class="link-archivo-profesor">
+                    Ver archivo profesor
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="seccion">
             <p class="subtitulo">Descripción</p>
             <p class="texto">{{ actividad.Act_descripcion }}</p>
@@ -96,8 +117,6 @@
                 <p style="color:red; margin-top:5px;">La fecha límite ya pasó, no se pueden subir más archivos.</p>
             {% endif %}
         </form>
-
-
     </div>
 </div>
 

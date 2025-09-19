@@ -240,35 +240,35 @@ def dashboard_directivos_calendar(request):
 
 def editar_perfil_directivos(request):
     usuario = get_usuario_from_session(request)
-
-    try:
-        # Buscar el directivo asociado al usuario logueado
-        directivo = Directivos.objects.get(Us=usuario)
-    except Directivos.DoesNotExist:
-        messages.error(request, "No se encontró el perfil de directivo asociado a este usuario.")
-        return redirect("home")  # Ajusta la redirección a donde quieras enviar en caso de error
-
+    directivo = Directivos.objects.get(Us=usuario)
+    
     if request.method == "POST":
         current_password = request.POST.get("current_password")
         
-        # Validar contraseña actual
         if current_password != usuario.Us_contraseña:  
-            messages.error(request, "Contraseña actual incorrecta.")
+            messages.error(request, "Contraseña actual incorrecta o no ingresada.")
             return redirect("editar_perfil_directivos")
         
-        # Actualizar datos básicos
         usuario.Us_nombre = request.POST.get("username")
-        usuario.correo = request.POST.get("email")
-
-        # Actualizar contraseña si se proporciona una nueva
+        usuario.documento = request.POST.get("documento")
+        usuario.correo = request.POST.get("correo")
+        
+        
+        if "foto_perfil_usuario" in request.FILES:
+            usuario.foto_perfil_usuario = request.FILES["foto_perfil_usuario"]
+        elif request.POST.get("eliminar_foto") == "true":
+            usuario.foto_perfil_usuario.delete(save=False)  
+            usuario.foto_perfil_usuario = None  
+            
         new_password = request.POST.get("new_password")
         if new_password:
             usuario.Us_contraseña = new_password
-
+            
         usuario.save()
+        directivo.save()
         messages.success(request, "Perfil actualizado correctamente!")
         return redirect("editar_perfil_directivos")
-
+        
     return render(request, 'directivos/editar_perfil_directivos.html', {
         'usuario': usuario,
         'directivo': directivo
@@ -276,7 +276,12 @@ def editar_perfil_directivos(request):
 
 def ver_perfil_directivos(request):
     usuario = get_usuario_from_session(request)
-    return render(request, 'directivos/ver_perfil_directivos.html', {'usuario': usuario})
+    directivo = Directivos.objects.get(Us=usuario)
+    
+    return render(request, 'directivos/ver_perfil_directivos.html', {
+        'usuario': usuario,
+        'directivo': directivo
+    })
 
 def dashboard_acudientes(request):
     usuario = get_usuario_from_session(request)
@@ -329,7 +334,10 @@ def actividades_estudiantes(request, Per_id, Mtr_id):
     estudiante = get_object_or_404(Estudiantes, Usuario_us=usuario)
     fecha_hoy = timezone.now().date()
 
-    actividades_con_calificacion = []
+    pendientes = []
+    entregadas = []
+    finalizadas = []
+
     for actividad in actividades_qs:
         entrega = Actividad_Entrega.objects.filter(Act=actividad, Est=estudiante).first()
         fecha_vencida = actividad.Act_fechaLimite < fecha_hoy
@@ -337,37 +345,40 @@ def actividades_estudiantes(request, Per_id, Mtr_id):
         if not entrega or not entrega.archivos.exists():
             if fecha_vencida:
                 estado = "Retrasado"
+                categoria = "finalizadas"
             else:
                 estado = "Sin entregar"
+                categoria = "pendientes"
         elif entrega.archivos.exists() and entrega.Act_calificacion is None:
             estado = "Entregado"
+            categoria = "entregadas"
         elif entrega.Act_calificacion is not None:
             estado = "Calificado"
+            categoria = "finalizadas"
 
-        actividades_con_calificacion.append({
+        actividad_data = {
             "actividad": actividad,
             "calificacion": entrega.Act_calificacion if entrega else None,
             "entrega": entrega,
             "estado": estado,
             "fecha_vencida": fecha_vencida
-        })
+        }
 
-    def ordenar(a):
-        if a["estado"] == "Sin entregar" and not a["fecha_vencida"]:
-            return 0
-        elif a["estado"] == "Entregado" and not a["fecha_vencida"]:
-            return 1
-        elif a["estado"] == "Calificado":
-            return 2
-        elif a["estado"] == "Retrasado":
-            return 3
+        if categoria == "pendientes":
+            pendientes.append(actividad_data)
+        elif categoria == "entregadas":
+            entregadas.append(actividad_data)
         else:
-            return 4
+            finalizadas.append(actividad_data)
 
-    actividades_con_calificacion.sort(key=ordenar)
+    pendientes.sort(key=lambda x: x["actividad"].Act_fechaLimite)
+    entregadas.sort(key=lambda x: x["actividad"].Act_fechaLimite)
+    finalizadas.sort(key=lambda x: x["actividad"].Act_fechaLimite)
 
     return render(request, 'estudiantes/actividad_estudiantes_consultar.html', {
-        "actividades": actividades_con_calificacion,
+        "pendientes": pendientes,
+        "entregadas": entregadas,
+        "finalizadas": finalizadas,
         "materia": materia,
         "periodo": periodo
     })
@@ -582,9 +593,6 @@ def dashboard_profesores(request):
         'actividades_abiertas': actividades_abiertas,
     })
 
-def ver_perfil_profesores(request):
-    usuario = get_usuario_from_session(request)
-    return render(request, 'profesores/ver_perfil_profesores.html', {'usuario': usuario})
 
 def actividad_profesores_calificaciones(request, act_id):
     usuario = get_usuario_from_session(request)
@@ -1334,7 +1342,41 @@ def generar_reporte_rendimiento_pdf(request, periodo_id):
 
 def editar_perfil_profesores(request):
     usuario = get_usuario_from_session(request)
-    return render(request, 'profesores/editar_perfil_profesores.html', {'usuario': usuario})
+    profesor = Profesores.objects.get(Us=usuario)
+    
+    if request.method == "POST":
+        current_password = request.POST.get("current_password")
+        
+        if current_password != usuario.Us_contraseña:  
+            messages.error(request, "Contraseña actual incorrecta o no ingresada.")
+            return redirect("editar_perfil_profesores")
+        
+        usuario.Us_nombre = request.POST.get("username")
+        usuario.documento = request.POST.get("documento")
+        usuario.correo = request.POST.get("correo")
+        
+        if "foto_perfil_usuario" in request.FILES:
+            usuario.foto_perfil_usuario = request.FILES["foto_perfil_usuario"]
+        elif request.POST.get("eliminar_foto") == "true":
+            usuario.foto_perfil_usuario.delete(save=False)  
+            usuario.foto_perfil_usuario = None  
+            
+        new_password = request.POST.get("new_password")
+        if new_password:
+            usuario.Us_contraseña = new_password
+            
+        usuario.save()
+        messages.success(request, "Perfil actualizado correctamente!")
+        return redirect("editar_perfil_profesores")
+        
+    return render(request, 'profesores/editar_perfil_profesores.html', {
+        'usuario': usuario,
+        'profesor': profesor
+    })
+
+def ver_perfil_profesores(request):
+    usuario = get_usuario_from_session(request)
+    return render(request, 'profesores/ver_perfil_profesores.html', {'usuario': usuario})
 
 @csrf_exempt
 def actualizar_perfil_profesores(request):
@@ -2177,35 +2219,33 @@ def notificaciones_acudientes(request):
 
 def editar_perfil_acudientes(request):
     usuario = get_usuario_from_session(request)
-
-    try:
-        # Buscar el acudiente asociado al usuario logueado
-        acudiente = Acudiente.objects.get(Usuario_Us=usuario)
-    except Acudiente.DoesNotExist:
-        messages.error(request, "No se encontró el perfil de acudiente asociado a este usuario.")
-        return redirect("home")  # Ajusta la redirección a donde quieras enviar en caso de error
-
+    acudiente = Acudiente.objects.get(Usuario_Us=usuario)
+    
     if request.method == "POST":
         current_password = request.POST.get("current_password")
         
-        # Validar contraseña actual
         if current_password != usuario.Us_contraseña:  
-            messages.error(request, "Contraseña actual incorrecta.")
+            messages.error(request, "Contraseña actual incorrecta o no ingresada.")
             return redirect("editar_perfil_acudientes")
         
-        # Actualizar datos básicos
         usuario.Us_nombre = request.POST.get("username")
-        usuario.correo = request.POST.get("email")
-
-        # Actualizar contraseña si se proporciona una nueva
+        usuario.documento = request.POST.get("documento")
+        usuario.correo = request.POST.get("correo")
+        
+        if "foto_perfil_usuario" in request.FILES:
+            usuario.foto_perfil_usuario = request.FILES["foto_perfil_usuario"]
+        elif request.POST.get("eliminar_foto") == "true":
+            usuario.foto_perfil_usuario.delete(save=False)  
+            usuario.foto_perfil_usuario = None  
+            
         new_password = request.POST.get("new_password")
         if new_password:
             usuario.Us_contraseña = new_password
-
+            
         usuario.save()
         messages.success(request, "Perfil actualizado correctamente!")
         return redirect("editar_perfil_acudientes")
-
+        
     return render(request, 'acudientes/editar_perfil_acudientes.html', {
         'usuario': usuario,
         'acudiente': acudiente
@@ -2213,7 +2253,9 @@ def editar_perfil_acudientes(request):
 
 def ver_perfil_acudientes(request):
     usuario = get_usuario_from_session(request)
-    return render(request, 'acudientes/ver_perfil_acudientes.html', {'usuario': usuario})
+    return render(request, 'acudientes/ver_perfil_acudientes.html', {
+        'usuario': usuario
+    })
 
 def actividades_list_acudientes(request):
     usuario = get_usuario_from_session(request)

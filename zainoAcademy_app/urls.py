@@ -83,7 +83,11 @@ urlpatterns = [
     path('materialApoyo/eliminar/<int:Mate_id>/', views.materialApoyo_eliminar, name='materialApoyo_eliminar'),
     path('materialApoyo/confirmar_eliminar/<int:Mate_id>/', views.materialApoyo_confirmar_eliminar, name='materialApoyo_confirmar_eliminar'),
     path('profesores/actividades/calificar/<int:curso_id>/', views.lista_actividades_calificar, name='lista_actividades_calificar'),
+
+
     path('profesores/editar_perfil/', views.editar_perfil_profesores, name='editar_perfil_profesores'),
+
+    
     path('profesores/actualizar_perfil/', views.actualizar_perfil_profesores, name='actualizar_perfil_profesores'),
     path('profesores/dashboard_profesores/', views.dashboard_profesores_calendar, name="dashboard_profesores"),
 
