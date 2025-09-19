@@ -4,6 +4,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/profesores/actividad_profesores_crear_actividad.css' %}">
 <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 {% endblock %}
 
 {% block page_title %}Crear Actividad{% endblock %}
@@ -17,11 +18,14 @@
         {% endfor %}
     {% endif %}
 
-
     <div class="content">
         <div class="actividades-opciones">
-            <button onclick="mostrarCrear()" class="btn-opcion crear active" id="btn-crear">Crear</button>
-            <button onclick="mostrarConsultar()" class="btn-opcion consultar" id="btn-consultar">Consultar</button>
+            <button onclick="mostrarCrear()" class="btn-opcion crear active" id="btn-crear">
+                Crear
+            </button>
+            <button onclick="mostrarConsultar()" class="btn-opcion consultar" id="btn-consultar">
+                Consultar
+            </button>
         </div>
 
         <!-- CREAR -->
@@ -32,40 +36,57 @@
                 <!-- Primera fila -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="nombre">Nombre:</label>
-                        <input type="text" id="nombre" name="Act_nombre" required>
+                        <label for="nombre">
+                            Nombre de la actividad:
+                        </label>
+                        <input type="text" id="nombre" name="Act_nombre" required placeholder="Ingrese el nombre de la actividad">
                     </div>
                     
                     <div class="form-group">
-                        <label for="fecha">Fecha límite:</label>
+                        <label for="fecha">
+                            Fecha límite:
+                        </label>
                         <input type="date" id="fecha" name="Act_fechaLimite" required>
                     </div>
                 </div>
 
                 <!-- Segunda fila -->
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="descripcion">Descripción:</label>
-                        <input type="text" id="descripcion" name="Act_descripcion">
+                    <div class="form-group descripcion-group">
+                        <label for="descripcion">
+                            Descripción:
+                        </label>
+                        <textarea id="descripcion" name="Act_descripcion" placeholder="Describe los objetivos y requisitos de la actividad..."></textarea>
                     </div>
+                </div>
 
+                <!-- Tercera fila -->
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="archivo">Archivo:</label>
-                        <input type="file" id="archivo" name="Act_Archivo_Profesor">
+                        <label for="archivo">
+                            <span class="material-icons-outlined">attach_file</span>
+                            Archivo adjunto:
+                        </label>
+                        <input type="file" id="archivo" name="Act_Archivo_Profesor" accept=".pdf,.doc,.docx,.txt,.jpg,.png">
+                        <small>Formatos permitidos: PDF, DOC, DOCX, TXT, JPG, PNG</small>
                     </div>
                 </div>
 
                 <!-- Botones -->
                 <div class="form-actions">
-                    <a href="{% url 'actividad_profesores_consultar_cursos' periodo_id %}" class="volver-btn">Volver</a>
-                    <button type="submit" class="submit-btn">Subir actividad</button>
+                    <a href="{% url 'actividad_profesores_consultar_cursos' periodo_id %}" class="volver-btn">
+                        Volver
+                    </a>
+                    <button type="submit" class="submit-btn">
+                        Guardar
+                    </button>
                 </div>
             </form>
-        </div> <!-- 🔹 cierro crear-section aquí -->
+        </div>
 
         <!-- CONSULTAR -->
         <div id="consultar-section" class="section-content" style="display: none;">
-            <h2 class="section-title">Actividades creadas:</h2>
+            <h2 class="section-title">Actividades Creadas</h2>
             
             <div class="actividades-lista">
                 {% if actividades %}
@@ -88,10 +109,10 @@
                             </div>
 
                             <div class="action-buttons">
-                                <a href="{% url 'actividad_profesores_editar' actividad.Act_id %}" class="icon-btn-pencil">
+                                <a href="{% url 'actividad_profesores_editar' actividad.Act_id %}" class="icon-btn-pencil" title="Editar">
                                     <span class="material-icons-outlined">edit</span>
                                 </a>
-                                <a href="{% url 'actividad_profesores_eliminar' actividad.Act_id %}" class="icon-btn">
+                                <a href="{% url 'actividad_profesores_eliminar' actividad.Act_id %}" class="icon-btn" title="Eliminar">
                                     <span class="material-icons-outlined">delete</span>
                                 </a>
                             </div>
@@ -103,7 +124,6 @@
             </div>
         </div>
     </div>
-</main>
 
 <script>
     function mostrarCrear() {
@@ -121,5 +141,26 @@
         document.getElementById('btn-crear').classList.remove('active');
         document.getElementById('btn-consultar').classList.add('active');
     }
+
+    // Establecer fecha mínima como hoy
+    document.addEventListener('DOMContentLoaded', function() {
+        const fechaInput = document.getElementById('fecha');
+        if (fechaInput) {
+            fechaInput.min = new Date().toISOString().split('T')[0];
+        }
+    });
+
+    // Auto-hide alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.floating-alert');
+        alerts.forEach(function(alert) {
+            setTimeout(function() {
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 300);
+            }, 5000);
+        });
+    });
 </script>
 {% endblock %}

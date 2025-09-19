@@ -4,49 +4,132 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/profesores/actividad_profesores_editar.css' %}">
 <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 {% endblock %}
 
-{% block page_title %}Actividad{% endblock %}
+{% block page_title %}Editar Actividad{% endblock %}
 
 {% block mockUp %}
-    <main class="main-content">
-        <h2 class="subtitulo">Editar Actividad</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="floating-alert {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
+    <div class="content">
+        <div class="section-header">
+            <h2 class="section-title">
+                Editar Actividad
+            </h2>
+        </div>
 
-        <div id="crear-section" class="section-content">
+        <div class="section-content">
             <form id="actividadForm" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 
                 <!-- Primera fila -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="nombre">Nombre:</label>
-                        <input type="text" name="Act_nombre" value="{{ actividad.Act_nombre }}" required>
+                        <label for="nombre">
+                            Nombre de la actividad:
+                        </label>
+                        <input type="text" id="nombre" name="Act_nombre" value="{{ actividad.Act_nombre }}" required placeholder="Ingrese el nombre de la actividad">
                     </div>
                     
                     <div class="form-group">
-                        <label for="fecha">Fecha límite:</label>
-                        <input type="date" name="Act_fechaLimite" value="{{ actividad.Act_fechaLimite|date:'Y-m-d' }}" required>
+                        <label for="fecha">
+                            Fecha límite:
+                        </label>
+                        <input type="date" id="fecha" name="Act_fechaLimite" value="{{ actividad.Act_fechaLimite|date:'Y-m-d' }}" required>
                     </div>
                 </div>
 
                 <!-- Segunda fila -->
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="descripcion">Descripción:</label>
-                        <p>Archivo actual: <a href="{{ actividad.Act_Archivo_Profesor.url }}" target="_blank">Ver</a></p>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="archivo">Archivo:</label>
-                        <input type="file" id="archivo" name="Act_Archivo_Profesor">
+                    <div class="form-group descripcion-group">
+                        <label for="descripcion">
+                            Descripción:
+                        </label>
+                        <textarea id="descripcion" name="Act_descripcion" placeholder="Describe los objetivos y requisitos de la actividad...">{{ actividad.Act_descripcion }}</textarea>
                     </div>
                 </div>
 
-            <div class="form-actions">
-                <a href="{% url 'actividad_profesores_crear_actividad' actividad.Bol.pk %}" class="volver-btn">Cancelar</a>
-                <button type="submit" class="submit-btn">Guardar cambios</button>
-            </div>
-        </form>
-    </main>
+                <!-- Tercera fila - Archivo -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="archivo">
+                            <span class="material-icons-outlined">attach_file</span>
+                            Archivo adjunto:
+                        </label>
+                        
+                        {% if actividad.Act_Archivo_Profesor %}
+                            <div class="archivo-actual">
+                                <div class="archivo-info">
+                                    <span class="material-icons-outlined">description</span>
+                                    <div class="archivo-detalles">
+                                        <strong>Archivo actual:</strong>
+                                        <a href="{{ actividad.Act_Archivo_Profesor.url }}" target="_blank" class="archivo-link">
+                                            {{ actividad.Act_Archivo_Profesor.name|cut:"archivos/profesores/" }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <input type="file" id="archivo" name="Act_Archivo_Profesor" accept=".pdf,.doc,.docx,.txt,.jpg,.png">
+                        <small>
+                            {% if actividad.Act_Archivo_Profesor %}
+                                Selecciona un nuevo archivo para reemplazar el actual. Formatos permitidos: PDF, DOC, DOCX, TXT, JPG, PNG
+                            {% else %}
+                                Formatos permitidos: PDF, DOC, DOCX, TXT, JPG, PNG
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="form-actions">
+                    <a href="{% url 'actividad_profesores_crear_actividad' actividad.Bol.pk %}" class="volver-btn">
+                        Volver
+                    </a>
+                    <button type="submit" class="submit-btn">
+                        Guardar cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+    // Establecer fecha mínima como hoy
+    document.addEventListener('DOMContentLoaded', function() {
+        const fechaInput = document.getElementById('fecha');
+        if (fechaInput) {
+            fechaInput.min = new Date().toISOString().split('T')[0];
+        }
+    });
+
+    // Auto-hide alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.floating-alert');
+        alerts.forEach(function(alert) {
+            setTimeout(function() {
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 300);
+            }, 5000);
+        });
+    });
+
+    // Confirmación antes de enviar
+    document.getElementById('actividadForm').addEventListener('submit', function(e) {
+        const confirmacion = confirm('¿Estás seguro de que deseas guardar los cambios en esta actividad?');
+        if (!confirmacion) {
+            e.preventDefault();
+        }
+    });
+</script>
 {% endblock %}

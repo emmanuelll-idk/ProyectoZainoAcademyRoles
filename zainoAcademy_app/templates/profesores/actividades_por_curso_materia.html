@@ -18,48 +18,55 @@
         {% csrf_token %}
         <table class="calificaciones-table">
             <thead>
-                <tr>
-                    <th>Nombre Estudiante</th>
-                    <th>Entrega</th>
-                    <th>Archivos</th>
-                    <th>Fecha límite</th>
-                    <th>Calificación</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for entrega in entregas %}
-                <tr>
-                    <td>{{ entrega.Est }}</td>
-                    <td>{{ actividad.Act_nombre }}</td>
-                    <td>
-                        {% if entrega.archivos_lista %}
-                            <ul>
-                                {% for archivo in entrega.archivos_lista %}
-                                    <li>
-                                        <a href="{{ archivo.archivo.url }}" target="_blank">
-                                            Ver archivo {{ forloop.counter }}
-                                        </a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p>Sin archivos</p>
-                        {% endif %}
-                    </td>
-                    <td>{{ actividad.Act_fechaLimite|date:"d/m/Y" }}</td>
-                    <td>
-                        <input type="number" step="0.1" name="calificacion_{{ entrega.id }}"
-                                value="{{ entrega.Act_calificacion|default:'' }}"
-                                placeholder="Calificación" min="0" max="10"
-                                class="calificacion-input">
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="no-entrega">No hay entregas registradas</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+    <tr>
+        <th>Nombre Estudiante</th>
+        <th>Entrega</th>
+        <th>Archivos</th>
+        <th>Fecha límite</th>
+        <th>Calificación</th>
+        <th>Comentario</th> <!-- NUEVO -->
+    </tr>
+        </thead>
+        <tbody>
+            {% for entrega in entregas %}
+            <tr>
+                <td>{{ entrega.Est }}</td>
+                <td>{{ actividad.Act_nombre }}</td>
+                <td>
+                    {% if entrega.archivos_lista %}
+                        <ul>
+                            {% for archivo in entrega.archivos_lista %}
+                                <li>
+                                    <a href="{{ archivo.archivo.url }}" target="_blank">
+                                        Ver archivo {{ forloop.counter }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Sin archivos</p>
+                    {% endif %}
+                </td>
+                <td>{{ actividad.Act_fechaLimite|date:"d/m/Y" }}</td>
+                <td>
+                    <input type="number" step="0.1" name="calificacion_{{ entrega.id }}"
+                        value="{{ entrega.Act_calificacion|default:'' }}"
+                        placeholder="Calificación" min="0" max="10"
+                        class="calificacion-input">
+                </td>
+                <td>
+                    <textarea name="comentario_{{ entrega.id }}" rows="2"
+                            placeholder="Escribe un comentario..."
+                            class="comentario-input">{{ entrega.Act_comentario }}</textarea>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="no-entrega">No hay entregas registradas</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
         </table>
 
         <div class="acciones">

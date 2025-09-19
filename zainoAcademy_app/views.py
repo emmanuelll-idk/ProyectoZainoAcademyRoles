@@ -614,10 +614,15 @@ def actividad_profesores_calificaciones(request, act_id):
     if request.method == "POST":
         for entrega in entregas:
             calificacion = request.POST.get(f"calificacion_{entrega.id}")
+            comentario = request.POST.get(f"comentario_{entrega.id}")  # nuevo campo
+
             if calificacion:
                 entrega.Act_calificacion = float(calificacion)
-                entrega.save()
-        messages.success(request, "Calificaciones guardadas correctamente.")
+            if comentario is not None:
+                entrega.Act_comentario = comentario
+            entrega.save()
+
+        messages.success(request, "Calificaciones y comentarios guardados correctamente.")
         return redirect(
             "actividad_profesores_consultar_cursos",
             periodo_id=actividad.Bol.Per.Per_id
@@ -790,19 +795,33 @@ def actividad_profesores_editar(request, act_id):
     actividad = get_object_or_404(Actividad, pk=act_id, Bol__Pro_id=profesor.Pro_id)
 
     if request.method == 'POST':
-        actividad.Act_nombre = request.POST.get('Act_nombre')
-        actividad.Act_descripcion = request.POST.get('Act_descripcion')
-        actividad.Act_fechaLimite = request.POST.get('Act_fechaLimite')
-        actividad.Act_comentario = request.POST.get('Act_comentario', '')
-        if request.FILES.get('Act_Archivo_Profesor'):
-            actividad.Act_Archivo_Profesor = request.FILES.get('Act_Archivo_Profesor')
-        
-        actividad.save()
-        messages.success(request, "Actividad actualizada exitosamente")
-        return redirect('actividad_profesores_crear_actividad', bol_id=actividad.Bol.pk)
+        try:
+            actividad.Act_nombre = request.POST.get('Act_nombre')
+            actividad.Act_descripcion = request.POST.get('Act_descripcion', '')
+            
+            fecha_limite_str = request.POST.get('Act_fechaLimite')
+            fecha_limite = date.fromisoformat(fecha_limite_str)
+            actividad.Act_fechaLimite = fecha_limite
+            
+            if fecha_limite >= date.today():
+                estado = Estado_Actividad.objects.get(Esta_Actividad_Estado='Abierta')
+            else:
+                estado = Estado_Actividad.objects.get(Esta_Actividad_Estado='Cerrada')
+            actividad.Esta_Actividad = estado
+            
+            if request.FILES.get('Act_Archivo_Profesor'):
+                actividad.Act_Archivo_Profesor = request.FILES.get('Act_Archivo_Profesor')
+            
+            actividad.save()
+            messages.success(request, "Actividad actualizada exitosamente")
+            return redirect('actividad_profesores_crear_actividad', bol_id=actividad.Bol.pk)
+            
+        except Exception as e:
+            messages.error(request, f"Error al actualizar actividad: {str(e)}")
 
     context = {
-        'actividad': actividad
+        'actividad': actividad,
+        'usuario': usuario_custom
     }
     return render(request, 'profesores/actividad_profesores_editar.html', context)
 
