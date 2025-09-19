@@ -1411,18 +1411,49 @@ def dashboard_profesores_calendar(request):
     usuario = get_usuario_from_session(request)
     if not usuario:
         return redirect('login')
-
-    # Aseguramos que fecha_registro no esté vacío
-    if not usuario.fecha_registro:
-        usuario.fecha_registro = date.today()
-        usuario.save()
-
-    today = date.today().isoformat()  # Para el input date
-
-    return render(request, "profesores/dashboard_profesores.html", {
-        "usuario": usuario,
-        "today": today
-    })
+    
+    try:
+        profesor = Profesores.objects.get(Us=usuario)
+    except Profesores.DoesNotExist:
+        messages.error(request, "No tienes permisos de profesor.")
+        return redirect('login')
+    
+    # Obtener la fecha actual
+    from datetime import date
+    fecha_actual = date.today()
+    
+    # Obtener actividades abiertas (que no hayan pasado la fecha límite)
+    actividades_abiertas = Actividad.objects.filter(
+        Bol__Pro=profesor,
+        Act_fechaLimite__gte=fecha_actual,  # Fecha límite mayor o igual a hoy
+        Esta_Actividad__Esta_Actividad_Estado='Abierta'  # Solo actividades con estado "Abierta"
+    ).select_related('Bol__Cur', 'Bol__Mtr', 'Esta_Actividad').order_by('Act_fechaLimite')
+    
+    # Agregar información de entregas para cada actividad
+    for actividad in actividades_abiertas:
+        # Obtener el curso de esta actividad
+        curso = actividad.Bol.Cur
+        
+        # Contar total de estudiantes en este curso
+        total_estudiantes = Estudiantes.objects.filter(
+            estudiante_curso__Cur=curso
+        ).distinct().count()
+        
+        # Contar entregas realizadas para esta actividad
+        total_entregas = Actividad_EntregaArchivo.objects.filter(
+            entrega__Act=actividad
+        ).values('entrega').distinct().count()
+        
+        # Agregar los datos a la actividad
+        actividad.total_estudiantes = total_estudiantes
+        actividad.total_entregas = total_entregas
+    
+    context = {
+        'usuario': usuario,
+        'actividades_abiertas': actividades_abiertas,
+    }
+    
+    return render(request, 'profesores/dashboard_profesores.html', context)
 
 #DIRECTIVOS SANTIAGO 
 
