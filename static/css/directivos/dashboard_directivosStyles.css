@@ -20,7 +20,7 @@ html, body {
 /* ========== SIDEBAR ========== */
   .sidebar {
     width: 260px;
-    background-color: #1e91d6;
+    background-color: #4a4063;
     padding: 2rem 1.2rem;
     color: #fff;
     position: fixed;
@@ -95,7 +95,7 @@ html, body {
 .logout-btn {
     display: inline-block;
     width: 85%;
-    background-color: #4a4063;
+    background-color: #1e91d6;
     color: #fff;
     padding: 0.9rem 1.2rem;
     border-radius: 12px;
@@ -185,16 +185,15 @@ html, body {
 
 /* ========== GREETING CARD ========== */
 .greeting-card {
-    background-color: #1e91d6;
+    background: linear-gradient(135deg, #4A4063 0%, #6A5B8C 100%);
+    color: #fff;
     border-radius: 20px;
-    padding: 1.5rem;
-    color: white;
+    padding: 2rem;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    flex-shrink: 0;
-    height: 315px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .greeting-text h2 {
@@ -416,14 +415,15 @@ html, body {
 
 /* ========== ACUDIENT PROFILE ========== */
 .acudient-profile {
-    background-color: #1e91d6;
+    background-color: #4a4063;
     border-radius: 20px;
     padding: 2.8rem;
-    color: white;
+    color: #ffffff;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     flex: 0.8;
     position: relative;
+    
 }
 
 .student-avatar {
@@ -466,14 +466,14 @@ html, body {
 .acudient-name {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #000000;
+    color: #ffffff;
     margin-bottom: 0.2rem;
 }
 
 .acudient-role {
     font-size: 0.8rem;
     opacity: 0.8;
-    color: #000000;
+    color: #ffffff;
     margin-bottom: 1rem;
 }
 
@@ -481,7 +481,7 @@ html, body {
     display: flex;
     justify-content: center;
     gap: 0.8rem;
-    color: #000000;
+    color: #ffffff;
     margin-bottom: 1.2rem;
 }
 
@@ -501,7 +501,7 @@ html, body {
     transform: scale(1.1);
 }
 
-.acudient-info { text-align: left; color: #000000; }
+.acudient-info { text-align: left; color: #ffffff; }
 
 .info-row {
     display: flex;

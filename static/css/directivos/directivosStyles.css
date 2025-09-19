@@ -21,7 +21,7 @@ html, body {
 /* ========== SIDEBAR ========== */
 .sidebar {
     width: 260px;
-    background-color: #1e91d6;
+    background-color: #4a4063;
     padding: 2rem 1.2rem;
     color: #fff;
     position: fixed;
@@ -94,7 +94,7 @@ html, body {
 .logout-btn {
     display: inline-block;
     width: 85%;  /* ocupa casi todo el ancho */
-    background-color: #4a4063;
+    background-color: #1e91d6;
     color: #fff;
     padding: 0.9rem 1.2rem;
     border-radius: 12px;
