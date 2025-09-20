@@ -34,31 +34,38 @@
 <body>
     
     <!--Cabecera del sitio-->
-    <header>
+<header>
     <nav class="barra-navegacion">
         <div class="logo">
             <a href="{% url 'home' %}"><img src="{% static 'images/registration/LogoNormal-removebg-preview.png' %}" alt="LogoZaino"></a>
         </div>
 
-        <nav class="nav">
-        <ul>
-                    <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
-                    <li><a href="{% url 'contacto' %}">Contacto</a></li>
-                    <li><a href="{% url 'precios' %}">Precios</a></li>
-        </ul>
-    </nav>
+        <!-- Menú hamburguesa para móvil -->
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
+        <nav class="nav" id="nav-menu">
+            <ul>
+                <li><a href="{% url 'nosotros' %}">Nosotros</a></li>
+                <li><a href="{% url 'contacto' %}">Contacto</a></li>
+                <!-- <li><a href="{% url 'precios' %}">Precios</a></li> -->
+            </ul>
+        </nav>
 
         <div class="butons">
             <a class="botonIngresar" href="{% url 'login' %}">
                 <img src="{% static 'images/staticPage/boton.png' %}" alt="boton">
             </a>
-            </div>
+        </div>
     </nav>
 
-        <div id="hero">
-            <h2>Contáctanos</h2>
-        </div>
-    </header>
+    <div id="hero">
+        <h2>Contáctanos</h2>
+    </div>
+</header>
 
     <main>
 
@@ -80,7 +87,7 @@
         <div class="circulo"></div>
         <div class="info">
             <h3>E-mail</h3>
-            <p>contacto@zainoacademy.edu.co</p>
+            <p>zainoacademy@gmail.com</p>
         </div>
         </article>
     </div>
@@ -176,6 +183,32 @@
                 });
             });
         });
+
+const mobileMenu = document.getElementById('mobile-menu');
+const navMenu = document.getElementById('nav-menu');
+
+mobileMenu.addEventListener('click', function() {
+    mobileMenu.classList.toggle('is-active');
+    navMenu.classList.toggle('active');
+});
+
+const navLinks = document.querySelectorAll('.nav ul li a');
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        mobileMenu.classList.remove('is-active');
+        navMenu.classList.remove('active');
+    });
+});
+
+document.addEventListener('click', function(event) {
+    const isClickInsideMenu = navMenu.contains(event.target);
+    const isClickOnToggle = mobileMenu.contains(event.target);
+    
+    if (!isClickInsideMenu && !isClickOnToggle && navMenu.classList.contains('active')) {
+        mobileMenu.classList.remove('is-active');
+        navMenu.classList.remove('active');
+    }
+});
     </script>
 
 </body>
