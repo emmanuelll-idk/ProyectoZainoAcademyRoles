@@ -185,7 +185,7 @@ def dashboard_estudiantes(request):
     actividades_qs = Actividad.objects.filter(Bol__in=boletines_qs).distinct()
 
     pendientes = []
-    hoy = timezone.now().date()  
+    hoy = localtime(timezone.now()).date()
 
     for actividad in actividades_qs:
         if actividad.Act_fechaLimite >= hoy:
@@ -332,7 +332,7 @@ def actividades_estudiantes(request, Per_id, Mtr_id):
     actividades_qs = Actividad.objects.filter(Bol__in=boletines_qs).distinct()
 
     estudiante = get_object_or_404(Estudiantes, Usuario_us=usuario)
-    fecha_hoy = timezone.now().date()
+    fecha_hoy = localtime(timezone.now()).date()
 
     pendientes = []
     entregadas = []
@@ -340,7 +340,9 @@ def actividades_estudiantes(request, Per_id, Mtr_id):
 
     for actividad in actividades_qs:
         entrega = Actividad_Entrega.objects.filter(Act=actividad, Est=estudiante).first()
-        fecha_vencida = actividad.Act_fechaLimite < fecha_hoy
+        fecha_vencida = fecha_hoy > actividad.Act_fechaLimite
+
+        print("Hoy:", fecha_hoy, "| Límite:", actividad.Act_fechaLimite, "| Vencida:", fecha_vencida)
 
         if not entrega or not entrega.archivos.exists():
             if fecha_vencida:
@@ -398,8 +400,8 @@ def subir_actividad_estudiante(request, Per_id, Mtr_id, Act_id):
     )
 
 
-    fecha_hoy = timezone.now().date()
-    fecha_vencida = actividad.Act_fechaLimite < fecha_hoy 
+    fecha_hoy = localtime(timezone.now()).date()
+    fecha_vencida = fecha_hoy > actividad.Act_fechaLimite
 
 
     mensaje_exito = request.GET.get("mensaje", None)

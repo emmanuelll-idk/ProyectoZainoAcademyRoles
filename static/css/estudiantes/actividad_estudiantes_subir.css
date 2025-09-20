@@ -148,6 +148,23 @@ input[type="file"] {
     font-weight: bold;
 }
 
+.volver-container{
+    background-color: #4A3F61;
+    width: 90px;
+    text-align: center;
+    border-radius: 20px;
+    display: inline-block;
+    padding: 7px;
+    margin-bottom: 20px;
+}
+
+.volver-container a {
+    font-size: 0.9rem;
+    color: #fff;
+    text-decoration: none;
+
+}
+
 /*responsive*/
 
 @media (max-width: 768px) {

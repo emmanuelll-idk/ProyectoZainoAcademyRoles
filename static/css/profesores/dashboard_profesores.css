@@ -34,9 +34,17 @@ html, body {
     display: flex;
     justify-content: space-between; /* título a la izquierda, íconos a la derecha */
     align-items: center;
-
+    padding: 0 20px; /* agrega espacio horizontal dentro del header */
     width: 98.5%;
     margin-top: 10px;
+}
+
+.page-title {
+    font-size: 40px;
+    font-weight: 700;
+    margin: 0;
+    color: #000;
+    margin-right: auto; /* fuerza que quede a la izquierda y se separe de los íconos */
 }
 
 .logo {
@@ -626,8 +634,8 @@ html, body {
     transform: translateY(-2px);
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1200px) {
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
     .dashboard-content {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -637,27 +645,11 @@ html, body {
         flex-direction: row;
         position: static;
     }
-
+    
     .calendar-widget,
     .student-profile {
-        flex: 5;
+        flex: 1;
     }
-}
-
-
-/* ===== LINKS DE ACTIVIDADES ===== */
-.activity-link {
-    text-decoration: none;
-    color: #4A4063;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.activity-link:hover {
-    color: #1E91D6;
-    text-decoration: none;
-    transform: translateX(3px); 
 }
 
 @media (max-width: 768px) {
@@ -684,12 +676,17 @@ html, body {
         flex-direction: column;
         text-align: center;
         gap: 1rem;
+        padding: 1rem;
     }
     
     .greeting-text h2 {
         font-size: 1.5rem;
     }
     
+    .greeting-text p {
+        font-size: 0.8rem;
+    }
+
     .right-column {
         flex-direction: column;
         position: static;
@@ -711,6 +708,32 @@ html, body {
         padding: 1rem;
         margin-bottom: 0.5rem;
     }
+
+    .greeting-illustration {
+    width: auto;
+    height: 150px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    }
+
+    .page-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: #000;
+    margin-right: auto; /* fuerza que quede a la izquierda y se separe de los íconos */
+    }
+
+    .user-name {
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: #4a4063;
+    }
+
 }
 
 
@@ -731,7 +754,7 @@ html, body {
     position: absolute;
     top: 70px; /* debajo del header */
     right: 0.5rem;
-    width: 350px; /* casi todo el ancho en móviles */
+    width: 280px; /* casi todo el ancho en móviles */
     background: rgba(255, 255, 255, 0.95); /* ligeramente transparente */
     backdrop-filter: blur(10px); /* efecto glass */
     border-radius: 12px;

@@ -1,5 +1,4 @@
 {% extends "estudiantes/base.html" %}
-
 {% load static %}
 
 {% block extra_css %}
@@ -9,8 +8,13 @@
 {% block page_title %}Material de apoyo - {{ materia.Mtr_nombre }}{% endblock %}
 
 {% block mockUp %}
-
 <div class="materiales-apoyo">
+    <!-- Botón Volver -->
+    <div class="volver-container">
+        <a href="{% url 'materias_estudiante' periodo.Per_id %}" class="btn-volver">
+            ← Volver
+        </a>
+    </div>
 
     <table>
         <thead>
@@ -33,7 +37,6 @@
                     {% endif %}
                 </td>
             </tr>
-
             {% empty %}
             <tr>
                 <td colspan="3">No hay materiales de apoyo disponibles.</td>
@@ -42,6 +45,4 @@
         </tbody>
     </table>
 </div>
-
 {% endblock %}
-

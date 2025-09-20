@@ -1,6 +1,8 @@
 /* ====== CURSOS ====== */
 .content {
     margin-top: 20px;
+    width: 93%;
+    margin-left: 4%;
 }
 
 .section-title {
@@ -27,11 +29,12 @@
     gap: 25px;
     margin-left: 30px; /* 🔹 Espacio respecto a la barra lateral */
     margin-right: 30px;
+    flex-wrap: wrap;
 }
 
 /* Nombre del curso */
 .curso-info p {
-    font-size: 16px;
+    font-size: 29px;
     font-weight: bold;
     margin: 0;
     display: flex;
@@ -64,7 +67,7 @@
 .crear_actividad-btn:hover,
 .calificacion-btn:hover,
 .material_apoyo-btn:hover {
-    background: #1976BB;
+    background: #1E91D6;
 }
 
 /* ====== BOTÓN VOLVER ====== */
@@ -88,4 +91,23 @@
 
 .volver-btn:hover {
     background-color: #2f2642;
+}
+
+
+@media (max-width: 768px) {
+
+    .curso-info p {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.curso-info {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
 }

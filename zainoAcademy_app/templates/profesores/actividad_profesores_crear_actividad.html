@@ -106,6 +106,13 @@
                                         {{ actividad.Esta_Actividad.Esta_Actividad_Estado }}
                                     </span>
                                 </p>
+                                
+                                <!-- Botón Calificar -->
+                                <div class="calificar-container">
+                                    <a href="{% url 'actividad_profesores_calificaciones' actividad.Act_id %}" class="btn-calificar">
+                                        Calificar
+                                    </a>
+                                </div>
                             </div>
 
                             <div class="action-buttons">

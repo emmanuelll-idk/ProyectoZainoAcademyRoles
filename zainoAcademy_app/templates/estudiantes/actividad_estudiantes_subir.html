@@ -7,6 +7,13 @@
 
 {% block mockUp %}
 <div class="contenido">
+
+    <div class="volver-container">
+        <a href="{% url 'actividades_estudiantes' periodo.Per_id materia.Mtr_id %}" class="btn-volver">
+            ← Volver
+        </a>
+    </div>
+
     <h1>{{ actividad.Act_nombre }}</h1>
 
     <div class="seccion-boxes">

@@ -10,6 +10,12 @@
 {% block mockUp %}
 <div class="actividades-container">
     
+    <div class="volver-container">
+        <a href="{% url 'materias_estudiante' periodo.Per_id %}" class="btn-volver">
+            ← Volver
+        </a>
+    </div>
+
     <!-- Sección 1: Actividades Pendientes -->
     <div class="seccion-actividades">
         <div class="seccion-header pendientes-header">
