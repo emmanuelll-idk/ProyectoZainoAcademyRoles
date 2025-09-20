@@ -6,24 +6,88 @@
 }
 
 .page-title {
-    font-size: 40px;
+    font-size: 35px;
     font-weight: 700;
     margin: 0;
-    margin-left: 100px; /* fuerza que quede a la izquierda y se separe de los íconos */
+    margin-left: 80px;
+    color: #4a4063;
 }
 
-/* Tabla actividades */
+.section-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #4a4063;
+    text-align: left;
+}
+
+/* Secciones de actividades */
+.seccion-actividades {
+    margin-bottom: 40px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Headers de sección */
+.seccion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid;
+}
+
+.seccion-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.contador {
+    background: #4a4063;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Colores personalizados */
+.abiertas-header {
+    border-bottom-color: #28a745;
+    color: #28a745;
+}
+
+.abiertas-header .contador {
+    background: #28a745;
+}
+
+.cerradas-header {
+    border-bottom-color: #dc3545;
+    color: #dc3545;
+}
+
+.cerradas-header .contador {
+    background: #dc3545;
+}
+
+/* Tabla de actividades */
 .activities-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-    font-family: 'Comfortaa', sans-serif;
 }
 
 .activities-table th, 
 .activities-table td {
     border: 1px solid #ddd;
-    padding: 10px;
+    padding: 12px;
     text-align: center;
     color: #4a4063;
     vertical-align: middle;
@@ -32,15 +96,15 @@
 .activities-table th {
     background: #eee;
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
 }
 
 .activities-table tr:nth-child(even) {
-    background-color: #f8f9fa;
+    background-color: #fdfdfd;
 }
 
 .activities-table tr:hover {
-    background-color: #e9ecef;
+    background-color: #f1f3f5;
     transition: background-color 0.3s ease;
 }
 
@@ -50,39 +114,53 @@
     color: #4a4063;
 }
 
-/* Botón Calificar */
-.btn.calificar {
-    background: #4A4063;
-    color: white;
-    padding: 6px 12px;
+/* Botones */
+.btn {
+    display: inline-block;
+    padding: 6px 14px;
     border-radius: 5px;
     text-decoration: none;
     font-size: 0.9rem;
-    transition: background 0.3s ease, transform 0.2s ease;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn.calificar {
+    background: #28a745;
+    color: white;
 }
 
 .btn.calificar:hover {
-    background: #3e2d58;
+    background: #218838;
     transform: scale(1.05);
 }
 
-/* Mensaje cuando no hay actividades */
-.no-activities {
+.btn.ver {
+    background: #6c757d;
+    color: white;
+}
+
+.btn.ver:hover {
+    background: #5a6268;
+    transform: scale(1.05);
+}
+
+/* Sección vacía */
+.empty-section {
     text-align: center;
     padding: 2rem;
     color: #6c757d;
     font-style: italic;
 }
 
-/* Contenedor de acciones */
+/* Acciones */
 .acciones {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
-/* Botón volver (igual estilo que materiales) */
 .volver-btn {
-    background: #3e2d58;
+    background: #4a4063;
     color: white;
     text-decoration: none;
     padding: 8px 15px;

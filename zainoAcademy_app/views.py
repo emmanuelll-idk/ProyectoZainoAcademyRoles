@@ -1010,6 +1010,7 @@ def asistencia_profesores_consultar(request, bol_id):
         "periodo_id": boletin.Per.Per_id,
     })
 
+
 def lista_actividades_calificar(request, curso_id):
     usuario = get_usuario_from_session(request)
     if not usuario:
@@ -1023,9 +1024,18 @@ def lista_actividades_calificar(request, curso_id):
         messages.error(request, "No tienes permisos de profesor.")
         return redirect('dashboard_profesores')
     
-    actividades = Actividad.objects.filter(
+    ahora = timezone.now().date()
+
+    abiertas = Actividad.objects.filter(
         Bol__Pro=profesor,
-        Bol__Cur=curso
+        Bol__Cur=curso,
+        Act_fechaLimite__gte=ahora
+    ).order_by('-Act_fechaLimite')
+
+    cerradas = Actividad.objects.filter(
+        Bol__Pro=profesor,
+        Bol__Cur=curso,
+        Act_fechaLimite__lt=ahora
     ).order_by('-Act_fechaLimite')
     
     periodo_id = None
@@ -1033,22 +1043,23 @@ def lista_actividades_calificar(request, curso_id):
     if boletin:
         periodo_id = boletin.Per.Per_id
     
-    for actividad in actividades:
-        total_estudiantes = Estudiantes.objects.filter(
-            estudiante_curso__Cur=curso
-        ).distinct().count()
-        
-        # Conteo de entregas basado en Actividad_EntregaArchivo
-        total_entregas = Actividad_EntregaArchivo.objects.filter(
-            entrega__Act=actividad
-        ).values('entrega').distinct().count()
-        
-        actividad.total_estudiantes = total_estudiantes
-        actividad.total_entregas = total_entregas
+    for lista in (abiertas, cerradas):
+        for actividad in lista:
+            total_estudiantes = Estudiantes.objects.filter(
+                estudiante_curso__Cur=curso
+            ).distinct().count()
+            
+            total_entregas = Actividad_EntregaArchivo.objects.filter(
+                entrega__Act=actividad
+            ).values('entrega').distinct().count()
+            
+            actividad.total_estudiantes = total_estudiantes
+            actividad.total_entregas = total_entregas
     
     context = {
         'curso': curso,
-        'actividades': actividades,
+        'abiertas': abiertas,
+        'cerradas': cerradas,
         'usuario': usuario,
         'periodo_id': periodo_id,
     }

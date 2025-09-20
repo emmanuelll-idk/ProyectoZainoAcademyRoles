@@ -9,70 +9,92 @@
 {% block page_title %}Añadir Calificación{% endblock %}
 
 {% block mockUp %}
-<div class="content">
-    <h2 class="section-title">
-        Curso: {{ curso.Cur_nombre }} | Materia: {{ materia.Mtr_nombre }}
-    </h2>
+<main class="main-content">
+    <div class="content">
+        <h2 class="section-title">
+            Curso: {{ curso.Cur_nombre }} | Materia: {{ materia.Mtr_nombre }}
+        </h2>
 
-    <form method="post">
-        {% csrf_token %}
-        <table class="calificaciones-table">
-            <thead>
-    <tr>
-        <th>Nombre Estudiante</th>
-        <th>Entrega</th>
-        <th>Archivos</th>
-        <th>Fecha límite</th>
-        <th>Calificación</th>
-        <th>Comentario</th> <!-- NUEVO -->
-    </tr>
-        </thead>
-        <tbody>
-            {% for entrega in entregas %}
-            <tr>
-                <td>{{ entrega.Est }}</td>
-                <td>{{ actividad.Act_nombre }}</td>
-                <td>
-                    {% if entrega.archivos_lista %}
-                        <ul>
-                            {% for archivo in entrega.archivos_lista %}
-                                <li>
-                                    <a href="{{ archivo.archivo.url }}" target="_blank">
-                                        Ver archivo {{ forloop.counter }}
-                                    </a>
-                                </li>
+        <div class="seccion-actividades">
+            <div class="seccion-header abiertas-header">
+                <h3><i class="icon-edit"></i> Calificaciones de la Actividad</h3>
+                <span class="contador">{{ entregas|length }}</span>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                {% if entregas %}
+                    <table class="calificaciones-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre Estudiante</th>
+                                <th>Actividad</th>
+                                <th>Archivos</th>
+                                <th>Fecha límite</th>
+                                <th>Estado</th>
+                                <th>Calificación</th>
+                                <th>Comentario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entrega in entregas %}
+                            <tr>
+                                <td>{{ entrega.Est }}</td>
+                                <td>{{ actividad.Act_nombre }}</td>
+                                <td>
+                                    {% if entrega.archivos_lista %}
+                                        <ul>
+                                            {% for archivo in entrega.archivos_lista %}
+                                                <li>
+                                                    <a href="{{ archivo.archivo.url }}" target="_blank">
+                                                        Ver archivo {{ forloop.counter }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p>Sin archivos</p>
+                                    {% endif %}
+                                </td>
+                                <td>{{ actividad.Act_fechaLimite|date:"d/m/Y" }}</td>
+                                <td>
+                                    {% if not entrega.archivos_lista %}
+                                        <span class="estado pendiente">Pendiente</span>
+                                    {% elif entrega.Act_calificacion %}
+                                        <span class="estado calificada">Calificada</span>
+                                    {% elif entrega.retraso %}
+                                        <span class="estado retraso">Con Retraso</span>
+                                    {% else %}
+                                        <span class="estado entregada">Entregada</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" name="calificacion_{{ entrega.id }}"
+                                        value="{{ entrega.Act_calificacion|default:'' }}"
+                                        placeholder="Calificación" min="0" max="10"
+                                        class="calificacion-input">
+                                </td>
+                                <td>
+                                    <textarea name="comentario_{{ entrega.id }}" rows="2"
+                                            placeholder="Escribe un comentario..."
+                                            class="comentario-input">{{ entrega.Act_comentario }}</textarea>
+                                </td>
+                            </tr>
                             {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>Sin archivos</p>
-                    {% endif %}
-                </td>
-                <td>{{ actividad.Act_fechaLimite|date:"d/m/Y" }}</td>
-                <td>
-                    <input type="number" step="0.1" name="calificacion_{{ entrega.id }}"
-                        value="{{ entrega.Act_calificacion|default:'' }}"
-                        placeholder="Calificación" min="0" max="10"
-                        class="calificacion-input">
-                </td>
-                <td>
-                    <textarea name="comentario_{{ entrega.id }}" rows="2"
-                            placeholder="Escribe un comentario..."
-                            class="comentario-input">{{ entrega.Act_comentario }}</textarea>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="6" class="no-entrega">No hay entregas registradas</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="empty-section">
+                        <p><i class="icon-info"></i> No hay entregas registradas</p>
+                    </div>
+                {% endif %}
 
-        </table>
-
-        <div class="acciones">
-            <a href="{% url 'actividad_profesores_consultar_cursos' periodo_id %}" class="btn-volver">Volver</a>
-            <button type="submit" class="btn-guardar">Guardar</button>
+                <div class="acciones">
+                    <a href="{% url 'lista_actividades_calificar' curso.Cur_id %}" class="btn-volver">Volver</a>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            </form>
         </div>
-    </form>
-</div>
+    </div>
+</main>
 {% endblock %}

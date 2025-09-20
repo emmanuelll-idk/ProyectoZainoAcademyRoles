@@ -9,43 +9,94 @@
 
 {% block mockUp %}
 <main class="main-content">
-    <!-- CONTENT -->
     <div class="content">
         <h2 class="section-title">{{ curso.Cur_nombre }}</h2> <br>
 
-        {% if actividades %}
-            <table class="activities-table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Fecha límite</th>
-                        <th>Entregas Recibidas</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for act in actividades %}
-                    <tr>
-                        <td>{{ act.Act_nombre }}</td>
-                        <td>{{ act.Act_descripcion }}</td>
-                        <td>{{ act.Act_fechaLimite|date:"d/m/Y" }}</td>
-                        <td>
-                            <span class="entregas-contador">
-                                {{ act.total_entregas|default:0 }}/{{ act.total_estudiantes|default:0 }}
-                            </span>
-                        </td>
-                        <td>
-                            <!-- CAMBIA ESTA LÍNEA: -->
-                            <a href="{% url 'actividad_profesores_calificaciones' act.Act_id %}" class="btn calificar">Calificar</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p class="no-activities">No tienes actividades creadas para este curso aún.</p>
-        {% endif %}
+        <!-- Sección 1: Actividades Abiertas -->
+        <div class="seccion-actividades">
+            <div class="seccion-header abiertas-header">
+                <h3><i class="icon-unlock"></i> Actividades Abiertas</h3>
+                <span class="contador">{{ abiertas|length }}</span>
+            </div>
+
+            {% if abiertas %}
+                <table class="activities-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Fecha límite</th>
+                            <th>Entregas Recibidas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for act in abiertas %}
+                        <tr>
+                            <td>{{ act.Act_nombre }}</td>
+                            <td>{{ act.Act_descripcion }}</td>
+                            <td>{{ act.Act_fechaLimite|date:"d/m/Y" }}</td>
+                            <td>
+                                <span class="entregas-contador">
+                                    {{ act.total_entregas|default:0 }}/{{ act.total_estudiantes|default:0 }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'actividad_profesores_calificaciones' act.Act_id %}" class="btn calificar">Calificar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-section">
+                    <p><i class="icon-info"></i> No tienes actividades abiertas actualmente.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Sección 2: Actividades Cerradas -->
+        <div class="seccion-actividades">
+            <div class="seccion-header cerradas-header">
+                <h3><i class="icon-lock"></i> Actividades Cerradas</h3>
+                <span class="contador">{{ cerradas|length }}</span>
+            </div>
+
+            {% if cerradas %}
+                <table class="activities-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Fecha límite</th>
+                            <th>Entregas Recibidas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for act in cerradas %}
+                        <tr>
+                            <td>{{ act.Act_nombre }}</td>
+                            <td>{{ act.Act_descripcion }}</td>
+                            <td>{{ act.Act_fechaLimite|date:"d/m/Y" }}</td>
+                            <td>
+                                <span class="entregas-contador">
+                                    {{ act.total_entregas|default:0 }}/{{ act.total_estudiantes|default:0 }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'actividad_profesores_calificaciones' act.Act_id %}" class="btn ver">Ver Detalles</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-section">
+                    <p><i class="icon-info"></i> No tienes actividades cerradas actualmente.</p>
+                </div>
+            {% endif %}
+        </div>
 
         <div class="acciones">
             <a href="{% url 'actividad_profesores_consultar_cursos' periodo_id %}" class="volver-btn">Volver</a>
