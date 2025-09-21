@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actividades - Zaino Academy</title>
     <link rel="stylesheet" href="{% static 'css/acudientes/actividades_list_acudientes.css' %}">
-    <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:300,400,600,700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
 </head>
 <body class="dashboard-page">
     <aside class="sidebar">
@@ -41,15 +42,13 @@
     <main class="main-content">
         <header class="page-header">
             <h1 class="page-title">Actividades</h1>
-    <div class="header-icons">
-            <!-- Notificaciones -->
-            
-            
-            <!-- Nombre -->
-
-            <span class="user-name">{{ usuario.Us_nombre }}</span>
-            
-            <!-- Avatar / Perfil -->
+            <div class="header-icons">
+                <!-- Notificaciones -->
+                
+                <!-- Nombre -->
+                <span class="user-name">{{ usuario.Us_nombre }}</span>
+                
+                <!-- Avatar / Perfil -->
                 <a href="{% url 'ver_perfil_acudientes' %}">
                     {% if usuario.foto_perfil_usuario %}
                         <img src="{{ usuario.foto_perfil_usuario.url }}" class="user-avatar" alt="Perfil">
@@ -57,56 +56,101 @@
                         <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
                     {% endif %}
                 </a>
-        </div>
-
-    <button class="hamburger" onclick="toggleMenu()">☰</button>
-                
-            <div id="dropdown-menu" class="dropdown-menu">
-                    <a href="{% url 'dashboard_acudientes' %}">Inicio</a>
-                    <a href="{% url 'actividades_acudientes' %}">Actividades</a>
-                    <a href="{% url 'asistencia_acudientes' %}">Asistencia</a>
-                    <form method="POST" action="{% url 'login' %}">
-                        {% csrf_token %}
-                        <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
-                    </form>
             </div>
-        </header>    
-        <div class="divider-line"></div>   
 
-            {% if actividades %}
+            <button class="hamburger" onclick="toggleMenu()">☰</button>
+                    
+            <div id="dropdown-menu" class="dropdown-menu">
+                <a href="{% url 'dashboard_acudientes' %}">Inicio</a>
+                <a href="{% url 'actividades_acudientes' %}">Actividades</a>
+                <a href="{% url 'asistencia_acudientes' %}">Asistencia</a>
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
+                </form>
+            </div>
+        </header>
+        <div class="divider-line"></div>
 
-<!-- Barra de Búsqueda para filtrar actividades -->
-            <input type="text" class="search-bar" placeholder="Buscar actividades" id="searchActivities"> 
-          
-            <table class="activities-table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Materia</th>
-                        <th>Curso</th>
-                        <th>Fecha Límite</th>
-                        <th>Estado</th> <!-- Nueva columna para Estado -->
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for actividad in actividades %}
-                    <tr>
-                        <td>{{ actividad.Act.Act_nombre }}</td>
-                        <td>{{ actividad.Act.Bol.Mtr.Mtr_nombre }}</td> <!-- Materia -->
-                        <td>{{ actividad.Act.Bol.Cur.Cur_nombre }}</td> <!-- Curso -->
-                        <td>{{ actividad.Act.Act_fechaLimite }}</td>
-                        <td>
-                            {{ actividad.Act.Esta_Actividad.Esta_Actividad_Estado }}</td> <!-- Estado de la actividad -->
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="actividades-content">
+            {% if actividades_info %}
+                <!-- Barra de Búsqueda para filtrar actividades -->
+                <div class="search-container">
+                    <input type="text" class="search-bar" placeholder="Buscar actividades..." id="searchActivities">
+                </div>
+              
+                <div class="table-container">
+                    <table class="activities-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Fecha Límite</th>
+                                <th>Estado</th>
+                                <th>Calificación</th>
+                                <th>Fecha Entrega</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for info in actividades_info %}
+                            <tr class="activity-row">
+                                <td data-label="Nombre">{{ info.actividad.Act_nombre }}</td>
+                                <td data-label="Fecha Límite">{{ info.actividad.Act_fechaLimite|date:"d/m/Y" }}</td>
+                                <td data-label="Estado">
+                                    {% if info.tiene_entrega %}
+                                        <span class="estado-badge estado-entregada">
+                                            Entregada
+                                        </span>
+                                    {% else %}
+                                        <span class="estado-badge estado-pendiente">
+                                            Pendiente
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td data-label="Calificación">
+                                    {% if info.calificacion %}
+                                        {{ info.calificacion }}
+                                    {% else %}
+                                        <span class="no-calificacion">Sin calificar</span>
+                                    {% endif %}
+                                </td>
+                                <td data-label="Fecha Entrega">
+                                    {% if info.fecha_entrega %}
+                                        {{ info.fecha_entrega|date:"d/m/Y" }}
+                                    {% else %}
+                                        <span class="no-entrega">No entregada</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% else %}
-                <p>No hay actividades disponibles para este estudiante.</p>
+                <div class="no-activities">
+                    <h3>No hay actividades disponibles</h3>
+                    {% if materia %}
+                        <p>No se encontraron actividades para la materia <strong>{{ materia.Mtr_nombre }}</strong> en este período.</p>
+                    {% endif %}
+                </div>
             {% endif %}
-        </section>
+
+            <!-- Botón para volver -->
+            <div class="volver-container">
+                {% if materia and estudiante and periodo %}
+                    <form method="POST" action="{% url 'actividades_materia_acudientes' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="student_id" value="{{ estudiante.Est_id }}">
+                        <input type="hidden" name="periodo_id" value="{{ periodo.Per_id }}">
+                        <button type="submit" class="btn-volver">
+                            Volver
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
     </main>
 
+    <!-- Modal de cerrar sesión -->
     <div id="logout-modal" class="modal">
         <div class="modal-content">
             <h2>¿Cerrar Sesión?</h2>
@@ -136,14 +180,18 @@
             const rows = document.querySelectorAll('.activities-table tbody tr');
             
             rows.forEach(row => {
-                const nombre = row.querySelector('td:first-child').textContent.toLowerCase();
+                const nombre = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
                 const materia = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
                 const curso = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
                 const fechaLimite = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-                const estado = row.querySelector('td:nth-child(5)').textContent.toLowerCase(); // Estado
+                const estado = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
+                const calificacion = row.querySelector('td:nth-child(6)')?.textContent.toLowerCase() || '';
+                const fechaEntrega = row.querySelector('td:nth-child(7)')?.textContent.toLowerCase() || '';
 
                 // Verifica si la búsqueda aparece en alguno de los campos de la fila
-                if (nombre.includes(query) || materia.includes(query) || curso.includes(query) || fechaLimite.includes(query) || estado.includes(query)) {
+                if (nombre.includes(query) || materia.includes(query) || curso.includes(query) || 
+                    fechaLimite.includes(query) || estado.includes(query) || 
+                    calificacion.includes(query) || fechaEntrega.includes(query)) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
@@ -151,11 +199,12 @@
             });
         });
     </script>
-<script>
-    function toggleMenu() {
-        const menu = document.getElementById("dropdown-menu");
-        menu.classList.toggle("show");
-    }
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("dropdown-menu");
+            menu.classList.toggle("show");
+        }
     </script>
 </body>
 </html>

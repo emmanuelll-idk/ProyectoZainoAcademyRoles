@@ -11,7 +11,7 @@ html, body {
 }
 
 .dashboard-page {
-    font-family: "Comfortaa", sans-serif;
+    font-family: "Comfortaa", sans-serif; /* Cambiado */
     background-color: #f5f6fa;
     display: flex;
     min-height: 100vh;
@@ -62,6 +62,7 @@ html, body {
     text-decoration: none;
     color: #fff;
     margin-bottom: 0.8rem;
+    font-family: "Comfortaa", sans-serif; /* Agregado */
 }
 
 .nav-item:hover,
@@ -141,6 +142,7 @@ html, body {
     font-size: 1.6rem;
     margin-bottom: 2rem;
     color: #4a4063;
+    font-family: "Comfortaa", sans-serif; /* Agregado */
 }
 
 .modal-actions {
@@ -225,6 +227,7 @@ html, body {
     font-weight: 600;
     font-size: 1rem;
     color: #4a4063;
+    font-family: "Comfortaa", sans-serif; /* Agregado */
 }
 
 /* Avatar */
@@ -252,138 +255,84 @@ html, body {
     border-radius: 2px;
 }
 
-.asistencia-content {
-    margin-top: 10px;
-    text-align: left;
+.actividades-content {
+    padding: 2rem 0;
 }
 
 .section-title {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 700;
     color: #4a4063;
-    margin-bottom: 20px;
-    font-weight: 600;
+    margin-bottom: 2rem;
+    font-family: 'Comfortaa', sans-serif;
 }
 
-.periodos-container {
+.materias-container {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    max-width: 600px;
-    margin: 0 auto;
-    
+    gap: 20px;
 }
 
-/* Tarjeta de periodo */
-.periodo-card {
-    background: #4a4063;
-    border: 2px solid #e8e9f0;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 4px 15px rgba(30, 145, 214, 0.1);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-}
-
-.periodo-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(30, 145, 214, 0.15);
-    border-color: #1e91d6;
-}
-
-/* Estado seleccionado */
-.periodo-card.selected {
-    border-color: #1e91d6;
-    background: #4a4063;
-    box-shadow: 0 6px 20px rgba(30, 145, 214, 0.25);
-    transform: translateY(-2px);
-}
-
-.periodo-card.selected:before {
-    content: "✓";
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: #1e91d6;
+/* Cada materia */
+.materia-card {
+    background-color: #4A3F61;
     color: white;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
+    border-radius: 20px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
+    padding: 25px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
 }
 
-/* Texto dentro de la tarjeta */
-.periodo-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 0.8rem;
-    font-family: 'Comfortaa', sans-serif;
-    text-align: center;
-}
-
-/* Contenedor del botón de descarga */
-/* Contenedor del botón de descarga */
-.descargar-container {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    z-index: 50;
-}
-
-/* Estilo base (deshabilitado) */
-.descargar-btn,
-.btn-pdf {
-    display: inline-block;
-    background: #cccccc;
-    color: #666666;
-    padding: 0.8rem 2.5rem;
-    border: none;
-    border-radius: 25px;
-    font-size: 1rem;
-    font-weight: 600;
-    font-family: 'Comfortaa', sans-serif;
-    cursor: not-allowed;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 12px rgba(204, 204, 204, 0.3);
-    min-width: 120px;
-    text-decoration: none;
-    text-align: center;
-    opacity: 0.6;
-}
-
-/* 🔹 Estado activo */
-.descargar-btn.enabled,
-.btn-pdf.enabled {
-    background: #4A4063;
-    color: #fff !important;
-    cursor: pointer !important;
-    opacity: 1;
-}
-
-/* 🔹 Hover cuando está activo */
-.descargar-btn.enabled:hover,
-.btn-pdf.enabled:hover {
-    background: #4A4063;
+.materia-card:hover {
     transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
-/* 🔹 Click (active) */
-.descargar-btn.enabled:active,
-.btn-pdf.enabled:active {
-    transform: translateY(0);
+.materia-nombre h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+    font-family: "Comfortaa", sans-serif; /* Agregado */
+}
+
+.materia-opciones {
+    display: flex;
+    justify-content: center;
+}
+
+.materia-opciones a,
+.btn-materia {
+    background-color: #37A8E0;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    font-family: "Comfortaa", sans-serif; /* Agregado */
+}
+
+.materia-opciones a:hover,
+.btn-materia:hover {
+    background-color: #2d91c2;
+    transform: translateY(-1px);
 }
 
 .volver-container {
     position: fixed;
     bottom: 2rem;
-    right: 19rem; /* A la izquierda del botón Continuar */
+    right: 2rem; /* A la izquierda del botón Continuar */
     z-index: 50;
 }
 
@@ -416,39 +365,26 @@ html, body {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .periodos-container {
-        max-width: 100%;
+    .materias-box {
+        gap: 15px;
     }
 
-    .periodo-card {
-        padding: 1.5rem;
+    .materia-card {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
     }
 
-    .periodo-name {
-        font-size: 1.3rem;
+    .materia-opciones {
+        width: 100%;
+    }
+
+    .materia-opciones a {
+        width: 100%;
     }
 
     .section-title {
         font-size: 1.5rem;
-    }
-
-    .descargar-container {
-        bottom: 1rem;
-        right: 1rem;
-    }
-
-    .descargar-btn,
-    .btn-pdf {
-        padding: 0.8rem 2rem;
-    }
-
-    .volver-container {
-        bottom: 1rem;
-        right: 17rem;
-    }
-    
-    .btn-volver {
-        padding: 0.8rem 2rem;
     }
 }
 
@@ -526,7 +462,6 @@ html, body {
     }
 }
 
-
 /* ===== HAMBURGER & DROPDOWN ===== */
 
 .hamburger {
@@ -536,6 +471,7 @@ html, body {
     border: none;
     cursor: pointer;
     color: #4a4063;
+    font-family: "Comfortaa", sans-serif; /* Agregado */
 }
 
 .dropdown-menu {
@@ -618,6 +554,7 @@ html, body {
     font-weight: 600;
     margin: 0.5rem 0;
     transition: background 0.3s ease, transform 0.2s ease;
+    font-family: "Comfortaa", sans-serif; /* Agregado */
 }
 
 .dropdown-menu .dropdown-logout-btn:hover {

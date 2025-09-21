@@ -283,11 +283,6 @@ def ver_perfil_directivos(request):
         'directivo': directivo
     })
 
-def dashboard_acudientes(request):
-    usuario = get_usuario_from_session(request)
-    return render(request, 'acudientes/dashboard_acudientes.html', {'usuario': usuario})
-
-
 
 # Vistas estudiantes:
 
@@ -2138,72 +2133,38 @@ def dashboard_acudientes(request):
     if not usuario:
         return redirect('login')
 
-    try:
-        acudiente = Acudiente.objects.get(Usuario_Us=usuario)
-        print(f"✅ Acudiente encontrado: {acudiente}")
-    except Acudiente.DoesNotExist:
-        print("❌ Acudiente no encontrado")
-        return redirect('login')
-
-    # Obtener estudiantes a cargo (ManyToMany)
+    acudiente = get_object_or_404(Acudiente, Usuario_Us=usuario)
     estudiantes_a_cargo = acudiente.Estudiantes_Est.all()
-    print(f"👥 Estudiantes a cargo: {estudiantes_a_cargo.count()}")
-
-    if not estudiantes_a_cargo.exists():
-        return render(request, 'acudientes/dashboard_acudientes.html', {
-            'usuario': usuario,
-            'pendientes': []
-        })
 
     pendientes = []
+    hoy = localtime(timezone.now()).date()
 
     for estudiante in estudiantes_a_cargo:
-        print(f"\n🎓 Procesando estudiante: {estudiante.Usuario_us.Us_nombre}")
+        cursos = Estudiante_Curso.objects.filter(Est=estudiante).select_related('Cur')
 
-        # Obtener cursos del estudiante
-        estudiante_cursos = Estudiante_Curso.objects.filter(Est=estudiante)
-        print(f"📚 Estudiante_Curso encontrados: {estudiante_cursos.count()}")
+        boletines_qs = Boletin.objects.filter(
+            Cur_id__in=cursos.values_list("Cur_id", flat=True)
+        )
 
-        for est_cur in estudiante_cursos:
-            boletines = Boletin.objects.filter(Cur=est_cur.Cur)
-            print(f"  📋 Boletines en el curso: {boletines.count()}")
+        actividades_qs = Actividad.objects.filter(Bol__in=boletines_qs).distinct()
 
-            for boletin in boletines:
-                actividades = Actividad.objects.filter(Bol=boletin)
-                print(f"    📌 Actividades en el boletín: {actividades.count()}")
+        for actividad in actividades_qs:
+            if actividad.Act_fechaLimite >= hoy:
+                entrega = Actividad_Entrega.objects.filter(Act=actividad, Est=estudiante).first()
+                if not entrega or not entrega.archivos.exists():
+                    pendientes.append({
+                        "id": actividad.Act_id,
+                        "titulo": actividad.Act_nombre,
+                        "fecha_limite": actividad.Act_fechaLimite,
+                        "materia": actividad.Bol.Mtr.Mtr_nombre,
+                        "estudiante": estudiante.Usuario_us.Us_nombre,
+                    })
 
-                for actividad in actividades:
-                    print(f"      🔍 Actividad: {actividad.Act_nombre}")
-
-                    try:
-                        entrega = Actividad_Entrega.objects.get(Act=actividad, Est=estudiante)
-
-                        if not entrega.archivos.exists():  # usa related_name="archivos"
-                            pendientes.append({
-                                "actividad": actividad.Act_nombre,
-                                "materia": boletin.Mtr.Mtr_nombre,
-                                "estado": "Pendiente",
-                                "estudiante": estudiante.Usuario_us.Us_nombre
-                            })
-                            print("      ⚠️ PENDIENTE: sin archivo")
-                        else:
-                            print("      ✅ COMPLETA: con archivo")
-
-                    except Actividad_Entrega.DoesNotExist:
-                        pendientes.append({
-                            "actividad": actividad.Act_nombre,
-                            "materia": boletin.Mtr.Mtr_nombre,
-                            "estado": "Pendiente",
-                            "estudiante": estudiante.Usuario_us.Us_nombre
-                        })
-                        print("      ❌ No hay entrega registrada")
-
-    # Limitar a 4 elementos
-    pendientes_limitadas = pendientes[:4]
+    pendientes_ordenadas = sorted(pendientes, key=lambda x: (x['fecha_limite'], x['titulo']))
 
     return render(request, 'acudientes/dashboard_acudientes.html', {
         'usuario': usuario,
-        'pendientes': pendientes_limitadas
+        'pendientes': pendientes_ordenadas[:4]
     })
 
 def dashboard_acudientes_calendar(request):
@@ -2311,23 +2272,168 @@ def ver_perfil_acudientes(request):
 
 def actividades_list_acudientes(request):
     usuario = get_usuario_from_session(request)
-    estudiante_id = request.POST.get('student_id')  # Obtiene el ID del estudiante desde el formulario
-
-    # Obtener el estudiante asociado al acudiente (solo si el estudiante existe)
-    if estudiante_id:
-        try:
-            estudiante = Estudiantes.objects.get(Est_id=estudiante_id)
-            # Usar solo 'Act' y 'Bol' en select_related
-            actividades = Actividad_Entrega.objects.filter(Est=estudiante).select_related('Act', 'Act__Bol', 'Act__Esta_Actividad')
-        except Estudiantes.DoesNotExist:
+    if not usuario:
+        return redirect('login')
+    
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        periodo_id = request.POST.get('periodo_id', request.POST.get('student_id'))  # fallback por compatibilidad
+        materia_id = request.POST.get('materia_id')
+        
+        if student_id and periodo_id and materia_id:
+            # Filtro específico por materia
+            try:
+                estudiante = Estudiantes.objects.get(Est_id=student_id)
+                periodo = Periodo.objects.get(Per_id=periodo_id)
+                materia = Materia.objects.get(Mtr_id=materia_id)
+                
+                # CAMBIO PRINCIPAL: Obtener TODAS las actividades de esa materia y período
+                actividades_todas = Actividad.objects.filter(
+                    Bol__Per=periodo,
+                    Bol__Mtr=materia
+                ).select_related('Bol', 'Esta_Actividad', 'Bol__Mtr', 'Bol__Cur')
+                
+                # Crear lista con información de entrega para cada actividad
+                actividades_info = []
+                for actividad in actividades_todas:
+                    try:
+                        # Buscar si existe entrega para esta actividad y estudiante
+                        entrega = Actividad_Entrega.objects.get(Act=actividad, Est=estudiante)
+                        actividades_info.append({
+                            'actividad': actividad,
+                            'entrega': entrega,
+                            'tiene_entrega': True,
+                            'calificacion': entrega.Act_calificacion,
+                            'fecha_entrega': entrega.Act_fecha_entrega,
+                            'comentario': entrega.Act_comentario
+                        })
+                    except Actividad_Entrega.DoesNotExist:
+                        # No existe entrega, mostrar actividad sin entrega
+                        actividades_info.append({
+                            'actividad': actividad,
+                            'entrega': None,
+                            'tiene_entrega': False,
+                            'calificacion': None,
+                            'fecha_entrega': None,
+                            'comentario': 'Sin entregar'
+                        })
+                
+                return render(request, 'acudientes/actividades_list_acudientes.html', {
+                    'usuario': usuario,
+                    'actividades_info': actividades_info,
+                    'estudiante': estudiante,
+                    'periodo': periodo,
+                    'materia': materia
+                })
+                
+            except (Estudiantes.DoesNotExist, Periodo.DoesNotExist, Materia.DoesNotExist):
+                pass
+                
+        elif student_id:
+            # Lógica original para mostrar todas las actividades del estudiante
+            try:
+                estudiante = Estudiantes.objects.get(Est_id=student_id)
+                actividades = Actividad_Entrega.objects.filter(Est=estudiante).select_related('Act', 'Act__Bol', 'Act__Esta_Actividad')
+            except Estudiantes.DoesNotExist:
+                actividades = []
+        else:
             actividades = []
-    else:
-        actividades = []
 
     return render(request, 'acudientes/actividades_list_acudientes.html', {
         'usuario': usuario,
         'actividades': actividades,
     })
+
+def actividades_periodo_acudientes(request):
+    usuario = get_usuario_from_session(request)
+    estudiante_id = request.POST.get('student_id')
+
+    periodos = []
+    estudiante = None
+    periodos_con_datos = []
+
+    if estudiante_id:
+        try:
+            estudiante = Estudiantes.objects.get(Est_id=estudiante_id)
+
+            # Periodos donde SÍ tiene boletín registrado
+            periodos_con_datos = Periodo.objects.filter(
+                boletin__Cur__estudiante_curso__Est=estudiante
+            ).distinct()
+
+            # Mostrar SIEMPRE todos los periodos
+            periodos = Periodo.objects.all().order_by('Per_id')
+
+        except Estudiantes.DoesNotExist:
+            periodos = Periodo.objects.all().order_by('Per_id')
+    else:
+        periodos = Periodo.objects.all().order_by('Per_id')
+
+    return render(request, "acudientes/actividades_periodo_acudientes.html", {
+        "usuario": usuario,
+        "estudiante": estudiante,
+        "periodos": periodos,
+        "periodos_con_datos": periodos_con_datos,  # importante para el template
+    })
+
+def actividades_materia_acudientes(request):
+    usuario = get_usuario_from_session(request)
+    if not usuario:
+        return redirect('login')
+    
+    # Verificar que el usuario es un acudiente
+    try:
+        acudiente = Acudiente.objects.get(Usuario_Us=usuario)
+    except Acudiente.DoesNotExist:
+        return redirect('login')
+    
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        periodo_id = request.POST.get('periodo_id')
+        
+        if not student_id or not periodo_id:
+            return redirect('actividades_acudientes')
+        
+        try:
+            # Verificar que el estudiante existe y está a cargo del acudiente
+            estudiante = Estudiantes.objects.get(Est_id=student_id)
+            if estudiante not in acudiente.Estudiantes_Est.all():
+                return redirect('actividades_acudientes')
+            
+            # Obtener el período
+            periodo = Periodo.objects.get(Per_id=periodo_id)
+            
+            # Obtener las materias del estudiante en ese período
+            # Buscar los boletines donde el estudiante tiene clases en ese período
+            estudiante_cursos = Estudiante_Curso.objects.filter(Est=estudiante)
+            cursos_estudiante = estudiante_cursos.values_list('Cur_id', flat=True)
+            
+            # Filtrar boletines por período y cursos del estudiante
+            boletines = Boletin.objects.filter(
+                Per=periodo,
+                Cur_id__in=cursos_estudiante
+            ).distinct()
+            
+            # Obtener las materias de esos boletines
+            materias = Materia.objects.filter(
+                Mtr_id__in=boletines.values_list('Mtr_id', flat=True)
+            ).distinct().order_by('Mtr_nombre')
+            
+            context = {
+                'usuario': usuario,
+                'estudiante': estudiante,
+                'periodo': periodo,
+                'materias': materias,
+                'acudiente': acudiente
+            }
+            
+            return render(request, 'acudientes/actividades_materia_acudientes.html', context)
+            
+        except (Estudiantes.DoesNotExist, Periodo.DoesNotExist):
+            return redirect('actividades_acudientes')
+    
+    # Si no es POST, redirigir al inicio de actividades
+    return redirect('actividades_acudientes')
 
 def asistencia_list_acudientes(request):
     usuario = get_usuario_from_session(request)
@@ -2361,16 +2467,25 @@ def generar_reporte_asistencia_acudientes_pdf(request, periodo_id):
     periodo = get_object_or_404(Periodo, Per_id=periodo_id)
 
     # Buscar cursos de los estudiantes
-    cursos = Estudiante_Curso.objects.filter(Est__in=estudiantes).select_related("Cur")
+    cursos = Estudiante_Curso.objects.filter(
+        Est__in=estudiantes
+    ).select_related("Cur")
 
+    # Filtrar asistencias del periodo (aquí solo filtramos por periodo_id, sin fechas porque no existen en tu modelo)
     asistencias = Asistencia.objects.filter(
-        Est_Cur__in=cursos
-    ).select_related("Est_Cur__Est__Usuario_us", "Esta_Asistencia").order_by("Ast_fecha")
+        Est_Cur__in=cursos,
+        Est_Cur__Cur__boletin__Per=periodo  # 🔹 relación por medio de Boletin
+    ).select_related(
+        "Est_Cur__Est__Usuario_us",
+        "Esta_Asistencia"
+    ).order_by("Ast_fecha")
 
+    # Verificar si hay asistencias
     if not asistencias.exists():
-        messages.error(request, f"No hay datos de asistencias para el periodo '{periodo.Per_nombre}'.")
+        messages.error(request, f"No hay registros de asistencia en el periodo '{periodo.Per_nombre}'.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+    # Generar PDF
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
     elements = []
@@ -2391,10 +2506,10 @@ def generar_reporte_asistencia_acudientes_pdf(request, periodo_id):
 
     table = Table(data, colWidths=[200, 100, 100])
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#1e91d6")),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-        ('GRID', (0,0), (-1,-1), 1, colors.black),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e91d6")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
     ]))
     elements.append(table)
 

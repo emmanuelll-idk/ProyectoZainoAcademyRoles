@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/acudientes/actividades_acudientes.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
 </head>
 <body class="dashboard-page">
     <aside class="sidebar">
@@ -43,11 +44,8 @@
             <h1 class="page-title">Actividades</h1>
             <div class="header-icons">
                 <!-- Notificaciones -->
-                
-                
-                <!-- Nombre -->
+            
                 <span class="user-name">{{ usuario.Us_nombre }}</span>
-                
                 <!-- Avatar / Perfil -->
                     <a href="{% url 'ver_perfil_acudientes' %}">
                         {% if usuario.foto_perfil_usuario %}
@@ -85,7 +83,7 @@
                     {% endfor %}
                     
                     <div class="continuar-container">
-                        <form method="POST" action="{% url 'actividades_list_acudientes' %}">
+                        <form method="POST" action="{% url 'actividades_periodo_acudientes' %}">
                         {% csrf_token %}
                         <button type="button" class="continuar-btn" id="continuar-btn" onclick="continueToActivities()" disabled>Continuar</button>
                         </form>
@@ -116,7 +114,7 @@
     let selectedStudentId = null;
 
     // Esta es la URL que se mantiene constante
-    const baseUrl = "{% url 'actividades_list_acudientes' %}";
+    const baseUrl = "{% url 'actividades_periodo_acudientes' %}";
 
     function selectStudent(studentId) {
         // Remover selección previa

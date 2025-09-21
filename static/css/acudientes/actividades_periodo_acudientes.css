@@ -252,17 +252,16 @@ html, body {
     border-radius: 2px;
 }
 
-.asistencia-content {
-    margin-top: 10px;
-    text-align: left;
+.actividades-content {
+    padding: 2rem 0;
 }
 
 .section-title {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 700;
     color: #4a4063;
-    margin-bottom: 20px;
-    font-weight: 600;
+    margin-bottom: 2rem;
+    font-family: 'Comfortaa', sans-serif;
 }
 
 .periodos-container {
@@ -271,10 +270,10 @@ html, body {
     gap: 1.5rem;
     max-width: 600px;
     margin: 0 auto;
-    
 }
 
-/* Tarjeta de periodo */
+
+/* 🔹 Tarjeta de periodo */
 .periodo-card {
     background: #4a4063;
     border: 2px solid #e8e9f0;
@@ -293,7 +292,6 @@ html, body {
     border-color: #1e91d6;
 }
 
-/* Estado seleccionado */
 .periodo-card.selected {
     border-color: #1e91d6;
     background: #4a4063;
@@ -301,7 +299,7 @@ html, body {
     transform: translateY(-2px);
 }
 
-.periodo-card.selected:before {
+.periodo-card.selected::before {
     content: "✓";
     position: absolute;
     top: 1rem;
@@ -318,7 +316,6 @@ html, body {
     font-size: 14px;
 }
 
-/* Texto dentro de la tarjeta */
 .periodo-name {
     font-size: 1.5rem;
     font-weight: 700;
@@ -328,18 +325,16 @@ html, body {
     text-align: center;
 }
 
-/* Contenedor del botón de descarga */
-/* Contenedor del botón de descarga */
-.descargar-container {
+/* ========== CONTAINER DEL BOTÓN CONTINUAR ========== */
+.continuar-container {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
     z-index: 50;
 }
 
-/* Estilo base (deshabilitado) */
-.descargar-btn,
-.btn-pdf {
+/* ========== BOTÓN CONTINUAR ========== */
+.continuar-btn {
     display: inline-block;
     background: #cccccc;
     color: #666666;
@@ -358,36 +353,42 @@ html, body {
     opacity: 0.6;
 }
 
-/* 🔹 Estado activo */
-.descargar-btn.enabled,
-.btn-pdf.enabled {
-    background: #4A4063;
+/* Estado deshabilitado explícito */
+.continuar-btn[disabled] {
+    background: #cccccc !important;
+    color: #666666 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+}
+
+/* Estado habilitado */
+.continuar-btn.enabled:not([disabled]) {
+    background: #4a4063 !important;
     color: #fff !important;
     cursor: pointer !important;
+    box-shadow: 0 3px 12px rgba(74, 64, 99, 0.3) !important;
     opacity: 1;
 }
 
-/* 🔹 Hover cuando está activo */
-.descargar-btn.enabled:hover,
-.btn-pdf.enabled:hover {
-    background: #4A4063;
+.continuar-btn.enabled:not([disabled]):hover {
+    background: #352c4d !important;
     transform: translateY(-2px);
+    box-shadow: 0 5px 16px rgba(74, 64, 99, 0.4) !important;
+    color: #fff !important;
 }
 
-/* 🔹 Click (active) */
-.descargar-btn.enabled:active,
-.btn-pdf.enabled:active {
+.continuar-btn.enabled:not([disabled]):active {
     transform: translateY(0);
 }
 
 .volver-container {
     position: fixed;
     bottom: 2rem;
-    right: 19rem; /* A la izquierda del botón Continuar */
+    right: 13rem; /* A la izquierda del botón Continuar */
     z-index: 50;
 }
 
-.btn-volver {
+.volver-btn {
     display: inline-block;
     background: #352c4d;
     color: #fff;
@@ -407,7 +408,7 @@ html, body {
     vertical-align: baseline;
 }
 
-.btn-volver:hover {
+.volver-btn:hover {
     background: #4a4063;
     transform: translateY(-2px);
     box-shadow: 0 5px 16px rgba(74, 64, 99, 0.4);
@@ -432,23 +433,23 @@ html, body {
         font-size: 1.5rem;
     }
 
-    .descargar-container {
+    .continuar-container {
         bottom: 1rem;
         right: 1rem;
     }
 
-    .descargar-btn,
+    .continuar-btn,
     .btn-pdf {
-        padding: 0.8rem 2rem;
+        padding: 1rem 2rem;
     }
 
     .volver-container {
         bottom: 1rem;
-        right: 17rem;
+        right: 13rem; /* En móvil un poco más cerca */
     }
     
-    .btn-volver {
-        padding: 0.8rem 2rem;
+    .volver-btn {
+        padding: 1rem 2rem;
     }
 }
 

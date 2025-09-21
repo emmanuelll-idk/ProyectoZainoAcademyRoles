@@ -7,6 +7,7 @@
     <title>Dashboard Acudiente - Zaino Academy</title>
     <link rel="stylesheet" href="{% static 'css/acudientes/dashboard_acudientes.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,600,700&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
 </head>
 <body class="dashboard-page">
     <aside class="sidebar">
@@ -82,35 +83,41 @@
                 <!-- Notificaciones -->
                 <div class="notifications-section">
                     <div class="notifications-header">
-                        <h3>Notificaciones</h3>
-                        <a href="{% url 'notificaciones_acudientes' %}" class="ver-todo-btn">Ver todo</a>
+                        <h3>Actividades Pendientes</h3>
+                        <div class="pendientes-count">
+                            {% if pendientes|length > 0 %}
+                                <span class="count-badge">{{ pendientes|length }}</span>
+                            {% endif %}
+                        </div>
+                        <a href="{% url 'actividades_acudientes' %}" class="ver-todo-btn">Ver todo</a>
                     </div>
                     
-                    <div class="notifications-table">
-                        <div class="table-header">
-                            <div class="col-header">ACTIVIDAD</div>
-                            <div class="col-header">MATERIA</div>
-                            <div class="col-header">ESTUDIANTE</div>
-                            <div class="col-header">ESTADO</div>
-                        </div>
+                    <div class="notifications-section">
 
-                        {% if pendientes and pendientes|length > 0 %}
-                            {% for p in pendientes %}
-                            <div class="table-row">
-                                <div class="col-data">{{ p.actividad }}</div>
-                                <div class="col-data">{{ p.materia }}</div>
-                                <div class="col-data">{{ p.estudiante }}</div>
-                                <div class="col-data status-pendiente">{{ p.estado }}</div>
-                            </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="table-row">
-                                <div class="col-data" colspan="4">
-                                    No hay actividades pendientes
-                                </div>
-                            </div>
-                        {% endif %}
+            <div class="notifications-table">
+                <div class="table-header">
+                    <div class="col-header">Título</div>
+                    <div class="col-header">Fecha límite</div>
+                    <div class="col-header">Materia</div>
+                </div>
+
+                {% for act in pendientes %}
+                <div class="table-row">
+                    <div class="col-data">
+                        <a href="{% url 'actividades_acudientes' %}" class="activity-link">
+                            {{ act.titulo }}
+                        </a>
                     </div>
+                    <div class="col-data">{{ act.fecha_limite|date:"d/m/Y" }}</div>
+                    <div class="col-data">{{ act.materia }}</div>
+                </div>
+                {% empty %}
+                <div class="table-row">
+                    <div class="col-data" style="grid-column: 1 / -1;">No hay actividades pendientes</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
                 </div>
             </div>
 
@@ -162,7 +169,11 @@
                         <div class="info-row">
                             <span class="info-label">Pendientes</span>
                             <span class="info-value pending-count">
-                                {{ pendientes|length }} pendientes
+                                {% if pendientes|length > 0 %}
+                                    {{ pendientes|length }} pendiente{{ pendientes|length|pluralize:"s" }}
+                                {% else %}
+                                    Sin pendientes
+                                {% endif %}
                             </span>
                         </div>
                     </div>
@@ -244,6 +255,5 @@
         }
         renderCalendar(currentDate);
     </script>
-
 </body>
 </html>
