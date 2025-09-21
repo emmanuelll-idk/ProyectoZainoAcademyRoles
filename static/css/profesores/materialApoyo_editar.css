@@ -1,152 +1,30 @@
-/* ====== ESTILOS PRINCIPALES ====== */
-body {
-    margin: 0;
-    font-family: 'Comfortaa', sans-serif;
-    background-color: #f7f7f7;
-}
-
-/* ====== SIDEBAR ====== */
-.sidebar {
-    width: 240px;
-    background-color: #4A4063;
-    padding: 1.5rem 1rem;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    color: #fff;
-    z-index: 100;
-}
-
-.logo {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.logo img {
-    max-width: 180px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    filter: brightness(0) invert(1);
-}
-
-.nav-list {
-    list-style: none;
-    padding: 0;
-}
-
-.nav-list li {
-    margin-bottom: 0.3rem;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    padding: 0.8rem;
-    border-radius: 10px;
-    text-decoration: none;
-    color: #fff;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    gap: 0.7rem;
-}
-
-.nav-item.active {
-    background-color: #fff;
-    color: #4A4063;
-}
-
-.nav-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.nav-item.active:hover {
-    background-color: #fff;
-    color: #4A4063;
-}
-
-.nav-icon {
-    width: 16px;
-    height: 16px;
-}
-
-.logout-container {
-    position: absolute;
-    bottom: 2rem;
-    left: 1rem;
-    right: 1rem;
-}
-
-.logout-btn {
-    background-color: #1E91D6;
-    color: #fff;
-    border: none;
-    padding: 1rem;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 100%;
-    font-family: "Comfortaa", sans-serif;
-}
-
-.logout-btn:hover {
-    background-color: #6A5B8C;
-}
-
-.main-content {
-    margin-left: 290px;
-    padding: 20px;
-    min-height: 100vh;
-}
-
+/* ====== ESTILOS GENERALES ====== */
 .page-title {
+    font-family: 'Comfortaa', cursive;
+    font-size: 40px;
+    color: #43355C;
+    margin-left: 1px;
+}
+
+.sub-title {
     color: #3B2D56;
-}
-
-.notification-icon {
-    width: 22px;
-    cursor: pointer;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.user-avatar {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    margin-bottom: 20px;
+    font-size: 23px;
 }
 
 .content {
     flex: 1;
     padding: 1rem 1rem;
+    margin-left: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+    max-width: 1060px;
+    margin-left: 50px;
+    margin-top: 40px;
 }
 
-
-.section-title {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-    color: #43355C;
-}
-
+/* ====== CAMPOS DEL FORMULARIO ====== */
 .form-group {
     margin-bottom: 15px;
 }
@@ -155,18 +33,28 @@ body {
     display: block;
     font-weight: 600;
     margin-bottom: 5px;
+    color: #43355C;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #bbb;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
+    font-family: "Comfortaa", sans-serif;
+    transition: all 0.3s ease;
 }
 
-/* ====== ESTILOS PARA FECHA DE CREACIÓN ====== */
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #6b73ff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(107,115,255,0.3);
+}
+
+/* ====== FECHA SOLO LECTURA ====== */
 .fecha-info {
     display: flex;
     flex-direction: column;
@@ -181,17 +69,12 @@ body {
     font-weight: 600;
 }
 
-.fecha-help {
-    color: #6c757d;
-    font-size: 12px;
-    font-style: italic;
-    margin-top: 3px;
-}
-
+/* ====== BOTONES ====== */
 .form-actions {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
+    gap: 15px;
 }
 
 .volver-btn {
@@ -201,6 +84,11 @@ body {
     border-radius: 8px;
     text-decoration: none;
     font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.volver-btn:hover {
+    background: #2d1f42;
 }
 
 .crear-btn {
@@ -211,17 +99,15 @@ body {
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
-    text-decoration: none;
     font-family: "Comfortaa", sans-serif;
+    transition: background 0.3s ease;
 }
 
 .crear-btn:hover {
     background: #2d1f42;
 }
 
-/* ====== ESTILOS ESPECÍFICOS PARA EDICIÓN ====== */
-
-/* Información del archivo actual */
+/* ====== INFO DEL ARCHIVO ACTUAL ====== */
 .archivo-actual {
     margin-top: 10px;
     padding: 10px;
@@ -249,7 +135,7 @@ body {
     text-decoration: underline;
 }
 
-/* ====== MODAL STYLES ====== */
+/* ====== MODAL ELIMINAR ====== */
 .modal {
     display: none;
     position: fixed;
@@ -319,53 +205,15 @@ body {
     background-color: #ff3742;
 }
 
-/* Popup */
-.popup {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.popup.hidden {
-    display: none;
-}
-
-.popup-content {
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    text-align: center;
-    width: 300px;
-}
-
-.popup-content button {
-    background: #43355C;
-    color: #fff;
-    padding: 10px 25px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    margin-top: 15px;
-}
-
+/* ====== RESPONSIVE ====== */
 @media (max-width: 640px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
+    .content {
+        margin: 0;
+        padding: 1rem;
     }
 
-    .main-content {
-        margin-left: 0;
-    }
-
-    .header-right {
-        gap: 0.5rem;
-    }
-
-    .user-name {
-        display: none;
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
     }
 }

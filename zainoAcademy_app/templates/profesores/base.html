@@ -27,7 +27,7 @@
                     Inicio
                 </a></li>
 
-                <li><a href="{% url 'actividad_profesores_consultar' %}" class="nav-item {% if request.resolver_match.url_name in 'actividad_profesores_consultar, actividad_profesores_consultar_cursos, actividad_profesores_crear_actividad, actividad_profesores_calificaciones, actividad_profesores_lista, actividades_por_curso_materia, actividad_profesores_eliminar, actividad_profesores_editar, lista_actividades_calificar, materialApoyo_subir, materialApoyo_consultar' %}active{% endif %}">
+                <li><a href="{% url 'actividad_profesores_consultar' %}" class="nav-item {% if request.resolver_match.url_name in 'actividad_profesores_consultar, actividad_profesores_consultar_cursos, actividad_profesores_crear_actividad, actividad_profesores_calificaciones, actividad_profesores_lista, actividades_por_curso_materia, actividad_profesores_eliminar, actividad_profesores_editar, lista_actividades_calificar, materialApoyo_subir, materialApoyo_consultar, materialApoyo_confirmar_eliminar, materialApoyo_editar' %}active{% endif %}">
                     <img src="{% static 'images/profesores/actividades.png' %}" class="nav-icon" alt="Actividades"> 
                     Actividades - Material de apoyo
                 </a></li>

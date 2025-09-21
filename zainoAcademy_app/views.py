@@ -1089,7 +1089,7 @@ def materialApoyo_subir(request, bol_id):
     if not usuario:
         return redirect('login')
 
-    boletin = Boletin.objects.get(Bol_id=bol_id)
+    boletin = get_object_or_404(Boletin, Bol_id=bol_id)
 
     if request.method == 'POST':
         titulo = request.POST.get('Mate_titulo')
@@ -1102,25 +1102,14 @@ def materialApoyo_subir(request, bol_id):
             Mate_archivo=archivo,
             Bol=boletin
         )
+        return redirect('materialApoyo_subir', bol_id=boletin.Bol_id)
 
-        return redirect('materialApoyo_consultar', bol_id=boletin.Bol_id)
+    materiales = MaterialApoyo.objects.filter(Bol_id=bol_id)
 
     return render(request, 'profesores/materialApoyo_subir.html', {
         'usuario': usuario,
-        'boletin': boletin
-    })
-
-def materialApoyo_consultar(request, bol_id):
-    materiales = MaterialApoyo.objects.filter(Bol_id=bol_id)
-    for m in materiales:
-        print(m.__dict__)
-    boletin = Boletin.objects.get(Bol_id=bol_id)
-    periodo_id = boletin.Per_id
-
-    return render(request, "profesores/materialApoyo_consultar.html", {
-        "materiales": materiales,
-        "bol_id": bol_id,
-        "periodo_id": periodo_id,
+        'boletin': boletin,
+        'materiales': materiales
     })
 
 def materialApoyo_editar(request, Mate_id):
@@ -1132,7 +1121,7 @@ def materialApoyo_editar(request, Mate_id):
             try:
                 form.save()
                 messages.success(request, 'Material actualizado exitosamente.')
-                return redirect('materialApoyo_consultar', bol_id=material.Bol.Bol_id)
+                return redirect('materialApoyo_subir', bol_id=material.Bol.Bol_id)
             except Exception as e:
                 messages.error(request, f'Error al actualizar el material: {str(e)}')
         else:
@@ -1159,7 +1148,7 @@ def materialApoyo_eliminar(request, Mate_id):
         except Exception as e:
             messages.error(request, f'Error al eliminar el material: {str(e)}')
 
-    return redirect('materialApoyo_consultar', bol_id=bol_id)
+    return redirect('materialApoyo_subir', bol_id=bol_id)
 
 def materialApoyo_confirmar_eliminar(request, Mate_id):
     material = get_object_or_404(MaterialApoyo, Mate_id=Mate_id)
@@ -1168,7 +1157,7 @@ def materialApoyo_confirmar_eliminar(request, Mate_id):
         bol_id = material.Bol.Bol_id
         material.delete()
         messages.success(request, 'Material eliminado exitosamente.')
-        return redirect('materialApoyo_consultar', bol_id=bol_id)
+        return redirect('materialApoyo_subir', bol_id=bol_id)
 
     context = {
         'material': material,

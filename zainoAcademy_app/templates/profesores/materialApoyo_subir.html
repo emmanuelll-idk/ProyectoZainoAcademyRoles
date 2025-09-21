@@ -3,86 +3,137 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/profesores/materialApoyo_subir.css' %}">
+<link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 {% endblock %}
 
 {% block page_title %}Material de Apoyo{% endblock %}
 
 {% block mockUp %}
-
-    <!-- BOTONES DE OPCIONES -->
-    <div class="material-opciones">
-    <!-- Redirige a la vista de subir material -->
-    <a href="{% url 'materialApoyo_subir' boletin.Bol_id %}" 
-       class="btn-opcion crear {% if request.resolver_match.url_name == 'materialApoyo_subir' %}active{% endif %}">
-       Crear
-    </a>
-
-    <!-- Redirige a la vista de consultar material -->
-    <a href="{% url 'materialApoyo_consultar' boletin.Bol_id %}" 
-       class="btn-opcion consultar {% if request.resolver_match.url_name == 'materialApoyo_consultar' %}active{% endif %}">
-       Consultar
-    </a>
-</div>
-
-    <!-- SECCIÓN CREAR -->
-    <div id="seccion-crear" class="seccion">
-        <h3>Subir material de apoyo:</h3> <br>
-        <form method="POST" enctype="multipart/form-data" action="{% url 'materialApoyo_subir' boletin.Bol_id %}">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label for="titulo">Título del material:</label>
-                <input type="text" id="titulo" name="Mate_titulo" required>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="floating-alert {{ message.tags }}">
+                {{ message }}
             </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="content">
+        <div class="actividades-opciones">
+            <button onclick="mostrarCrear()" class="btn-opcion crear active" id="btn-crear">
+                Crear
+            </button>
+            <button onclick="mostrarConsultar()" class="btn-opcion consultar" id="btn-consultar">
+                Consultar
+            </button>
+        </div>
+
+        <!-- CREAR -->
+        <div id="crear-section" class="section-content">
+            <form id="materialForm" method="POST" enctype="multipart/form-data" action="{% url 'materialApoyo_subir' boletin.Bol_id %}">
+                {% csrf_token %}
+
+                <!-- Primera fila -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="titulo">Título del material:</label>
+                        <input type="text" id="titulo" name="Mate_titulo" required placeholder="Ingrese el título del material">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="archivo">
+                            <span class="material-icons-outlined">attach_file</span>
+                            Archivo adjunto:
+                        </label>
+                        <input type="file" id="archivo" name="Mate_archivo" accept=".pdf,.doc,.docx,.txt,.jpg,.png" required>
+                        <small>Formatos permitidos: PDF, DOC, DOCX, TXT, JPG, PNG</small>
+                    </div>
+                </div>
+
+                <!-- Segunda fila -->
+                <div class="form-row">
+                    <div class="form-group descripcion-group">
+                        <label for="descripcion">Descripción:</label>
+                        <textarea id="descripcion" name="Mate_descripcion" placeholder="Describe el material de apoyo..." rows="3" required></textarea>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="form-actions">
+                    <a href="{% url 'actividad_profesores_consultar_cursos' boletin.Per_id %}" class="volver-btn">Volver</a>
+                    <button type="submit" class="submit-btn">Subir material</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- CONSULTAR -->
+        <div id="consultar-section" class="section-content" style="display: none;">
+            <h2 class="section-title">Material de Apoyo Subido</h2>
             
-            <div class="form-group">
-                <label for="descripcion">Descripción:</label>
-                <textarea id="descripcion" name="Mate_descripcion" rows="3" required></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="archivo">Archivo:</label>
-                <input type="file" id="archivo" name="Mate_archivo" required>
+            <div class="actividades-lista">
+                {% if materiales %}
+                    {% for material in materiales %}
+                        <div class="actividad-item">
+                            <div class="actividad-info">
+                                <h3>{{ material.Mate_titulo }}</h3>
+                                <p><strong>Descripción:</strong> {{ material.Mate_descripcion }}</p>
+                                {% if material.Mate_archivo %}
+                                    <p><strong>Archivo:</strong> 
+                                        <a href="{{ material.Mate_archivo.url }}" target="_blank">Ver archivo</a>
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="action-buttons">
+                                <a href="{% url 'materialApoyo_editar' material.Mate_id %}" class="icon-btn-pencil" title="Editar">
+                                    <span class="material-icons-outlined">edit</span>
+                                </a>
+                                <a href="{% url 'materialApoyo_confirmar_eliminar' material.Mate_id %}" class="icon-btn" title="Eliminar">
+                                    <span class="material-icons-outlined">delete</span>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="sin-actividades">No has subido material de apoyo aún.</p>
+                {% endif %}
             </div>
 
+            <!-- Botón volver también en consultar -->
             <div class="form-actions">
                 <a href="{% url 'actividad_profesores_consultar_cursos' boletin.Per_id %}" class="volver-btn">Volver</a>
-                <button type="submit" class="crear-btn">Subir material</button>
             </div>
-        </form>
+        </div>
     </div>
 
-    <!-- SECCIÓN CONSULTAR -->
-    <div id="seccion-consultar" class="seccion oculto">
-        <h3>Consultar material de apoyo:</h3>
-        <ul>
-            {% for material in materiales %}
-                <li>
-                    <strong>{{ material.Mate_titulo }}</strong> - {{ material.Mate_descripcion }}
-                    <a href="{{ material.Mate_archivo.url }}" target="_blank">Descargar</a>
-                </li>
-            {% empty %}
-                <p>No hay material de apoyo aún.</p>
-            {% endfor %}
-        </ul>
-    </div>
-</div>
-
-<!-- SCRIPT PARA CAMBIO DE SECCIONES -->
 <script>
-function mostrarCrear() {
-    document.getElementById("seccion-crear").classList.remove("oculto");
-    document.getElementById("seccion-consultar").classList.add("oculto");
-    document.getElementById("btn-crear").classList.add("active");
-    document.getElementById("btn-consultar").classList.remove("active");
-}
+    function mostrarCrear() {
+        document.getElementById('crear-section').style.display = 'block';
+        document.getElementById('consultar-section').style.display = 'none';
+        
+        document.getElementById('btn-crear').classList.add('active');
+        document.getElementById('btn-consultar').classList.remove('active');
+    }
 
-function mostrarConsultar() {
-    document.getElementById("seccion-consultar").classList.remove("oculto");
-    document.getElementById("seccion-crear").classList.add("oculto");
-    document.getElementById("btn-consultar").classList.add("active");
-    document.getElementById("btn-crear").classList.remove("active");
-}
+    function mostrarConsultar() {
+        document.getElementById('crear-section').style.display = 'none';
+        document.getElementById('consultar-section').style.display = 'block';
+        
+        document.getElementById('btn-crear').classList.remove('active');
+        document.getElementById('btn-consultar').classList.add('active');
+    }
+
+    // Auto-hide alerts after 5 segundos
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.floating-alert');
+        alerts.forEach(function(alert) {
+            setTimeout(function() {
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 300);
+            }, 5000);
+        });
+    });
 </script>
-
 {% endblock %}

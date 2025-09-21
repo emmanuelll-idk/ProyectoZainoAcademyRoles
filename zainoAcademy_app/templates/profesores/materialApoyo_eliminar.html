@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/profesores/materialApoyo_consultar.css' %}">
+<link rel="stylesheet" href="{% static 'css/profesores/materialApoyo_confirmar_eliminar.css' %}">
 {% endblock %}
 
 {% block mockUp %}
@@ -13,7 +13,7 @@
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn-danger">Sí, eliminar</button>
-        <a href="{% url 'materialApoyo_consultar' material.Bol.id %}" class="btn-secondary">Cancelar</a>
+        <a href="{% url 'materialApoyo_confirmar_eliminar' material.Bol.id %}" class="btn-secondary">Cancelar</a>
     </form>
 </div>
 {% endblock %}
