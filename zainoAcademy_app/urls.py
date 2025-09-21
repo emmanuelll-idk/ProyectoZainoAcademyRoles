@@ -18,7 +18,10 @@ urlpatterns = [
     path('contacto/',views.contacto, name='contacto'),
     path('precios/',views.precios, name='precios'),
     path('login/', views.login_view, name='login'),
-
+    path('reset-password/', views.reset_password_step1, name='reset_password_step1'),
+    path('reset-password/form/', views.reset_password_step2, name='reset_password_step2'),
+    path('reset-password/restart/', views.reset_password_restart, name='reset_password_restart'),
+    
     # Dashboards
     path('estudiantes/', views.dashboard_estudiantes, name='dashboard_estudiantes'),
     path('profesores/', views.dashboard_profesores, name='dashboard_profesores'),
@@ -51,7 +54,6 @@ urlpatterns = [
     path('estudiantes/editar_perfil/', views.editar_perfil_estudiantes, name='editar_perfil_estudiantes'),
     path('perfil/', views.ver_perfil_estudiantes, name='ver_perfil_estudiantes'),
     path('eliminar-archivo/', views.eliminar_archivo, name='eliminar_archivo'),
-    path('cambiar_contraseña/', views.reset_password, name='reset_password'),
 
 
     #Profesores

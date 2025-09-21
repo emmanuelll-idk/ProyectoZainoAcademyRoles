@@ -143,30 +143,139 @@ def get_usuario_from_session(request):
             return None
     return None
 
-def reset_password(request):
-    exito = False  
 
+############ RESET DE LA CONTRASEÑA ##########################
+
+def reset_password_step1(request):
+    """Paso 1: Seleccionar tipo de usuario"""
     if request.method == "POST":
-        correo = request.POST.get("correo")
-        documento = request.POST.get("documento")
+        tipo_usuario = request.POST.get("tipo_usuario")
+        if tipo_usuario:
+            request.session['tipo_usuario_reset'] = tipo_usuario
+            return redirect("reset_password_step2")
+        else:
+            messages.error(request, "Por favor selecciona un tipo de usuario.")
+    
+    # Obtener tipos de usuario
+    tipos_usuario = TipoUsuario.objects.all()
+    
+    return render(request, "registration/reset_password_step1.html", {
+        "tipos_usuario": tipos_usuario
+    })
+
+def reset_password_step2(request):
+    """Paso 2: Formulario según tipo de usuario y cambio de contraseña"""
+    tipo_usuario = request.session.get('tipo_usuario_reset')
+    if not tipo_usuario:
+        return redirect("reset_password_step1")
+    
+    try:
+        tipo_usuario_obj = TipoUsuario.objects.get(Tus_id=tipo_usuario)
+        tipo_nombre = tipo_usuario_obj.TusTiposUsuario.lower()
+    except TipoUsuario.DoesNotExist:
+        messages.error(request, "Tipo de usuario inválido.")
+        return redirect("reset_password_step1")
+    
+    exito = False
+    
+    if request.method == "POST":
         nueva_contraseña = request.POST.get("new_password")
         confirmar_contraseña = request.POST.get("confirm_password")
-
-        try:
-            usuario = Usuario.objects.get(correo=correo, documento=documento)
-        except Usuario.DoesNotExist:
-            messages.error(request, "Correo o documento incorrecto.")
-            return redirect("reset_password")
-
+        
+        # Validar que las contraseñas coincidan
         if nueva_contraseña != confirmar_contraseña:
             messages.error(request, "Las contraseñas no coinciden.")
-            return redirect("reset_password")
+            return redirect("reset_password_step2")
+        
+        # Validar longitud mínima
+        if len(nueva_contraseña) < 3:
+            messages.error(request, "La contraseña debe tener al menos 3 caracteres.")
+            return redirect("reset_password_step2")
+        
+        if tipo_nombre == "estudiante":
+            exito = handle_estudiante_reset(request, nueva_contraseña)
+        else:
+            exito = handle_other_user_reset(request, nueva_contraseña, tipo_nombre)
+    
+    context = {
+        "tipo_usuario": tipo_nombre,
+        "tipo_usuario_obj": tipo_usuario_obj,
+        "exito": exito
+    }
+    
+    return render(request, "registration/reset_password_step2.html", context)
 
+def handle_estudiante_reset(request, nueva_contraseña):
+    """Maneja el reset de contraseña para estudiantes"""
+    correo_acudiente = request.POST.get("correo_acudiente")
+    documento_acudiente = request.POST.get("documento_acudiente")
+    documento_estudiante = request.POST.get("documento_estudiante")
+    
+    try:
+        # Buscar el estudiante
+        estudiante = Estudiantes.objects.select_related('Usuario_us').get(
+            Usuario_us__documento=documento_estudiante
+        )
+        
+        # Buscar el acudiente
+        acudiente_usuario = Usuario.objects.get(
+            correo=correo_acudiente,
+            documento=documento_acudiente
+        )
+        
+        # Verificar que el acudiente está relacionado con el estudiante
+        acudiente = Acudiente.objects.get(Usuario_Us=acudiente_usuario)
+        if estudiante not in acudiente.Estudiantes_Est.all():
+            raise Exception("El acudiente no está asociado con este estudiante")
+        
+        # Cambiar la contraseña del estudiante
+        estudiante.Usuario_us.Us_contraseña = nueva_contraseña
+        estudiante.Usuario_us.save()
+        
+        messages.success(request, f"Contraseña del estudiante {estudiante.Usuario_us.Us_nombre} actualizada correctamente!")
+        return True
+        
+    except Estudiantes.DoesNotExist:
+        messages.error(request, "Estudiante no encontrado con ese documento.")
+    except Usuario.DoesNotExist:
+        messages.error(request, "Acudiente no encontrado con esos datos.")
+    except Acudiente.DoesNotExist:
+        messages.error(request, "No se encontró la relación acudiente-estudiante.")
+    except Exception as e:
+        messages.error(request, "Error: El acudiente no está asociado con este estudiante.")
+    
+    return False
+
+def handle_other_user_reset(request, nueva_contraseña, tipo_usuario):
+    """Maneja el reset de contraseña para profesores, acudientes y directivos"""
+    correo = request.POST.get("correo")
+    documento = request.POST.get("documento")
+    
+    try:
+        usuario = Usuario.objects.select_related('TipoUsuario').get(
+            correo=correo,
+            documento=documento,
+            TipoUsuario__TusTiposUsuario__icontains=tipo_usuario
+        )
+        
+        # Cambiar la contraseña
         usuario.Us_contraseña = nueva_contraseña
         usuario.save()
-        exito = True  
+        
+        messages.success(request, f"Contraseña de {usuario.Us_nombre} actualizada correctamente!")
+        return True
+        
+    except Usuario.DoesNotExist:
+        messages.error(request, "Usuario no encontrado con esos datos.")
+    
+    return False
 
-    return render(request, "registration/reset_password.html", {"exito": exito})
+def reset_password_restart(request):
+    """Limpia la sesión y reinicia el proceso"""
+    request.session.pop('tipo_usuario_reset', None)
+    return redirect("reset_password_step1")
+
+ ###############################
 
 def dashboard_estudiantes(request):
     usuario = get_usuario_from_session(request)
@@ -611,7 +720,7 @@ def actividad_profesores_calificaciones(request, act_id):
     if request.method == "POST":
         for entrega in entregas:
             calificacion = request.POST.get(f"calificacion_{entrega.id}")
-            comentario = request.POST.get(f"comentario_{entrega.id}")  # nuevo campo
+            comentario = request.POST.get(f"comentario_{entrega.id}")
 
             if calificacion:
                 entrega.Act_calificacion = float(calificacion)
@@ -619,11 +728,8 @@ def actividad_profesores_calificaciones(request, act_id):
                 entrega.Act_comentario = comentario
             entrega.save()
 
-        messages.success(request, "Calificaciones y comentarios guardados correctamente.")
-        return redirect(
-            "actividad_profesores_consultar_cursos",
-            periodo_id=actividad.Bol.Per.Per_id
-        )
+        messages.success(request, "Cambios guardados correctamente.")
+        return redirect("actividad_profesores_calificaciones", act_id=act_id)
 
     estudiantes = Estudiantes.objects.filter(
         estudiante_curso__Cur=actividad.Bol.Cur

@@ -1,5 +1,4 @@
 /* Contenedor general */
-
 .main-content {
     flex: 1;
     padding: 20px;
@@ -18,7 +17,7 @@
     margin-bottom: 25px;
     font-weight: 700;
     color: #4a4063;
-    text-align: left ;
+    text-align: left;
 }
 
 .page-title {
@@ -62,6 +61,12 @@
     font-weight: bold;
     border-radius: 50%;
     padding: 6px 12px;
+}
+
+/* Contenedor de tabla responsivo */
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Tabla */
@@ -186,4 +191,300 @@
 
 .btn-guardar:hover {
     background-color: #4a3570;
+}
+
+.foto-perfil {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ddd;
+}
+
+.foto-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #666;
+    border: 1px solid #ddd;
+    margin: 0 auto;
+}
+
+.messages {
+    background-color: #b6ebc3;
+    border: 10px #00bb2c;
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+/* Por defecto, ocultar las tarjetas móviles */
+.mobile-cards {
+    display: none;
+}
+
+/* Estilos para tarjetas móviles */
+.student-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.student-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.student-info {
+    flex: 1;
+}
+
+.student-name {
+    font-weight: 700;
+    color: #4a4063;
+    margin: 0;
+}
+
+.activity-name {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 5px 0 0 0;
+}
+
+.card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.card-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.card-label {
+    font-weight: 600;
+    color: #4a4063;
+    font-size: 0.9rem;
+}
+
+.card-value {
+    text-align: right;
+}
+
+.files-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.files-list li {
+    margin-bottom: 5px;
+}
+
+.files-list a {
+    color: #5e4b8b;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* RESPONSIVE DESIGN */
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+    .content {
+        margin-left: 50px;
+        padding: 15px;
+    }
+
+    .main-content {
+        margin-left: 50px;
+        padding: 15px;
+    }
+
+    .page-title {
+        margin-left: 75px;
+        font-size: 30px;
+    }
+
+    .section-title {
+        font-size: 24px;
+    }
+
+    .calificaciones-table th,
+    .calificaciones-table td {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    .calificacion-input {
+        width: 70px;
+    }
+}
+
+/* Móviles grandes (481px - 768px) */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .page-title {
+        margin-left: 0;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .section-title {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .seccion-actividades {
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .seccion-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .seccion-header h3 {
+        font-size: 16px;
+        justify-content: center;
+    }
+
+    /* Ocultar tabla en móviles */
+    .calificaciones-table {
+        display: none;
+    }
+
+    /* Mostrar tarjetas en móviles */
+    .mobile-cards {
+        display: block;
+    }
+
+    .calificacion-input {
+        width: 80px;
+        margin: 0;
+    }
+
+    .comentario-input {
+        width: 100%;
+        min-height: 60px;
+        margin: 0;
+    }
+
+    .acciones {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-volver,
+    .btn-guardar {
+        width: 100%;
+        text-align: center;
+    }
+
+    .messages {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Móviles pequeños (hasta 480px) */
+@media (max-width: 480px) {
+    .section-title {
+        font-size: 18px;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    .seccion-actividades {
+        padding: 10px;
+    }
+
+    .student-card {
+        padding: 12px;
+    }
+
+    .student-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .foto-perfil,
+    .foto-placeholder {
+        width: 35px;
+        height: 35px;
+        font-size: 12px;
+    }
+
+    .card-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .card-value {
+        text-align: left;
+        width: 100%;
+    }
+
+    .calificacion-input {
+        width: 100%;
+    }
+
+    .estado {
+        font-size: 0.8rem;
+        padding: 4px 8px;
+    }
+}
+
+/* Mostrar tabla en desktop, tarjetas en móvil */
+@media (min-width: 769px) {
+    .mobile-cards {
+        display: none !important;
+    }
+    
+    .calificaciones-table {
+        display: table !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .calificaciones-table {
+        display: none !important;
+    }
+    
+    .mobile-cards {
+        display: block !important;
+    }
 }
