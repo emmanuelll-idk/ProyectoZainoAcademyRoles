@@ -81,3 +81,26 @@
     90% { opacity: 1; transform: translateY(0); }
     100% { opacity: 0; transform: translateY(-10px); }
 }
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 1024px) {
+    .profile-form {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-column, .right-column {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-form {
+        padding: 1.5rem;
+    }
+
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+    }
+}

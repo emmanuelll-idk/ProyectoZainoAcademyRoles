@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ZainoAcademy</title>
 
+
     <!-- Fuentes e íconos -->
     <link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Varela:400&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
@@ -13,7 +14,12 @@
     <link rel="icon" type="image/vnd.icon" href="{% static 'images/favicon/Favicon.png' %}">
 
 
+
+
+
+
 </head>
+
 
 <body class="dashboard-page">
     <aside class="sidebar">
@@ -26,34 +32,38 @@
             </a>
         </div>
 
+
         <nav>
             <ul class="nav-list">
                 <li><a href="{% url 'dashboard_directivo' %}" class="nav-item">
                     <img src="{% static 'images/acudientes/inicio.png' %}" class="nav-icon" alt="Inicio"> Inicio
                 </a></li>
 
+
                 <li><a href="{% url 'crear_usuario' %}" class="nav-item">
                     <img src="{% static 'images/directivos/LogoUsuario.png' %}" class="nav-icon" alt="Nuevo Usuario"> Nuevo Usuario
                 </a></li>
+
 
                 <li><a href="{% url 'crear_matricula' %}" class="nav-item">
                     <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Matricula"> Matricula
                 </a></li>
 
+
                 <li><a href="{% url 'crear_curso' %}" class="nav-item">
                     <img src="{% static 'images/directivos/LogoCurso.png' %}" class="nav-icon" alt="Curso"> Curso
                 </a></li>
-                
+               
                 <li><a href="{% url 'crear_materia' %}" class="nav-item">
                     <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Materia"> Materia
                 </a></li>
-                
+               
                 <li><a href="{% url 'periodo_directivos' %}" class="nav-item">
                     <img src="{% static 'images/directivos/LogoLibro.png' %}" class="nav-icon" alt="Asignacion"> Asignacion
                 </a></li>
             </ul>
         </nav>
-        
+       
         <!-- Botón de cerrar sesión -->
         <div class="logout-container">
             <form method="POST" action="{% url 'login' %}">
@@ -62,6 +72,7 @@
             </form>
         </div>
     </aside>
+
 
     <main class="main-content">
         <header class="page-header">
@@ -75,14 +86,29 @@
                             <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
                         {% endif %}
                     </a>
+                    <button class="hamburger" onclick="toggleMenu()">☰</button>
+                    <div id="dropdown-menu" class="dropdown-menu">
+                        <a href="{% url 'ver_perfil_directivos' %}">Perfil</a>
+                        <a href="{% url 'dashboard_directivo' %}">Inicio</a>
+                        <a href="{% url 'crear_usuario' %}">Usuarios</a>
+                        <a href="{% url 'crear_matricula' %}">Matrículas</a>
+                        <a href="{% url 'crear_curso' %}">Cursos</a>
+                        <a href="{% url 'crear_materia' %}">Materias</a>
+                        <a href="{% url 'periodo_directivos' %}">Asignaciones</a>
+                        <div class="divider"></div>
+                        <a href="{% url 'login' %}">Cerrar sesión</a>
+                    </div>
             </div>
         </header>
 
+
         <div class="divider-line"></div>
+
 
         {% block content %}
         {% endblock %}
     </main>
+
 
     <!-- Modal Cerrar Sesión -->
     <div id="logout-modal" class="modal">
@@ -98,6 +124,7 @@
             </div>
     </div>
 
+
     <script>
         const modal = document.getElementById('logout-modal');
         function openModal() { modal.style.display = 'flex'; }
@@ -105,6 +132,8 @@
         window.onclick = function(event) {
             if (event.target == modal) { closeModal(); }
         }
+       
+
 
         // Mensajes flotantes
         document.querySelectorAll('.header-icons .material-icons-outlined').forEach(icon => {
@@ -118,17 +147,21 @@
             });
         });
 
+
         // Resaltar item activo en la barra lateral según URL
         document.addEventListener('DOMContentLoaded', () => {
             const currentPath = window.location.pathname.replace(/\/+$/, '');
             const items = document.querySelectorAll('.nav-list a.nav-item');
 
+
             items.forEach(a => a.classList.remove('active'));
+
 
             let winner = null;
             items.forEach(a => {
                 const href = a.getAttribute('href');
                 if (!href || href === '#') return;
+
 
                 const linkPath = new URL(href, window.location.origin).pathname.replace(/\/+$/, '');
                 if (currentPath === linkPath || currentPath.startsWith(linkPath + '/')) {
@@ -139,8 +172,14 @@
                 }
             });
 
+
             if (winner) winner.classList.add('active');
         });
+   
+        function toggleMenu() {
+        const menu = document.getElementById("dropdown-menu");
+        menu.classList.toggle("show");
+        }
     </script>
 </body>
 </html>
