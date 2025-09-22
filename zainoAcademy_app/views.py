@@ -728,7 +728,8 @@ def actividad_profesores_calificaciones(request, act_id):
                 entrega.Act_comentario = comentario
             entrega.save()
 
-        messages.success(request, "Cambios guardados correctamente.")
+        messages.success(request, "Calificaciones y comentarios guardados correctamente.")
+        # CAMBIO: Redirigir a la misma vista en lugar de otra página
         return redirect("actividad_profesores_calificaciones", act_id=act_id)
 
     estudiantes = Estudiantes.objects.filter(
