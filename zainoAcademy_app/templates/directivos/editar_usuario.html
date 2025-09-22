@@ -1,16 +1,9 @@
-<!-- 
-Nombre del archivo: editar_usuario.html 
-Descripción: Este archivo es un fomrulario de editar los usuarios ya creados 
-Autor: David Santiago Alfonso Guzman
-Fecha de creación: 2025-04-18 
-Última modificación: 2025-09-01
--->
-
 {% extends 'base_directivos.html' %}
 {% load static %}
 {% block page_title %}Usuario{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/directivos/editar_usuarioStyles.css' %}">
+
 {% if messages %}
 <div class="message-container">
     {% for message in messages %}
@@ -19,6 +12,12 @@ Fecha de creación: 2025-04-18
 </div>
 {% endif %}
 
+<!-- Debug para ver errores -->
+{% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>Errores:</strong> {{ form.errors }}
+    </div>
+{% endif %}
 
 <h2 style="text-align:center;">Editar Usuario</h2>
 <div class="edit-delete-container"></div>
@@ -27,15 +26,14 @@ Fecha de creación: 2025-04-18
 <div class="column">
     <div class="form-group">{{ form.Us_nombre.label_tag }}{{ form.Us_nombre }}</div>
     <div class="form-group">{{ form.Us_contraseña.label_tag }}{{ form.Us_contraseña }}</div>
-    <div class="form-group">{{ form.fecha_registro.label_tag }}{{ form.fecha_registro }}</div>
-    <div class="form-group">{{ form.estado.label_tag }}{{ form.estado }}</div>
+    <div class="form-group">{{ form.documento.label_tag }}{{ form.documento }}</div>
+    <div class="form-group">{{ form.genero.label_tag }}{{ form.genero }}</div>
 </div>
 
 <div class="column">
-    <div class="form-group">{{ form.documento.label_tag }}{{ form.documento }}</div>
-    <div class="form-group">{{ form.genero.label_tag }}{{ form.genero }}</div>
-    <div class="form-group">{{ form.correo.label_tag }}{{ form.correo }}</div>
     <div class="form-group">{{ form.TipoUsuario.label_tag }}{{ form.TipoUsuario }}</div>
+    <div class="form-group">{{ form.tiene_correo.label_tag }}{{ form.tiene_correo }}</div>
+    <div class="form-group">{{ form.correo.label_tag }}{{ form.correo }}</div>
 </div>
 
 <button type="submit" class="submit-button">Guardar cambios</button>
