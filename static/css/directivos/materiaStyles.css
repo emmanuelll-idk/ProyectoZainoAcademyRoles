@@ -1,4 +1,12 @@
-    .form-layout {
+* {
+    font-family: "Comfortaa", sans-serif !important;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+ 
+ 
+ .form-layout {
         display: flex;
         flex-direction: column;
         padding: 2rem 3rem;

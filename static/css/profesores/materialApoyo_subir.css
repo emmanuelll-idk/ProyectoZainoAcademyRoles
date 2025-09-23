@@ -331,6 +331,17 @@ body {
     padding: 2rem;
 }
 
+
+.messages {
+    background-color: #b6ebc3;
+    border: 10px #00bb2c;
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
     .content {

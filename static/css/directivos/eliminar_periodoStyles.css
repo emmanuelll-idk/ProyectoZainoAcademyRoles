@@ -1,3 +1,11 @@
+* {
+    font-family: "Comfortaa", sans-serif !important;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
 .confirm-delete-overlay {
     position: fixed;
     top: 0;

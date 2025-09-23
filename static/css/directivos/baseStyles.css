@@ -434,8 +434,7 @@
 
 
 /* ===== HAMBURGER & DROPDOWN ===== */
-
-
+/* ========== HAMBURGER & DROPDOWN ========== */
 .hamburger {
     display: none;
     font-size: 1.8rem;
@@ -445,16 +444,15 @@
     color: #4a4063;
 }
 
-
 .dropdown-menu {
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 70px; /* debajo del header */
+    top: 70px;
     right: 0.5rem;
-    width: 280px; /* casi todo el ancho en móviles */
-    background: rgba(255, 255, 255, 0.95); /* ligeramente transparente */
-    backdrop-filter: blur(10px); /* efecto glass */
+    width: 280px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     overflow: hidden;
@@ -465,7 +463,6 @@
     z-index: 200;
     flex-wrap: nowrap;
 }
-
 
 .dropdown-menu a,
 .dropdown-menu button {
@@ -482,13 +479,11 @@
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-
 .dropdown-menu a:hover,
 .dropdown-menu button:hover {
-    background-color: rgba(30, 145, 214, 0.1); /* azul suave al pasar */
+    background-color: rgba(30, 145, 214, 0.1);
     color: #1e91d6;
 }
-
 
 .dropdown-menu.show {
     max-height: 500px;
@@ -496,6 +491,20 @@
     transform: translateY(0);
 }
 
+.dropdown-menu .dropdown-logout-btn {
+    background-color: #1e91d6 !important;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.dropdown-menu .dropdown-logout-btn:hover {
+    background-color: #6A5B8C !important;
+    transform: scale(1.02);
+}
 
 @media (max-width: 1024px) {
     .hamburger {
@@ -523,21 +532,4 @@
         margin-left: 0;
         width: 100%;
     }
-}
-
-
-.dropdown-menu .dropdown-logout-btn {
-    background-color: #1e91d6 !important;
-    color: #fff !important;
-    border-radius: 8px;
-    padding: 0.8rem 1.2rem;
-    font-weight: 600;
-    margin: 0.5rem 0;
-    transition: background 0.3s ease, transform 0.2s ease;
-}
-
-
-.dropdown-menu .dropdown-logout-btn:hover {
-    background-color: #6A5B8C !important;
-    transform: scale(1.02);
 }

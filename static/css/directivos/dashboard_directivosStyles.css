@@ -602,7 +602,7 @@ html, body {
     position: absolute;
     top: 70px;
     right: 0.5rem;
-    width: 350px;
+    width: 280px;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border-radius: 12px;
@@ -659,6 +659,33 @@ html, body {
 }
 
 /* ========== RESPONSIVE ========== */
+@media (max-width: 1200px) {
+    .dashboard-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .right-column {
+        flex-direction: row;
+        gap: 1rem;
+    }
+    
+    .calendar-section,
+    .acudient-profile {
+        flex: 1;
+        width: 93vw;
+    }
+    
+    .greeting-illustration {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .greeting-text h2 {
+        font-size: 2rem;
+    }
+}
+
 @media (max-width: 1024px) {
     .hamburger {
         display: block;
@@ -675,92 +702,319 @@ html, body {
     }
 
     .sidebar {
-        display: none; 
-    }
-
-    .main-content {
-        margin-left: 0;
-        width: 100%;
-    }
-
-    .dashboard-content {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .right-column {
-        flex-direction: row;
-        position: static;
-    }
-    
-    .calendar-widget,
-    .acudient-profile {
-        flex: 1;
-    }
-}
-
-@media (max-width: 768px) {
-    .sidebar {
-        width: 80px;
-        padding: 1rem 0.5rem;
-    }
-    
-    .sidebar .logo img {
-        max-width: 60px;
-    }
-    
-    .nav-item span:not(.nav-icon) {
         display: none;
     }
-    
+
     .main-content {
         margin-left: 0;
         width: 100%;
         padding: 1rem;
+    }
+    
+    .dropdown-menu {
+        width: 280px;
+        right: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 0.5rem;
+        height: auto;
+    }
+    
+    .page-header {
+        padding: 0.8rem 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .dashboard-content {
+        padding: 1rem;
+        gap: 1rem;
+        height: auto;
     }
     
     .greeting-card {
         flex-direction: column;
         text-align: center;
+        padding: 1.5rem;
         gap: 1rem;
+        width: 94vw;
     }
     
     .greeting-illustration {
-        width: 155px;
-        height: 155px;
-        flex: 1;
+        width: 150px !important;
+        height: 150px !important;
     }
     
+    
+
     .greeting-text h2 {
         font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .greeting-text p {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        max-width: none;
     }
     
     .right-column {
         flex-direction: column;
-        position: static;
+        gap: 1rem;
     }
     
-    .table-header,
-    .table-row {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
+    .notifications-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
     }
     
-    .col-header {
-        display: none;
+    .notifications-header h3 {
+        font-size: 1.4rem;
     }
     
-    .table-row {
-        background: #f8f9ff;
-        border-radius: 8px;
+    .ver-todo-btn {
+        align-self: stretch;
+        text-align: center;
+        padding: 0.8rem 1rem;
+    }
+    
+    /* Tabla responsive */
+    .table-wrapper {
+        overflow-x: auto;
         padding: 1rem;
-        margin-bottom: 0.5rem;
+        margin-top: 0;
+    }
+    
+    .styled-table {
+        min-width: 600px;
+        font-size: 0.85rem;
+    }
+    
+    .styled-table th,
+    .styled-table td {
+        padding: 8px 6px;
+        font-size: 0.8rem;
+    }
+    
+    .styled-table td {
+        white-space: nowrap;
+    }
+    
+    /* Perfil más compacto */
+    .acudient-profile {
+        padding: 1.5rem;
+    }
+    
+    .student-avatar {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 20px;
+    }
+    
+    .student-avatar img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .acudient-name {
+        font-size: 1rem;
+    }
+    
+    .info-row {
+        padding: 0.4rem 0;
+    }
+    
+    .info-label,
+    .info-value {
+        font-size: 0.75rem;
+    }
+    
+    /* Calendario más compacto */
+    .calendar-widget {
+        padding: 1rem;
+    }
+    
+    .calendar-grid {
+        gap: 0.3rem;
+    }
+    
+    .day-cell {
+        padding: 8px 0;
+        font-size: 0.85rem;
+    }
+    
+    .calendar-top h4 {
+        font-size: 1.1rem;
+    }
+    
+    .nav-btn {
+        padding: 3px 8px;
+        font-size: 1rem;
+    }
+    
+    .day-header {
+        font-size: 0.8rem;
+    }
+    
+    /* Header responsive */
+    .user-name {
+        font-size: 0.9rem;
+    }
+    
+    .user-avatar {
+        width: 35px;
+        height: 38px;
+    }
+    
+    .dropdown-menu {
+        width: calc(100vw - 2rem);
+        right: 1rem;
+        left: 1rem;
     }
 
-    .col-data:nth-child(2) {
-        background: none;
-        border: none;
-        padding: 0;
-        justify-content: flex-start;
+    .notifications-section {
+        width: 94vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 0.3rem;
+    }
+    
+    .dashboard-content {
+        padding: 0.5rem;
+        gap: 0.8rem;
+    }
+    
+    .greeting-card {
+        padding: 1rem;
+        width: 94vw;
+    }
+    
+    .greeting-text h2 {
+        font-size: 1.3rem;
+    }
+    
+    .greeting-text p {
+        font-size: 0.85rem;
+    }
+    
+    .greeting-illustration {
+        width: 120px !important;
+        height: 120px !important;
+    }
+    
+    .notifications-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    /* Tabla ultra compacta */
+    .styled-table {
+        min-width: 500px;
+    }
+    
+    .styled-table th,
+    .styled-table td {
+        padding: 6px 4px;
+        font-size: 0.75rem;
+    }
+    
+    /* Perfil ultra compacto */
+    .acudient-profile {
+        padding: 1rem;
+    }
+    
+    .student-avatar {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 15px;
+    }
+    
+    .student-avatar img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .acudient-name {
+        font-size: 0.9rem;
+    }
+    
+    .acudient-role {
+        font-size: 0.75rem;
+    }
+    
+    .info-row {
+        padding: 0.3rem 0;
+    }
+    
+    .info-label,
+    .info-value {
+        font-size: 0.7rem;
+    }
+    
+    /* Calendario ultra compacto */
+    .calendar-widget {
+        padding: 0.8rem;
+    }
+    
+    .calendar-top h4 {
+        font-size: 1rem;
+    }
+    
+    .day-cell {
+        padding: 6px 0;
+        font-size: 0.8rem;
+    }
+    
+    .day-header {
+        font-size: 0.75rem;
+    }
+    
+    /* Header ultra compacto */
+    .page-header {
+        padding: 0.5rem;
+    }
+    
+    .user-name {
+        font-size: 0.8rem;
+    }
+    
+    .user-avatar {
+        width: 32px;
+        height: 35px;
+    }
+
+    .notifications-section {
+        width: 94vw;
+    }
+}
+
+/* Ajustes adicionales para muy pantallas muy pequeñas */
+@media (max-width: 320px) {
+    .greeting-text h2 {
+        font-size: 1.1rem;
+    }
+    
+    .greeting-illustration {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    
+    .styled-table {
+        min-width: 450px;
+    }
+    
+    .calendar-grid {
+        gap: 0.2rem;
+    }
+    
+    .day-cell {
+        padding: 4px 0;
+        font-size: 0.75rem;
     }
 }

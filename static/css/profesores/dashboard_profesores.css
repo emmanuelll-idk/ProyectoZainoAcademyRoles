@@ -188,68 +188,66 @@ html, body {
     gap: 2rem;
 }
 
+/* ========== GREETING CARD ========== */
 .greeting-card {
-    background: linear-gradient(135deg, #4A4063 0%, #6A5B8C 100%);
-    color: #fff;
+    background-color: #4A4063;
     border-radius: 20px;
-    padding: 2rem;
+    padding: 2.5rem;
+    color: white;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.greeting-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    height: auto;
 }
 
 .greeting-text h2 {
-    font-size: 1.8rem;
-    margin-bottom: 0.8rem;
+    font-size: 2.5rem;
     font-weight: 700;
+    margin-bottom: 1.3rem;
 }
 
 .greeting-text p {
-    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
     opacity: 0.9;
     line-height: 1.4;
+    margin-bottom: 1.3rem;
+    max-width: 400px;
 }
 
 .btn-leer-mas {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    padding: 0.8rem 1.5rem;
-    border-radius: 25px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
     text-decoration: none;
+    font-weight: 500;
     font-size: 0.9rem;
-    font-weight: 600;
     transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: inline-block;
 }
 
 .btn-leer-mas:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
 }
 
 .greeting-illustration {
-    position: relative;
-    z-index: 2;
+    width: auto;
+    height: 250px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
-.greeting-illustration img {
-    width: 120px;
-    height: 120px;
+.greeting-illustration::before {
+    font-size: 2rem;
 }
-
 /* ===== NOTIFICATIONS SECTION ===== */
 .notifications-section {
     background: #fff;
@@ -710,6 +708,11 @@ html, body {
     }
 
     .greeting-illustration {
+        width: auto;
+        height: 150px;
+    }
+
+    .greeting-illustration img {
     width: auto;
     height: 150px;
     background-color: rgba(255, 255, 255, 0.2);

@@ -86,18 +86,20 @@
                             <img src="{% static 'images/acudientes/perfil.png' %}" class="user-avatar" alt="Perfil">
                         {% endif %}
                     </a>
-                    <button class="hamburger" onclick="toggleMenu()">☰</button>
-                    <div id="dropdown-menu" class="dropdown-menu">
-                        <a href="{% url 'ver_perfil_directivos' %}">Perfil</a>
-                        <a href="{% url 'dashboard_directivo' %}">Inicio</a>
-                        <a href="{% url 'crear_usuario' %}">Usuarios</a>
-                        <a href="{% url 'crear_matricula' %}">Matrículas</a>
-                        <a href="{% url 'crear_curso' %}">Cursos</a>
-                        <a href="{% url 'crear_materia' %}">Materias</a>
-                        <a href="{% url 'periodo_directivos' %}">Asignaciones</a>
-                        <div class="divider"></div>
-                        <a href="{% url 'login' %}">Cerrar sesión</a>
-                    </div>
+                        <button class="hamburger" onclick="toggleMenu()">☰</button>
+        
+                        <div id="dropdown-menu" class="dropdown-menu">
+                                <a href="{% url 'dashboard_directivos' %}">Inicio</a>
+                                <a href="{% url 'crear_usuario' %}">Nuevo Usuario</a>
+                                <a href="{% url 'crear_matricula' %}">Matrícula</a>
+                                <a href="{% url 'crear_curso' %}">Curso</a>
+                                <a href="{% url 'crear_materia' %}">Materia</a>
+                                <a href="{% url 'periodo_directivos' %}">Asignación</a>
+                                <form method="POST" action="{% url 'login' %}">
+                                    {% csrf_token %}
+                                    <button type="button" class="dropdown-logout-btn" onclick="openModal()">Cerrar sesión</button>
+                                </form>
+                        </div>
             </div>
         </header>
 
@@ -176,10 +178,12 @@
             if (winner) winner.classList.add('active');
         });
    
-        function toggleMenu() {
+
+    function toggleMenu() {
         const menu = document.getElementById("dropdown-menu");
         menu.classList.toggle("show");
-        }
+    }
+
     </script>
 </body>
 </html>

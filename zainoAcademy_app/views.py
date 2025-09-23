@@ -1204,6 +1204,8 @@ def materialApoyo_subir(request, bol_id):
             Mate_archivo=archivo,
             Bol=boletin
         )
+        
+        messages.success(request, f'Material "{titulo}" subido exitosamente.')
         return redirect('materialApoyo_subir', bol_id=boletin.Bol_id)
 
     materiales = MaterialApoyo.objects.filter(Bol_id=bol_id)
